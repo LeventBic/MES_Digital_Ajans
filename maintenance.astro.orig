@@ -1,0 +1,529 @@
+---
+// Bakım sayfası — middleware bu sayfaya yönlendirir.
+import { url } from "../lib/url";
+import FontFaces from "../components/FontFaces.astro";
+---
+
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DEVARP</title>
+    <meta name="robots" content="noindex, nofollow" />
+
+    <link rel="icon" type="image/svg+xml" href={url("/favicon.svg")} />
+
+    {/* Eina 04 @font-face — bu sayfa global.css import etmez */}
+    <FontFaces />
+
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        font-family: "Eina 04", Arial, Helvetica, sans-serif;
+        min-height: 100svh;
+        background: #0d0d0d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      /* Video arka plan */
+      .bg-video {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        z-index: 0;
+      }
+
+      /* Karartma */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.52);
+        z-index: 1;
+      }
+
+      /* Kart sarmalayıcı — butonu karta hizalamak için */
+      .card-wrap {
+        position: relative;
+        z-index: 2;
+        max-width: 800px;
+        width: calc(100% - 2rem);
+      }
+
+      /* Dil menüsü — hover/focus olduğunda sola doğru açılır */
+      .lang-menu {
+        position: absolute;
+        bottom: 100%;
+        right: 0;
+        margin-bottom: 0.3rem;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+
+      .lang-menu__option {
+        width: 3rem;
+        height: 2rem;
+        overflow: hidden;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #b0b0b0;
+        border-radius: 4px;
+        font-family: inherit;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          color 0.2s ease,
+          border-color 0.2s ease,
+          opacity 0.2s ease,
+          transform 0.25s ease;
+      }
+
+      /* `outline: none` buradaydi ve :focus-visible ile ayni blokta oldugu icin
+         global odak halkasini eziyordu: klavyeyle gelen kullanici icin kalan tek
+         sinyal 1.17:1 kontrastli bir zemin degisimiydi (WCAG 1.4.11 icin 3:1
+         gerekiyor). Kaldirildi - hover zaten outline uretmiyor, focus-visible ise
+         artik global halkayi aliyor. Zemin/kenarlik vurgusu destekleyici ipucu
+         olarak duruyor. */
+      .lang-menu__option:hover,
+      .lang-menu__option:focus-visible {
+        background: rgba(255, 255, 255, 0.14);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.24);
+      }
+
+      .lang-menu__option.is-current {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.14);
+        border-color: rgba(255, 255, 255, 0.24);
+        order: 3;
+      }
+
+      .lang-menu__option:not(.is-current) {
+        width: 0;
+        min-width: 0;
+        border-width: 0;
+        padding: 0;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateX(0.5rem);
+      }
+
+      .lang-menu.is-open .lang-menu__option:not(.is-current),
+      .lang-menu:hover:not(.is-locked) .lang-menu__option:not(.is-current),
+      .lang-menu:focus-within:not(.is-locked) .lang-menu__option:not(.is-current) {
+        width: 3rem;
+        border-width: 1px;
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(0);
+      }
+
+      @media (hover: none) {
+        .lang-menu__option:not(.is-current) {
+          opacity: 1;
+          pointer-events: auto;
+          transform: none;
+        }
+      }
+
+      /* İçerik kartı */
+      .card {
+        background: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 4px;
+        width: 100%;
+        padding: 3rem 3.25rem 2.5rem;
+      }
+
+      /* Logo */
+      .logo-wrap {
+        margin-bottom: 1.5rem;
+        margin-left: -0.7rem;
+      }
+      .logo-wrap img {
+        display: block;
+        max-width: 100%;
+      }
+
+      h2 {
+        color: #fff;
+        font-size: clamp(1.5rem, 4vw, 2.1rem);
+        font-weight: 700;
+        line-height: 1.25;
+        margin-bottom: 1.25rem;
+        margin-top: 2.5rem;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+      }
+
+      .description {
+        color: rgba(255, 255, 255, 0.82);
+        font-size: clamp(0.9rem, 2vw, 1rem);
+        font-weight: 400;
+        line-height: 1.7;
+        text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
+        margin-bottom: 1.5rem;
+      }
+
+      .description p + p {
+        margin-top: 0.5rem;
+      }
+
+      .company-name {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 1.25rem;
+        margin-top: 3rem;
+      }
+
+      /* İletişim listesi */
+      .contact-list {
+        list-style: none;
+        display: grid;
+        grid-template-columns: max-content 1fr max-content;
+        align-items: center;
+        gap: 0.6rem 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        padding-top: 1.25rem;
+      }
+
+      .contact-list li {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        color: rgba(255, 255, 255, 0.78);
+        font-size: 0.88rem;
+        font-weight: 400;
+      }
+
+      .contact-list li:nth-child(2) {
+        justify-self: center;
+        white-space: nowrap;
+      }
+
+      .contact-list li:nth-child(3) {
+        justify-self: end;
+      }
+
+      .contact-list li:first-child span {
+        white-space: nowrap;
+      }
+
+      .contact-list li a {
+        color: inherit;
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .contact-list li a:hover {
+        color: #fff;
+      }
+
+      .contact-icon {
+        width: 14px;
+        height: 14px;
+        opacity: 0.7;
+        flex-shrink: 0;
+      }
+
+      /* Responsive */
+      @media (max-width: 800px) {
+        .card-wrap {
+          width: calc(100% - 1.5rem);
+        }
+        .card {
+          padding: 1.75rem 1.25rem 1.5rem;
+          border-radius: 8px;
+        }
+
+        .contact-list {
+          grid-template-columns: 1fr;
+          gap: 0.6rem;
+        }
+
+        .contact-list li:nth-child(2),
+        .contact-list li:nth-child(3) {
+          justify-self: start;
+        }
+
+        .contact-list li:first-child span {
+          white-space: normal;
+          overflow-wrap: anywhere;
+        }
+      }
+
+      @media (max-width: 380px) {
+        .card {
+          padding: 1.25rem 1rem 1.25rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .bg-video {
+          display: none;
+        }
+        body {
+          background: #111;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <video
+      class="bg-video"
+      id="bgVideo"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+      disablepictureinpicture
+    >
+      <source src={url("/maintenance/DEVARP_VIDEO.mp4")} type="video/mp4" />
+    </video>
+
+    <script>
+      (function () {
+        const v = document.getElementById("bgVideo") as HTMLVideoElement | null;
+        if (!v) return;
+        v.muted = true;
+        const tryPlay = () => v.play().catch(() => {});
+        tryPlay();
+        // iOS bazen kullanıcı etkileşimi olmadan başlatmıyor,
+        // ilk dokunuşta tekrar dene
+        document.addEventListener("touchstart", tryPlay, { once: true });
+        document.addEventListener("click", tryPlay, { once: true });
+      })();
+    </script>
+
+    <script>
+      (function () {
+        const menuEl = document.getElementById("langMenu");
+        if (!menuEl) return;
+        // setMenuOpen() bir `function` bildirimi olduğu icin yukaridaki null
+        // kontrolu gövdesine tasinmiyor; daraltilmis degeri const'a aliyoruz.
+        const menu = menuEl;
+        const htmlEl = document.documentElement;
+        const buttons = Array.from(
+          menu.querySelectorAll<HTMLButtonElement>("[data-lang]"),
+        );
+        let openByClick = false;
+
+        function applyLang(lang: string) {
+          htmlEl.setAttribute("lang", lang);
+          document.querySelectorAll<HTMLElement>("[data-tr]").forEach((el) => {
+            const txt =
+              el.dataset[lang as "tr" | "en" | "de"] ??
+              el.dataset.en ??
+              el.dataset.tr;
+            if (txt != null) el.textContent = txt;
+          });
+
+          buttons.forEach((button) => {
+            const isCurrent = button.dataset.lang === lang;
+            button.classList.toggle("is-current", isCurrent);
+            button.setAttribute("aria-pressed", String(isCurrent));
+            button.tabIndex = isCurrent ? 0 : -1;
+          });
+        }
+
+        function setMenuOpen(open: boolean) {
+          openByClick = open;
+          menu.classList.toggle("is-open", open);
+          if (!open) {
+            menu.classList.remove("is-locked");
+          }
+        }
+
+        // İlk dil türkçe
+        applyLang("tr");
+
+        menu.addEventListener("mouseleave", () => {
+          if (!openByClick) {
+            menu.classList.remove("is-locked");
+          }
+        });
+
+        buttons.forEach((button) => {
+          button.addEventListener("click", (event) => {
+            event.stopPropagation();
+            const lang = button.dataset.lang;
+            if (!lang) return;
+
+            if (button.classList.contains("is-current")) {
+              setMenuOpen(!openByClick);
+              button.blur();
+              return;
+            }
+
+            applyLang(lang);
+            setMenuOpen(false);
+            button.blur();
+          });
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!menu.contains(event.target as Node)) {
+            setMenuOpen(false);
+          }
+        });
+      })();
+    </script>
+
+    <div class="overlay"></div>
+
+    <div class="card-wrap">
+      <div class="lang-menu" id="langMenu" aria-label="Change language">
+        <button
+          class="lang-menu__option is-current"
+          type="button"
+          data-lang="tr"
+          aria-pressed="true"
+        >
+          TR
+        </button>
+        <button
+          class="lang-menu__option"
+          type="button"
+          data-lang="en"
+          aria-pressed="false"
+        >
+          ENG
+        </button>
+        <button
+          class="lang-menu__option"
+          type="button"
+          data-lang="de"
+          aria-pressed="false"
+        >
+          DE
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="logo-wrap">
+          <img
+            src={url("/maintenance/devarp_logo_white.svg")}
+            alt="DEVARP Mekatronik"
+            width="395"
+            height="100"
+          />
+        </div>
+
+        <h2
+          data-tr="Planlı bakım çalışması"
+          data-en="Scheduled maintenance"
+          data-de="Geplante Wartungsarbeiten"
+        >
+          Planlı bakım çalışması
+        </h2>
+
+        <div class="description">
+          <p
+            data-tr="Sistemlerimizde gerçekleştirdiğimiz planlı iyileştirme çalışmaları tamamlandığında, web sitemiz yeniden erişime açılacaktır."
+            data-en="Once the scheduled improvements to our systems are complete, our website will be back online."
+            data-de="Sobald die geplanten Verbesserungsarbeiten an unseren Systemen abgeschlossen sind, wird unsere Website wieder erreichbar sein."
+          >
+            Sistemlerimizde gerçekleştirdiğimiz planlı iyileştirme çalışmaları
+            tamamlandığında, web sitemiz yeniden erişime açılacaktır.
+          </p>
+          <p
+            data-tr="Sabrınız ve anlayışınız için teşekkür ederiz."
+            data-en="Thank you for your patience and understanding."
+            data-de="Vielen Dank für Ihre Geduld und Ihr Verständnis."
+          >
+            Sabrınız ve anlayışınız için teşekkür ederiz.
+          </p>
+        </div>
+
+        <div
+          class="company-name"
+          data-tr="DEVARP MEKATRONİK A.Ş."
+          data-en="DEVARP MECHATRONICS INC."
+          data-de="DEVARP MECHATRONIK A.G."
+        >
+          DEVARP MEKATRONİK A.Ş.
+        </div>
+
+        <ul class="contact-list">
+          <li>
+            <svg
+              class="contact-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#e51b26"
+              stroke-width="2"
+            >
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+              ></path><circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <span
+              data-tr="TÜBİTAK Teknokent 30/13 Gebze, Kocaeli"
+              data-en="TÜBİTAK Technopark 30/13, Gebze, Kocaeli, Türkiye"
+              data-de="TÜBİTAK Technopark 30/13, Gebze, Kocaeli, Türkei"
+              >TÜBİTAK Teknokent 30/13 Gebze, Kocaeli</span
+            >
+          </li>
+          <li>
+            <svg
+              class="contact-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#e51b26"
+              stroke-width="2"
+            >
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.38 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.61a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"
+              ></path>
+            </svg>
+            +90 (850) 885 2070
+          </li>
+          <li>
+            <svg
+              class="contact-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#e51b26"
+              stroke-width="2"
+            >
+              <path
+                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+              ></path><polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            <a href="mailto:info@devarp.com">info@devarp.com</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

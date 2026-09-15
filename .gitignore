@@ -1,0 +1,4 @@
+.DS_Store
+
+# DEVARP sablonundan kalan, sayfada artik kullanilmayan varliklar (10 MB video dahil)
+assets/maintenance/

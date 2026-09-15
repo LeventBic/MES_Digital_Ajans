@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="tr" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <title>Mes Digital</title>
+    <meta name="robots" content="noindex, nofollow" />
+
+    <link rel="icon" href="data:," />
+
+    <!-- Tema tercihi: ilk boyamada yanıp sönmeyi (FOUC) önlemek için stillerden önce. -->
+    <script>
+      (function () {
+        var t = null;
+        try { t = localStorage.getItem("theme"); } catch (e) {}
+        if (t !== "light" && t !== "dark") {
+          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      })();
+    </script>
+
+    <!-- Eina 04 @font-face — bu sayfa global bir stil dosyası kullanmaz.
+         Ağırlık eşlemesi: light→300, regular→400 500, semibold→600, bold→700 900. -->
+    <style>
+      @font-face {
+        font-family: "Eina 04";
+        src: url("assets/fonts/eina04-light.woff2") format("woff2");
+        font-weight: 300;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Eina 04";
+        src: url("assets/fonts/eina04-regular.woff2") format("woff2");
+        font-weight: 400 500;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Eina 04";
+        src: url("assets/fonts/eina04-semibold.woff2") format("woff2");
+        font-weight: 600;
+        font-style: normal;
+        font-display: swap;
+      }
+      @font-face {
+        font-family: "Eina 04";
+        src: url("assets/fonts/eina04-bold.woff2") format("woff2");
+        font-weight: 700 900;
+        font-style: normal;
+        font-display: swap;
+      }
+    </style>
+
+    <style>
+      /* Renk token'ları — koyu tema varsayılan */
+      :root {
+        color-scheme: dark;
+        --bg: #0d0d0d;
+        --card-bg: rgba(255, 255, 255, 0.07);
+        --card-border: rgba(255, 255, 255, 0.12);
+        --heading: #fff;
+        --text: rgba(255, 255, 255, 0.82);
+        --text-muted: rgba(255, 255, 255, 0.6);
+        --text-contact: rgba(255, 255, 255, 0.78);
+        --link-hover: #fff;
+        --divider: rgba(255, 255, 255, 0.12);
+        --watermark: rgba(255, 255, 255, 0.035);
+        --brand: #e51b26; /* wordmark + ikonlar */
+        --heading-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+        --text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
+        --toggle-bg: rgba(255, 255, 255, 0.07);
+        --toggle-border: rgba(255, 255, 255, 0.12);
+        --toggle-fg: #b0b0b0;
+        --toggle-bg-hover: rgba(255, 255, 255, 0.14);
+        --toggle-fg-hover: #fff;
+        --toggle-border-hover: rgba(255, 255, 255, 0.24);
+      }
+
+      :root[data-theme="light"] {
+        color-scheme: light;
+        --bg: #f4f4f4;
+        --card-bg: rgba(255, 255, 255, 0.86);
+        --card-border: rgba(0, 0, 0, 0.08);
+        --heading: #161616;
+        --text: rgba(0, 0, 0, 0.74);
+        --text-muted: rgba(0, 0, 0, 0.5);
+        --text-contact: rgba(0, 0, 0, 0.7);
+        --link-hover: #000;
+        --divider: rgba(0, 0, 0, 0.1);
+        --watermark: rgba(0, 0, 0, 0.045);
+        --brand: #c4141d; /* açık zeminde kırmızı metin için WCAG'a uygun ton */
+        --heading-shadow: none;
+        --text-shadow: none;
+        --toggle-bg: rgba(0, 0, 0, 0.05);
+        --toggle-border: rgba(0, 0, 0, 0.1);
+        --toggle-fg: #555;
+        --toggle-bg-hover: rgba(0, 0, 0, 0.1);
+        --toggle-fg-hover: #000;
+        --toggle-border-hover: rgba(0, 0, 0, 0.2);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        font-family: "Eina 04", Arial, Helvetica, sans-serif;
+        min-height: 100svh;
+        background: var(--bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        transition: background-color 0.25s ease;
+      }
+
+      /* Kart sarmalayıcı — butonu karta hizalamak için */
+      .card-wrap {
+        position: relative;
+        z-index: 2;
+        max-width: 800px;
+        width: calc(100% - 2rem);
+      }
+
+      /* Tema anahtarı */
+      .theme-toggle {
+        position: absolute;
+        bottom: 100%;
+        right: 0;
+        margin-bottom: 0.3rem;
+        z-index: 3;
+        width: 3rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--toggle-bg);
+        border: 1px solid var(--toggle-border);
+        color: var(--toggle-fg);
+        border-radius: 4px;
+        cursor: pointer;
+        font: inherit;
+        transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      }
+
+      .theme-toggle:hover,
+      .theme-toggle:focus-visible {
+        background: var(--toggle-bg-hover);
+        color: var(--toggle-fg-hover);
+        border-color: var(--toggle-border-hover);
+      }
+
+      .theme-toggle__icon {
+        width: 16px;
+        height: 16px;
+      }
+
+      .theme-toggle__icon--sun {
+        display: block;
+      }
+
+      .theme-toggle__icon--moon {
+        display: none;
+      }
+
+      :root[data-theme="light"] .theme-toggle__icon--sun {
+        display: none;
+      }
+
+      :root[data-theme="light"] .theme-toggle__icon--moon {
+        display: block;
+      }
+
+      /* İçerik kartı */
+      .card {
+        background: var(--card-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--card-border);
+        border-radius: 4px;
+        width: 100%;
+        padding: 3rem 3.25rem 2.5rem;
+        transition: background-color 0.25s ease, border-color 0.25s ease;
+      }
+
+      /* Logo */
+      .logo-wrap {
+        margin-bottom: 1.5rem;
+      }
+
+      .wordmark {
+        color: var(--brand);
+        font-weight: 600;
+        font-size: clamp(2.4rem, 7vw, 3.6rem);
+        line-height: 1;
+        letter-spacing: -0.02em;
+      }
+
+      h2 {
+        color: var(--heading);
+        font-size: clamp(1.5rem, 4vw, 2.1rem);
+        font-weight: 700;
+        line-height: 1.25;
+        margin-bottom: 1.25rem;
+        margin-top: 1.5rem;
+        text-shadow: var(--heading-shadow);
+      }
+
+      .description {
+        color: var(--text);
+        font-size: clamp(0.9rem, 2vw, 1rem);
+        font-weight: 400;
+        line-height: 1.7;
+        text-shadow: var(--text-shadow);
+        margin-bottom: 1.5rem;
+      }
+
+      .description p + p {
+        margin-top: 0.5rem;
+      }
+
+      /* Hizmet listesi */
+      .services {
+        list-style: none;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.55rem 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .services li {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        color: var(--text);
+        font-size: 0.92rem;
+        font-weight: 500;
+      }
+
+      .check-icon {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        color: var(--brand);
+      }
+
+      .company-name {
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 1.25rem;
+        margin-top: 2rem;
+      }
+
+      /* İletişim listesi */
+      .contact-list {
+        list-style: none;
+        display: grid;
+        grid-template-columns: max-content max-content;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.6rem 1.5rem;
+        border-top: 1px solid var(--divider);
+        padding-top: 1.25rem;
+      }
+
+      .contact-list li {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        color: var(--text-contact);
+        font-size: 0.88rem;
+        font-weight: 400;
+      }
+
+      .contact-list li:nth-child(2) {
+        justify-self: end;
+        white-space: nowrap;
+      }
+
+      .contact-list li a {
+        color: inherit;
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .contact-list li a:hover {
+        color: var(--link-hover);
+      }
+
+      .contact-icon {
+        width: 14px;
+        height: 14px;
+        opacity: 0.7;
+        flex-shrink: 0;
+        color: var(--brand);
+      }
+
+      /* Arka plan filigranı */
+      .watermark {
+        position: fixed;
+        right: -0.05em;
+        bottom: -0.12em;
+        z-index: 0;
+        font-weight: 900;
+        font-size: clamp(10rem, 32vw, 30rem);
+        line-height: 1;
+        letter-spacing: -0.04em;
+        color: var(--watermark);
+        pointer-events: none;
+        user-select: none;
+      }
+
+      /* Responsive */
+      @media (max-width: 800px) {
+        .card-wrap {
+          width: calc(100% - 1.5rem);
+        }
+        .card {
+          padding: 1.75rem 1.25rem 1.5rem;
+          border-radius: 8px;
+        }
+
+        .contact-list {
+          grid-template-columns: 1fr;
+          gap: 0.6rem;
+        }
+
+        .contact-list li:nth-child(2) {
+          justify-self: start;
+        }
+
+        .services {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 380px) {
+        .card {
+          padding: 1.25rem 1rem 1.25rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="watermark" aria-hidden="true">MES</div>
+
+    <div class="card-wrap">
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Açık temaya geç" title="Açık temaya geç">
+        <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+        <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+      </button>
+
+      <div class="card">
+        <div class="logo-wrap">
+          <div class="wordmark" aria-label="Mes Digital">
+            <span class="wordmark__main">Mes</span>
+            <span class="wordmark__sub">Digital</span>
+          </div>
+        </div>
+
+        <h2
+          data-tr="Çok yakında buradayız"
+          data-en="Coming soon"
+          data-de="Bald sind wir da"
+        >
+          Çok yakında buradayız
+        </h2>
+
+        <div class="description">
+          <p
+            data-tr="Uşak merkezli dijital pazarlama ve influencer marketing ajansı Mes çok yakında burada!"
+            data-en="Mes, the Uşak-based digital marketing and influencer marketing agency, is coming soon!"
+            data-de="Mes, die Agentur für digitales Marketing und Influencer-Marketing aus Uşak, ist bald hier!"
+          >
+            Uşak merkezli dijital pazarlama ve influencer marketing ajansı Mes
+            çok yakında burada!
+          </p>
+          <p
+            data-tr="Bu sırada bize aşağıdaki kanallardan ulaşabilirsiniz."
+            data-en="In the meantime, you can reach us through the channels below."
+            data-de="In der Zwischenzeit erreichen Sie uns über die unten stehenden Kanäle."
+          >
+            Bu sırada bize aşağıdaki kanallardan ulaşabilirsiniz.
+          </p>
+        </div>
+
+        <ul class="services" aria-label="Hizmetler">
+          <li>
+            <svg
+              class="check-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span
+              data-tr="Dijital Pazarlama"
+              data-en="Digital Marketing"
+              data-de="Digitales Marketing"
+              >Dijital Pazarlama</span
+            >
+          </li>
+          <li>
+            <svg
+              class="check-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span
+              data-tr="Sosyal Medya"
+              data-en="Social Media"
+              data-de="Social Media"
+              >Sosyal Medya</span
+            >
+          </li>
+          <li>
+            <svg
+              class="check-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span
+              data-tr="Influencer Marketing"
+              data-en="Influencer Marketing"
+              data-de="Influencer-Marketing"
+              >Influencer Marketing</span
+            >
+          </li>
+          <li>
+            <svg
+              class="check-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span
+              data-tr="Web Tasarım"
+              data-en="Web Design"
+              data-de="Webdesign"
+              >Web Tasarım</span
+            >
+          </li>
+          <li>
+            <svg
+              class="check-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span
+              data-tr="Reklam Yönetimi"
+              data-en="Ad Management"
+              data-de="Anzeigenmanagement"
+              >Reklam Yönetimi</span
+            >
+          </li>
+        </ul>
+
+        <div
+          class="company-name"
+          data-tr="MES DİJİTAL"
+          data-en="MES DIGITAL"
+          data-de="MES DIGITAL"
+        >
+          MES DİJİTAL
+        </div>
+
+        <ul class="contact-list">
+          <li>
+            <svg
+              class="contact-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.38 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.61a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"
+              ></path>
+            </svg>
+            <a href="tel:+905394974327">+90 539 497 43 27</a>
+          </li>
+          <li>
+            <svg
+              class="contact-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+              ></path><polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            <a href="mailto:iletisim@mesdijital.com.tr"
+              >iletisim@mesdijital.com.tr</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var btn = document.getElementById("themeToggle");
+        if (!btn) return;
+        var root = document.documentElement;
+        function label() {
+          var light = root.getAttribute("data-theme") === "light";
+          var txt = light ? "Koyu temaya geç" : "Açık temaya geç";
+          btn.setAttribute("aria-label", txt);
+          btn.setAttribute("title", txt);
+        }
+        label();
+        btn.addEventListener("click", function () {
+          var next = root.getAttribute("data-theme") === "light" ? "dark" : "light";
+          root.setAttribute("data-theme", next);
+          try { localStorage.setItem("theme", next); } catch (e) {}
+          label();
+        });
+      })();
+    </script>
+  </body>
+</html>
