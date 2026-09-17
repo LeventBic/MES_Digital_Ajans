@@ -7,7 +7,12 @@
     <title>Mes Digital</title>
     <meta name="robots" content="noindex, nofollow" />
 
-    <link rel="icon" href="data:," />
+    <link rel="icon" href="favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
 
     <!-- Tema tercihi: ilk boyamada yanıp sönmeyi (FOUC) önlemek için stillerden önce. -->
     <script>
@@ -200,12 +205,10 @@
         margin-bottom: 1.5rem;
       }
 
-      .wordmark {
-        color: var(--brand);
-        font-weight: 600;
-        font-size: clamp(2.4rem, 7vw, 3.6rem);
-        line-height: 1;
-        letter-spacing: -0.02em;
+      .logo {
+        display: block;
+        width: clamp(180px, 40vw, 260px);
+        height: auto;
       }
 
       h2 {
@@ -366,10 +369,14 @@
 
       <div class="card">
         <div class="logo-wrap">
-          <div class="wordmark" aria-label="Mes Digital">
-            <span class="wordmark__main">Mes</span>
-            <span class="wordmark__sub">Digital</span>
-          </div>
+          <img
+            class="logo"
+            src="assets/maintenance/mes-logo.png"
+            alt="Mes Digital"
+            width="394"
+            height="200"
+            decoding="async"
+          />
         </div>
 
         <h2
