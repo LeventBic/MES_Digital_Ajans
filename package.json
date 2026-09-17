@@ -1,0 +1,21 @@
+{
+  "name": "mes-dijital",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "deploy": "npm run build && python3 scripts/deploy.py deploy",
+    "maintenance:on": "python3 scripts/deploy.py maintenance on",
+    "maintenance:off": "python3 scripts/deploy.py maintenance off",
+    "maintenance:status": "python3 scripts/deploy.py maintenance status"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "astro": "^7.3.3",
+    "typescript": "^6.0.3"
+  }
+}

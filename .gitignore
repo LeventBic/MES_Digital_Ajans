@@ -1,4 +1,8 @@
 .DS_Store
+node_modules/
+dist/
+.astro/
 
-# DEVARP sablonundan kalan, sayfada artik kullanilmayan varliklar (10 MB video dahil)
-assets/maintenance/
+# FTP bilgileri — asla commit'lenmez
+.env.deploy
+__pycache__/

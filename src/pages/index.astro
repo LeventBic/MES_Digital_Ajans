@@ -1,0 +1,24 @@
+---
+// Ana sayfa — YER TUTUCU. Gerçek tasarım burada yapılacak.
+// Canlıda bakım modu açık olduğu sürece bu sayfa ziyaretçiye gösterilmez;
+// yalnızca mes_preview=1 çerezi olan tarayıcı görür.
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+  title="Mes Dijital — Uşak merkezli dijital pazarlama ajansı"
+  description="Dijital pazarlama, influencer marketing, sosyal medya, reklam yönetimi ve web tasarım."
+>
+  <main class="wrap">
+    <img src="/assets/img/mes-logo.png" alt="Mes Dijital" width="394" height="200" class="logo" />
+    <h1>Ana sayfa yapım aşamasında</h1>
+    <p>Bu sayfa yalnızca önizleme çerezi olan tarayıcıda görünür. Ziyaretçiler bakım sayfasını görüyor.</p>
+  </main>
+</Base>
+
+<style>
+  .wrap { min-height: 100dvh; display: grid; place-content: center; text-align: center; padding: 2rem; }
+  .logo { width: min(60vw, 260px); margin: 0 auto 1.5rem; }
+  h1 { font-size: clamp(1.5rem, 4vw, 2.2rem); margin: 0 0 0.5rem; }
+  p { color: var(--muted); margin: 0; }
+</style>

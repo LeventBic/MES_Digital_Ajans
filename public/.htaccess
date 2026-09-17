@@ -1,0 +1,57 @@
+# Mes Dijital — mesdijital.com.tr
+# Bu dosya public/ içinde durur, `astro build` ile dist/ köküne kopyalanır
+# ve deploy ile public_html/.htaccess olur. Sunucuda elle düzenleme; burada
+# değiştir ve deploy et.
+
+Options -Indexes
+AddDefaultCharset utf-8
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# www → kök alan adı, http → https
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# ---- Bakım modu -------------------------------------------------------
+# public_html/.maintenance adında bir dosya VARSA her istek dahili olarak
+# maintenance.php'ye gider; o da 503 + Retry-After ile maintenance.html'i
+# basar (LiteSpeed rewrite 503'lerinde ErrorDocument'ı uygulamıyor, bu
+# yüzden PHP). Dosya yoksa bu blok hiçbir şey yapmaz.
+#   aç:    npm run maintenance:on      (dosyayı oluşturur)
+#   kapat: npm run maintenance:off     (dosyayı siler)
+# Bakım açıkken siteyi önizlemek için tarayıcıya mes_preview=1 çerezi koy
+# (adres çubuğu: javascript:document.cookie="mes_preview=1;path=/").
+RewriteCond %{DOCUMENT_ROOT}/.maintenance -f
+RewriteCond %{REQUEST_URI} !^/maintenance\.(html|php)$
+RewriteCond %{REQUEST_URI} !^/assets/
+RewriteCond %{REQUEST_URI} !^/(favicon[^/]*\.(ico|png)|apple-touch-icon\.png)$
+RewriteCond %{REQUEST_URI} !^/\.well-known/
+RewriteCond %{HTTP_COOKIE} !(^|;\s*)mes_preview=1
+RewriteRule ^ /maintenance.php [L]
+
+# Bakım bayrağının kendisi dışarıdan okunamasın
+RewriteRule ^\.maintenance$ - [F,L]
+
+</IfModule>
+
+ErrorDocument 404 /404.html
+
+<IfModule mod_headers.c>
+Header always set X-Content-Type-Options "nosniff"
+Header always set X-Frame-Options "SAMEORIGIN"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Önbellek: hash'li Astro varlıkları ve fontlar uzun, HTML kısa
+<IfModule mod_expires.c>
+ExpiresActive On
+<FilesMatch "\.(html)$">
+  ExpiresDefault "access plus 5 minutes"
+</FilesMatch>
+<FilesMatch "\.(woff2|png|ico|svg|jpg|webp|css|js)$">
+  ExpiresDefault "access plus 30 days"
+</FilesMatch>
+</IfModule>

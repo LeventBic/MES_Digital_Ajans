@@ -1,0 +1,28 @@
+/* Mes Dijital — global stil.
+   Tokenlar bakım sayfasıyla (public/maintenance.html) aynı: Eina 04 + #e51b26. */
+
+@font-face { font-family: "Eina 04"; font-weight: 300;     font-display: swap; src: url("/assets/fonts/eina04-light.woff2") format("woff2"); }
+@font-face { font-family: "Eina 04"; font-weight: 400 500; font-display: swap; src: url("/assets/fonts/eina04-regular.woff2") format("woff2"); }
+@font-face { font-family: "Eina 04"; font-weight: 600;     font-display: swap; src: url("/assets/fonts/eina04-semibold.woff2") format("woff2"); }
+@font-face { font-family: "Eina 04"; font-weight: 700 900; font-display: swap; src: url("/assets/fonts/eina04-bold.woff2") format("woff2"); }
+
+:root {
+  --font: "Eina 04", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --brand: #e51b26;
+  --brand-text: #c4141d;
+  --bg: #fcfbfb;
+  --bg-raised: #ffffff;
+  --text: #1a1a1a;
+  --muted: #5c5c5c;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.6;
+}
+img { max-width: 100%; height: auto; display: block; }
