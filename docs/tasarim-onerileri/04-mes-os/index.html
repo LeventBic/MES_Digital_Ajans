@@ -1,0 +1,941 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MES/OS — Mes Dijital</title>
+<meta name="description" content="Mes Dijital'in masaüstü: Uşak merkezli dijital pazarlama, sosyal medya, reklam, web tasarım ve influencer marketing ajansı.">
+<meta name="theme-color" content="#e51b26">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400;600&family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#e51b26; --red-d:#b8121b; --ink:#0a0a0a; --cream:#fffdf8; --paper:#f1ede4; --gray:#c9c3b6; --gray-d:#8d877b;
+  --px:"Pixelify Sans",monospace; --ui:"Geist",system-ui,sans-serif; --mono:"Geist Mono",ui-monospace,monospace;
+  --shadow:4px 4px 0 var(--ink);
+  --bar:30px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:var(--ui);font-size:15px;line-height:1.5;color:var(--ink);background:var(--red);overflow:hidden;-webkit-font-smoothing:antialiased;user-select:none;-webkit-user-select:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:2px dashed var(--ink);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+svg.pix{image-rendering:pixelated;shape-rendering:crispEdges}
+
+/* ───────── WALLPAPERS ───────── */
+#desk{position:fixed;inset:var(--bar) 0 0 0;overflow:hidden}
+#desk::before{
+  content:"";position:absolute;inset:0;
+  background-image:radial-gradient(rgba(10,10,10,.16) 1px,transparent 1.2px);
+  background-size:6px 6px;
+}
+.wall-logo{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-54%);
+  font-family:var(--px);font-weight:700;font-size:min(26vw,40vh);line-height:.8;letter-spacing:-.02em;
+  color:var(--red-d);white-space:nowrap;pointer-events:none;text-align:center
+}
+.wall-logo small{display:block;font-size:.12em;letter-spacing:.3em;margin-top:.4em;font-weight:500}
+body[data-wall="black"]{background:var(--ink)}
+body[data-wall="black"] .wall-logo{color:#1d1d1d}
+body[data-wall="black"] #desk::before{background-image:radial-gradient(rgba(229,27,38,.22) 1px,transparent 1.2px)}
+body[data-wall="black"] .icon span{color:var(--cream)}
+body[data-wall="paper"]{background:var(--paper)}
+body[data-wall="paper"] .wall-logo{color:#e3ddd0}
+body[data-wall="paper"] #desk::before{background-image:linear-gradient(rgba(10,10,10,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(10,10,10,.06) 1px,transparent 1px);background-size:24px 24px}
+
+/* ───────── MENU BAR ───────── */
+.menubar{
+  position:fixed;inset:0 0 auto 0;height:var(--bar);z-index:9000;
+  display:flex;align-items:center;gap:2px;padding:0 10px;
+  background:var(--cream);border-bottom:2px solid var(--ink);
+  font-family:var(--px);font-size:16px;
+}
+.menubar > .m{position:relative}
+.menubar > .m > button{height:var(--bar);padding:0 10px;display:flex;align-items:center;gap:6px}
+.menubar > .m > button[aria-expanded="true"]{background:var(--ink);color:var(--cream)}
+.menubar .brand{font-weight:700}
+.menubar .brand i{font-style:normal;color:var(--red)}
+.drop{position:absolute;left:0;top:calc(var(--bar) - 2px);min-width:230px;background:var(--cream);border:2px solid var(--ink);box-shadow:var(--shadow);padding:4px 0;display:none;font-family:var(--ui);font-size:14px}
+.m.open .drop{display:block}
+.drop button,.drop a{display:flex;justify-content:space-between;width:100%;padding:6px 14px;text-align:left;text-decoration:none}
+.drop button:hover,.drop a:hover,.drop button:focus-visible{background:var(--ink);color:var(--cream);outline:0}
+.drop hr{border:0;border-top:1px dotted var(--ink);margin:4px 0}
+.drop kbd{font-family:var(--mono);font-size:12px;opacity:.6}
+.menubar .sp{flex:1}
+.menubar .mstat{display:flex;align-items:center;gap:16px;font-size:15px;padding-right:4px}
+.led{display:inline-block;width:8px;height:8px;background:var(--red);margin-right:6px;animation:blink 1.2s steps(1) infinite}
+@keyframes blink{50%{opacity:.2}}
+
+/* ───────── ICONS ───────── */
+.icons{position:absolute;top:18px;left:18px;right:18px;bottom:18px;pointer-events:none;display:grid;grid-auto-flow:column;grid-template-rows:repeat(auto-fill,104px);gap:6px 10px;align-content:start}
+.icon{pointer-events:auto;width:100px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 2px;text-align:center}
+.icon svg{width:48px;height:48px;filter:drop-shadow(2px 2px 0 rgba(10,10,10,.35))}
+.icon span{font-family:var(--px);font-size:15px;line-height:1.1;padding:1px 4px;color:var(--cream);text-shadow:1px 1px 0 var(--ink)}
+body[data-wall="paper"] .icon span{color:var(--ink);text-shadow:none}
+.icon.sel span,.icon:focus-visible span{background:var(--ink);color:var(--cream);text-shadow:none}
+.icon:focus-visible{outline:0}
+.icon.trash{position:absolute;right:18px;bottom:18px}
+
+/* ───────── WINDOWS ───────── */
+.win{
+  position:absolute;display:none;flex-direction:column;
+  background:var(--cream);border:2px solid var(--ink);box-shadow:var(--shadow);
+  min-width:300px;max-width:calc(100vw - 24px);max-height:calc(100% - 24px);
+  user-select:text;-webkit-user-select:text;
+}
+.win.open{display:flex}
+.win.max{left:8px!important;top:8px!important;width:calc(100% - 16px)!important;height:calc(100% - 16px)!important;max-height:none}
+.tb{
+  flex:none;height:30px;display:flex;align-items:center;gap:8px;padding:0 6px;border-bottom:2px solid var(--ink);
+  cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;
+  background:var(--cream);
+}
+.win.front .tb{background:repeating-linear-gradient(var(--ink) 0 1.5px,transparent 1.5px 4px) 0 7px/100% 14px no-repeat,var(--cream)}
+.tb h2{margin:0 auto;padding:0 10px;background:var(--cream);font-family:var(--px);font-weight:600;font-size:16px;line-height:30px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb button{flex:none;width:18px;height:18px;border:2px solid var(--ink);background:var(--cream);position:relative}
+.tb .close:hover{background:var(--red)}
+.tb .close::after{content:"";position:absolute;inset:3px;border:0}
+.tb .maxb::after{content:"";position:absolute;inset:2px 5px 5px 2px;border:1.5px solid var(--ink)}
+.tb .back{display:none}
+.wbody{flex:1;overflow:auto;overscroll-behavior:contain}
+.status{flex:none;display:flex;justify-content:space-between;gap:12px;padding:4px 10px;border-top:2px solid var(--ink);font-family:var(--mono);font-size:11px;background:var(--paper)}
+.grip{width:14px;height:14px;background:linear-gradient(135deg,transparent 45%,var(--ink) 45% 55%,transparent 55% 70%,var(--ink) 70% 80%,transparent 80%);cursor:nwse-resize;align-self:flex-end;touch-action:none}
+.zoomrect{position:fixed;border:2px dashed var(--ink);z-index:8999;pointer-events:none}
+
+/* buttons inside windows */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:38px;padding:0 16px;border:2px solid var(--ink);background:var(--cream);box-shadow:2px 2px 0 var(--ink);font-family:var(--px);font-size:16px;text-decoration:none;border-radius:6px}
+.btn:active{transform:translate(2px,2px);box-shadow:none}
+.btn.pri{background:var(--red);color:var(--cream);text-shadow:1px 1px 0 var(--ink)}
+.btn.pri:hover{background:var(--ink);color:var(--cream);text-shadow:none}
+.btn:hover{background:var(--ink);color:var(--cream)}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+
+/* ── Welcome ── */
+.welcome{padding:26px 26px 22px}
+.welcome h1{margin:0 0 6px;font-family:var(--px);font-weight:700;font-size:clamp(46px,6.4vw,84px);line-height:.9;letter-spacing:-.01em}
+.welcome h1 i{font-style:normal;color:var(--red)}
+.welcome p{margin:12px 0 18px;font-size:17px;max-width:44ch;line-height:1.45}
+.welcome .lead{font-size:19px;font-weight:500}
+.sys{margin-top:20px;border-top:1.5px dotted var(--ink);padding-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;font-family:var(--mono);font-size:12px}
+.sys b{font-weight:600}
+.ok{color:#11884a}
+
+/* ── Finder (services) ── */
+.finder{display:grid;grid-template-columns:230px 1fr;min-height:100%}
+.finder ul{list-style:none;margin:0;padding:6px;border-right:2px solid var(--ink);background:var(--paper)}
+.finder li button{display:flex;align-items:center;gap:10px;width:100%;padding:7px 8px;text-align:left;font-size:14px}
+.finder li button svg{width:22px;height:22px;flex:none}
+.finder li button[aria-selected="true"]{background:var(--ink);color:var(--cream)}
+.finder .detail{padding:22px 24px}
+.detail .kind{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-d)}
+.detail h3{margin:6px 0 10px;font-family:var(--px);font-weight:700;font-size:40px;line-height:.95}
+.detail p{margin:0 0 16px;font-size:16px;max-width:46ch}
+.detail dl{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin:0 0 18px;font-size:14px;border-top:1.5px dotted var(--ink);padding-top:12px}
+.detail dt{font-family:var(--mono);font-size:12px;color:var(--gray-d)}
+.detail dd{margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.chip{font-family:var(--mono);font-size:11px;border:1.5px solid var(--ink);padding:2px 8px;border-radius:99px;text-transform:uppercase}
+
+/* ── Viewer (works) ── */
+.viewer{display:flex;flex-direction:column;height:100%}
+.stage{position:relative;background:var(--ink);aspect-ratio:16/10;flex:none}
+.stage svg{position:absolute;inset:0;width:100%;height:100%}
+.stage .lbl{position:absolute;left:10px;top:10px;background:var(--cream);font-family:var(--mono);font-size:11px;padding:3px 7px;border:1.5px solid var(--ink)}
+.stage .num{position:absolute;right:10px;bottom:8px;font-family:var(--px);font-weight:700;font-size:clamp(34px,5vw,64px);line-height:1;color:var(--cream);text-shadow:3px 3px 0 var(--ink)}
+.cap{padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:8px 14px;align-items:start}
+.cap h3{margin:0;font-family:var(--px);font-size:24px;line-height:1.05}
+.cap p{margin:0;grid-column:1/-1;font-size:14px;max-width:60ch}
+.thumbs{display:flex;gap:8px;padding:0 16px 14px;overflow-x:auto}
+.thumbs button{flex:none;width:84px;aspect-ratio:16/10;border:2px solid var(--ink);position:relative;overflow:hidden;opacity:.55}
+.thumbs button[aria-current="true"]{opacity:1;box-shadow:2px 2px 0 var(--red)}
+.thumbs svg{width:100%;height:100%}
+
+/* ── List view (creators) ── */
+.list{width:100%;border-collapse:collapse;font-size:14px}
+.list th{position:sticky;top:0;background:var(--paper);text-align:left;font-weight:500;font-family:var(--mono);font-size:11px;text-transform:uppercase;border-bottom:2px solid var(--ink);padding:0}
+.list th button{width:100%;padding:8px 12px;text-align:left;display:flex;justify-content:space-between;gap:8px}
+.list th button:hover{background:var(--ink);color:var(--cream)}
+.list td{padding:8px 12px;border-bottom:1px dotted var(--gray-d);white-space:nowrap}
+.list tr:nth-child(even) td{background:rgba(10,10,10,.03)}
+.list tbody tr:hover td{background:var(--red);color:var(--cream)}
+.list td:first-child{display:flex;align-items:center;gap:8px;font-weight:600}
+.list td:first-child svg{width:18px;height:18px}
+
+/* ── Notepad ── */
+.note{margin:0;padding:22px 24px 30px;font-family:var(--mono);font-size:14px;line-height:1.75;white-space:pre-wrap;background:
+  repeating-linear-gradient(var(--cream) 0 calc(1.75em - 1px),rgba(229,27,38,.18) calc(1.75em - 1px) 1.75em);background-position:0 22px}
+.note b{background:var(--red);color:var(--cream);font-weight:600;padding:0 3px}
+.caret{display:inline-block;width:.6em;height:1.1em;vertical-align:-3px;background:var(--ink);animation:blink 1s steps(1) infinite}
+
+/* ── Terminal ── */
+.term{background:var(--ink);color:#f3efe6;font-family:var(--mono);font-size:13.5px;line-height:1.55;padding:14px 16px;min-height:100%;cursor:text}
+.term .out{white-space:pre-wrap;word-break:break-word}
+.term .r{color:var(--red)} .term .g{color:#6fe39a} .term .d{color:#8f8a80}
+.term .in{display:flex;gap:8px}
+.term input{flex:1;min-width:0;background:none;border:0;outline:0;color:inherit;font:inherit;caret-color:var(--red)}
+.term a{color:#6fe39a}
+
+/* ── Wizard ── */
+.wiz{display:grid;grid-template-columns:170px 1fr;min-height:100%}
+.wiz aside{background:var(--red);color:var(--cream);padding:16px 14px;border-right:2px solid var(--ink);display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+.wiz aside ol{margin:0;padding:0;list-style:none;font-family:var(--px);font-size:15px;display:flex;flex-direction:column;gap:6px}
+.wiz aside li{opacity:.55}
+.wiz aside li.on{opacity:1}
+.wiz aside li.on::before{content:"▸ "}
+.wiz aside .disk{font-family:var(--px);font-size:34px;line-height:.9;font-weight:700;text-shadow:2px 2px 0 var(--ink)}
+.wiz .pane{padding:20px 22px;display:flex;flex-direction:column;gap:14px}
+.wiz h3{margin:0;font-family:var(--px);font-size:26px;line-height:1.05}
+.wiz p{margin:0;font-size:15px}
+.wiz fieldset{border:1.5px dotted var(--ink);margin:0;padding:10px 12px;display:grid;gap:6px}
+.wiz legend{font-family:var(--mono);font-size:11px;text-transform:uppercase;padding:0 6px}
+.wiz label{display:flex;gap:10px;align-items:center;font-size:15px;cursor:pointer}
+.wiz input[type=checkbox],.wiz input[type=radio]{appearance:none;width:18px;height:18px;border:2px solid var(--ink);background:var(--cream);margin:0;flex:none;display:grid;place-items:center}
+.wiz input[type=radio]{border-radius:50%}
+.wiz input:checked::after{content:"";width:8px;height:8px;background:var(--red)}
+.wiz input[type=radio]:checked::after{border-radius:50%}
+.wiz .field{display:grid;gap:4px}
+.wiz .field span{font-family:var(--mono);font-size:11px;text-transform:uppercase}
+.wiz .field input{height:38px;border:2px solid var(--ink);background:#fff;padding:0 10px;font:inherit;font-size:15px}
+.wiz .nav{display:flex;justify-content:flex-end;gap:10px;margin-top:auto;padding-top:10px;border-top:1.5px dotted var(--ink)}
+.bar{height:22px;border:2px solid var(--ink);background:#fff;padding:2px}
+.bar i{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,var(--red) 0 10px,transparent 10px 12px);transition:width .2s steps(8)}
+.log{font-family:var(--mono);font-size:12px;min-height:5.5em;white-space:pre-line}
+
+/* ── Contact ── */
+.contact{padding:20px 22px}
+.card{border:2px solid var(--ink);box-shadow:3px 3px 0 var(--red);padding:18px;background:#fff}
+.card h3{margin:0 0 2px;font-family:var(--px);font-size:30px;line-height:1}
+.card .sub{font-family:var(--mono);font-size:11px;text-transform:uppercase;color:var(--gray-d)}
+.card dl{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;margin:16px 0 0;font-size:15px}
+.card dt{font-family:var(--mono);font-size:11px;text-transform:uppercase;padding-top:3px}
+.card dd{margin:0}
+.card a{text-decoration-thickness:1.5px;text-underline-offset:3px}
+
+/* ── Trash ── */
+.trashwin{padding:14px}
+.trashwin .warn{display:flex;gap:10px;align-items:flex-start;font-size:14px;border:1.5px dotted var(--ink);padding:10px 12px;margin-bottom:12px}
+.files{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.file{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;font-size:12px;padding:8px 4px;word-break:break-word;opacity:.8}
+.file svg{width:36px;height:36px}
+.file s{text-decoration-color:var(--red);text-decoration-thickness:2px}
+.file em{font-style:normal;font-family:var(--mono);font-size:10px;color:var(--red)}
+
+/* ── Dialog ── */
+.about{padding:22px;text-align:center}
+.about .logo{font-family:var(--px);font-weight:700;font-size:54px;line-height:.9}
+.about .logo i{font-style:normal;color:var(--red)}
+.about p{font-size:13px;margin:10px 0 0;font-family:var(--mono)}
+
+/* ───────── BOOT ───────── */
+.boot{position:fixed;inset:0;z-index:10000;background:var(--ink);color:var(--cream);display:grid;place-items:center;font-family:var(--mono);font-size:13px;cursor:pointer;transition:opacity .4s}
+.boot.done{opacity:0;pointer-events:none}
+.boot .inner{width:min(420px,84vw);display:grid;gap:16px}
+.boot .logo{font-family:var(--px);font-weight:700;font-size:64px;line-height:.9}
+.boot .logo i{font-style:normal;color:var(--red)}
+.boot .bar{border-color:var(--cream);background:none}
+.boot pre{margin:0;white-space:pre-line;min-height:6.5em;color:#bdb7aa}
+.boot small{color:#6d685f}
+
+/* ───────── DOCK (mobile) ───────── */
+.dock{display:none}
+
+/* ───────── MOBILE: phone home screen ───────── */
+@media (max-width:760px){
+  :root{--bar:34px}
+  body{overflow:hidden}
+  .menubar{justify-content:space-between;background:var(--ink);color:var(--cream);border:0;font-size:15px;padding:0 16px}
+  .menubar .m:not(.first){display:none}
+  .menubar .m.first > button{padding:0}
+  .menubar .mstat .hide-m{display:none}
+  .icons{position:absolute;inset:22px 16px 110px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:none;grid-auto-flow:row;gap:18px 6px;justify-items:center;align-content:start}
+  .icon{width:78px;padding:0}
+  .icon svg{width:56px;height:56px;background:var(--cream);border:2px solid var(--ink);border-radius:14px;padding:8px;box-shadow:2px 2px 0 var(--ink);filter:none}
+  .icon span{font-size:13px;text-shadow:none;color:var(--cream)}
+  body[data-wall="paper"] .icon span{color:var(--ink)}
+  .icon.trash{position:static}
+  .wall-logo{font-size:29vw;top:60%}
+  .dock{display:flex;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:50;justify-content:space-around;padding:10px;background:rgba(255,253,248,.9);border:2px solid var(--ink);border-radius:22px;box-shadow:var(--shadow)}
+  .dock .icon svg{width:52px;height:52px;box-shadow:none}
+  .dock .icon span{display:none}
+  .win{position:fixed!important;left:0!important;top:var(--bar)!important;width:100%!important;height:calc(100% - var(--bar))!important;max-width:none;max-height:none;border:0;box-shadow:none;z-index:100}
+  .win.open{animation:sheet .38s cubic-bezier(.2,.8,.2,1);z-index:200!important}
+  .win.front{z-index:300!important}
+  @keyframes sheet{from{transform:translateY(100%)}to{transform:none}}
+  .tb{height:48px;cursor:default;background:var(--cream)!important}
+  .tb h2{font-size:18px;line-height:48px}
+  .tb .close,.tb .maxb{display:none}
+  .tb .back{display:flex;align-items:center;gap:4px;width:auto;height:34px;border:2px solid var(--ink);padding:0 10px;font-family:var(--px);font-size:15px;border-radius:8px}
+  .grip{display:none}
+  .finder,.wiz{grid-template-columns:1fr}
+  .finder ul{border-right:0;border-bottom:2px solid var(--ink);display:flex;overflow-x:auto;gap:4px}
+  .finder li button{white-space:nowrap}
+  .wiz aside{flex-direction:row;align-items:center;border-right:0;border-bottom:2px solid var(--ink);padding:10px 14px}
+  .wiz aside ol{flex-direction:row;gap:10px;font-size:13px;overflow-x:auto}
+  .wiz aside .disk{display:none}
+  .sys{grid-template-columns:1fr}
+  .list .hm{display:none}
+  .detail h3{font-size:34px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<noscript><style>body{overflow:auto}.boot{display:none}#desk{position:static}.win{display:flex;position:static;margin:16px;max-height:none}</style></noscript>
+</head>
+<body data-wall="red">
+
+<!-- BOOT -->
+<div class="boot" id="boot" role="status" aria-live="polite">
+  <div class="inner">
+    <div class="logo">MES<i>/</i>OS</div>
+    <div class="bar"><i id="bootBar"></i></div>
+    <pre id="bootLog"></pre>
+    <small>Atlamak için dokunun</small>
+  </div>
+</div>
+
+<!-- MENU BAR -->
+<nav class="menubar" aria-label="Menü çubuğu">
+  <div class="m first">
+    <button class="brand" aria-haspopup="true" aria-expanded="false">◆ MES<i>/</i>OS</button>
+    <div class="drop" role="menu">
+      <button role="menuitem" data-open="about">MES/OS hakkında</button>
+      <hr>
+      <button role="menuitem" data-open="hosgeldin">Hoş geldiniz</button>
+      <button role="menuitem" data-open="sihirbaz">Teklif Sihirbazı <kbd>⌘T</kbd></button>
+      <button role="menuitem" data-open="terminal">Terminal <kbd>⌘K</kbd></button>
+      <hr>
+      <a role="menuitem" href="mailto:iletisim@mesdijital.com.tr">E-posta gönder</a>
+    </div>
+  </div>
+  <div class="m">
+    <button aria-haspopup="true" aria-expanded="false">Dosya</button>
+    <div class="drop" role="menu">
+      <button role="menuitem" data-open="sihirbaz">Yeni teklif…</button>
+      <button role="menuitem" data-open="manifesto">manifesto.txt aç</button>
+      <hr>
+      <button role="menuitem" data-act="closeall">Tüm pencereleri kapat</button>
+    </div>
+  </div>
+  <div class="m">
+    <button aria-haspopup="true" aria-expanded="false">Görünüm</button>
+    <div class="drop" role="menu">
+      <button role="menuitem" data-act="wall">Duvar kâğıdını değiştir</button>
+      <button role="menuitem" data-act="tile">Pencereleri diz</button>
+    </div>
+  </div>
+  <div class="m">
+    <button aria-haspopup="true" aria-expanded="false">Git</button>
+    <div class="drop" role="menu">
+      <button role="menuitem" data-open="hizmetler">Hizmetler</button>
+      <button role="menuitem" data-open="isler">İşler</button>
+      <button role="menuitem" data-open="kreator">Kreatör Ağı</button>
+      <button role="menuitem" data-open="iletisim">İletişim</button>
+    </div>
+  </div>
+  <div class="sp"></div>
+  <div class="mstat">
+    <span class="hide-m"><span class="led"></span>Yeni projelere açık</span>
+    <span class="hide-m">Uşak</span>
+    <span id="clock">--:--</span>
+  </div>
+</nav>
+
+<main id="desk">
+  <div class="wall-logo" aria-hidden="true">MES/OS<small>DİJİTAL PAZARLAMA · UŞAK</small></div>
+
+  <div class="icons" id="icons" role="toolbar" aria-label="Masaüstü simgeleri">
+    <button class="icon" data-open="hosgeldin" data-ic="star"><span>Hoş geldiniz</span></button>
+    <button class="icon" data-open="hizmetler" data-ic="folder"><span>Hizmetler</span></button>
+    <button class="icon" data-open="isler" data-ic="image"><span>İşler</span></button>
+    <button class="icon" data-open="kreator" data-ic="people"><span>Kreatör Ağı</span></button>
+    <button class="icon" data-open="manifesto" data-ic="doc"><span>manifesto.txt</span></button>
+    <button class="icon" data-open="terminal" data-ic="term"><span>Terminal</span></button>
+    <button class="icon" data-open="sihirbaz" data-ic="disk"><span>Teklif Sihirbazı</span></button>
+    <button class="icon" data-open="iletisim" data-ic="mail"><span>İletişim</span></button>
+    <button class="icon trash" data-open="cop" data-ic="trash"><span>Çöp Kutusu</span></button>
+  </div>
+
+  <!-- WELCOME -->
+  <section class="win" id="w-hosgeldin" data-w="600" data-x=".30" data-y=".08" role="dialog" aria-labelledby="t-hosgeldin">
+    <header class="tb"><button class="back" data-close>‹ Ana ekran</button><button class="close" data-close aria-label="Kapat"></button><h2 id="t-hosgeldin">Hoş geldiniz</h2><button class="maxb" data-max aria-label="Büyüt"></button></header>
+    <div class="wbody">
+      <div class="welcome">
+        <h1>Merhaba<i>.</i></h1>
+        <p class="lead">Burası Mes Dijital'in masaüstü. Uşak merkezli bir dijital pazarlama ve kreatör ajansıyız.</p>
+        <p>Markanız için sosyal medyayı, reklamı, web sitesini ve kreatör iş birliklerini tek bir sistemde, birbiriyle uyumlu çalışacak şekilde kuruyoruz. Simgeleri açarak gezinin. Masaüstünde çift tıklayın, telefonda dokunun.</p>
+        <div class="row">
+          <button class="btn pri" data-open="sihirbaz">Teklif Sihirbazı</button>
+          <button class="btn" data-open="hizmetler">Hizmetler</button>
+          <button class="btn" data-open="terminal">&gt;_ Terminal</button>
+        </div>
+        <div class="sys">
+          <span>Kreatör ağı: <b class="ok">çevrimiçi</b></span>
+          <span>Yeni projeler: <b class="ok">açık</b></span>
+          <span>Konum: <b>Uşak, TR</b></span>
+          <span>Oturum: <b id="uptime">00:00</b></span>
+        </div>
+      </div>
+    </div>
+    <footer class="status"><span>MES/OS 1.0</span><span>9 öğe masaüstünde</span></footer>
+  </section>
+
+  <!-- SERVICES (Finder) -->
+  <section class="win" id="w-hizmetler" data-w="760" data-h="480" data-x=".22" data-y=".14" role="dialog" aria-labelledby="t-hizmetler">
+    <header class="tb"><button class="back" data-close>‹ Ana ekran</button><button class="close" data-close aria-label="Kapat"></button><h2 id="t-hizmetler">Hizmetler</h2><button class="maxb" data-max aria-label="Büyüt"></button></header>
+    <div class="wbody">
+      <div class="finder">
+        <ul role="tablist" aria-label="Hizmet dosyaları" id="svcList"></ul>
+        <div class="detail" id="svcDetail" role="tabpanel"></div>
+      </div>
+    </div>
+    <footer class="status"><span>5 öğe</span><span>Tek ekip · tek rapor</span></footer>
+  </section>
+
+  <!-- WORKS (Viewer) -->
+  <section class="win" id="w-isler" data-w="680" data-x=".38" data-y=".06" role="dialog" aria-labelledby="t-isler">
+    <header class="tb"><button class="back" data-close>‹ Ana ekran</button><button class="close" data-close aria-label="Kapat"></button><h2 id="t-isler">İşler — Önizleme</h2><button class="maxb" data-max aria-label="Büyüt"></button></header>
+    <div class="wbody">
+      <div class="viewer">
+        <div class="stage" id="stage"></div>
+        <div class="cap" id="cap"></div>
+        <div class="thumbs" id="thumbs" role="tablist" aria-label="İş seç"></div>
+      </div>
+    </div>
+    <footer class="status"><span id="workIdx">1 / 4</span><span>Örnek içerik — gerçek vakalarla değiştirilecek</span></footer>
+  </section>
+
+  <!-- CREATORS (List) -->
+  <section class="win" id="w-kreator" data-w="700" data-h="420" data-x=".26" data-y=".3" role="dialog" aria-labelledby="t-kreator">
+    <header class="tb"><button class="back" data-close>‹ Ana ekran</button><button class="close" data-close aria-label="Kapat"></button><h2 id="t-kreator">Kreatör Ağı</h2><button class="maxb" data-max aria-label="Büyüt"></button></header>
+    <div class="wbody">
+      <table class="list" id="list">
+        <thead><tr>
+          <th><button data-sort="0">Kategori <span>↕</span></button></th>
+          <th><button data-sort="1">Ölçek <span>↕</span></button></th>
+          <th class="hm"><button data-sort="2">Platform <span>↕</span></button></th>
+          <th class="hm"><button data-sort="3">Uygun iş <span>↕</span></button></th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <footer class="status"><span>9 profil türü</span><span>Uşak · Denizli · Afyon · Kütahya · Manisa · İzmir</span></footer>
+  </section>
+
+  <!-- MANIFESTO (Notepad) -->
+  <section class="win" id="w-manifesto" data-w="540" data-h="520" data-x=".5" data-y=".1" role="dialog" aria-labelledby="t-manifesto">
+    <header class="tb"><button class="back" data-close>‹ Ana ekran</button><button class="close" data-close aria-label="Kapat"></button><h2 id="t-manifesto">manifesto.txt</h2><button class="maxb" data-max aria-label="Büyüt"></button></header>
+    <div class="wbody">
+<pre class="note">MES DİJİTAL — MANİFESTO
+======================
+
+1. Görünmek yetmez. <b>Hatırlanmak</b> gerekir.
+
+2. Takipçi satın almayız.
+   Etkileşim üretiriz.
+
+3. Her kampanyaya başlamadan önce
+   neyi ölçeceğimizi yazarız.
+
+4. Küçük şehir, küçük fikir demek değildir.
+   Uşak'tan çıkan bir içerik
+   Türkiye'nin akışına düşebilir.
+
+5. Kreatörler reklam panosu değildir.
+   Onlarla ortak gibi çalışırız.
+
+6. Rapor günü sürpriz olmaz.
+   Rakamlar her hafta masadadır.
+
+7. Tek muhatap, tek takvim, tek hikâye.
+
+— Uşak, 2026<span class="caret"></span></pre>
+    </div>
+    <footer class="status"><span>UTF-8 · Satır 24</span><span>Salt okunur</span></footer>
+  </section>
+
+  <!-- TERMINAL -->
+  <section class="win" id="w-terminal" data-w="620" data-h="400" data-x=".42" data-y=".36" role="dialog" aria-labelledby="t-terminal">
+    <header class="tb"><button class="back" data-close>‹ Ana ekran</button><button class="close" data-close aria-label="Kapat"></button><h2 id="t-terminal">Terminal — misafir@mes-os</h2><button class="maxb" data-max aria-label="Büyüt"></button></header>
+    <div class="wbody" style="background:var(--ink)">
+      <div class="term" id="term">
+        <div class="out" id="tout"></div>
+        <label class="in"><span class="r">misafir@mes-os</span><span class="d">~$</span><input id="tin" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Komut yazın"></label>
+      </div>
+    </div>
+    <div class="grip" aria-hidden="true"></div>
+  </section>
+
+  <!-- WIZARD -->
+  <section class="win" id="w-sihirbaz" data-w="640" data-h="470" data-x=".3" data-y=".12" role="dialog" aria-labelledby="t-sihirbaz">
+    <header class="tb"><button class="back" data-close>‹ Ana ekran</button><button class="close" data-close aria-label="Kapat"></button><h2 id="t-sihirbaz">Teklif Sihirbazı</h2><button class="maxb" data-max aria-label="Büyüt"></button></header>
+    <div class="wbody">
+      <form class="wiz" id="wiz" novalidate>
+        <aside>
+          <ol id="wizSteps"><li class="on">Başlangıç</li><li>Hizmetler</li><li>Bütçe</li><li>Bilgiler</li><li>Kurulum</li></ol>
+          <div class="disk">Teklif<br>1.0</div>
+        </aside>
+        <div class="pane">
+          <div class="page" data-p="0">
+            <h3>Teklif Sihirbazı'na hoş geldiniz.</h3>
+            <p style="margin-top:10px">Bu sihirbaz markanız için doğru paketi yaklaşık bir dakikada hazırlar. Sonunda her şey tek bir e-postada toplanır; gönder tuşuna siz basarsınız.</p>
+            <p style="margin-top:10px;font-family:var(--mono);font-size:12px">Gereken alan: 1 dakika · Gereken bellek: biraz merak</p>
+          </div>
+          <div class="page" data-p="1" hidden>
+            <h3>Hangi bileşenler kurulsun?</h3>
+            <fieldset><legend>Hizmetler</legend>
+              <label><input type="checkbox" name="svc" value="Sosyal medya yönetimi" checked> Sosyal medya yönetimi</label>
+              <label><input type="checkbox" name="svc" value="Influencer marketing"> Influencer marketing</label>
+              <label><input type="checkbox" name="svc" value="Reklam yönetimi"> Reklam yönetimi (Meta, Google, TikTok)</label>
+              <label><input type="checkbox" name="svc" value="Web tasarım"> Web tasarım</label>
+              <label><input type="checkbox" name="svc" value="Dijital strateji"> Dijital strateji</label>
+            </fieldset>
+          </div>
+          <div class="page" data-p="2" hidden>
+            <h3>Bütçe ve zamanlama</h3>
+            <fieldset><legend>Aylık bütçe</legend>
+              <label><input type="radio" name="budget" value="₺15 bin altı"> ₺15 bin altı</label>
+              <label><input type="radio" name="budget" value="₺15–50 bin" checked> ₺15–50 bin</label>
+              <label><input type="radio" name="budget" value="₺50–150 bin"> ₺50–150 bin</label>
+              <label><input type="radio" name="budget" value="₺150 bin üzeri"> ₺150 bin üzeri</label>
+              <label><input type="radio" name="budget" value="Henüz bilmiyorum"> Henüz bilmiyorum</label>
+            </fieldset>
+            <fieldset><legend>Ne zaman?</legend>
+              <label><input type="radio" name="when" value="Hemen" checked> Hemen</label>
+              <label><input type="radio" name="when" value="1 ay içinde"> Bir ay içinde</label>
+              <label><input type="radio" name="when" value="Sadece bakıyorum"> Sadece bakıyorum</label>
+            </fieldset>
+          </div>
+          <div class="page" data-p="3" hidden>
+            <h3>Kurulum bilgileri</h3>
+            <label class="field"><span>Adınız</span><input name="name" autocomplete="name" required></label>
+            <label class="field"><span>Marka / işletme</span><input name="brand" autocomplete="organization"></label>
+            <label class="field"><span>E-posta veya telefon</span><input name="reach" autocomplete="email" required></label>
+          </div>
+          <div class="page" data-p="4" hidden>
+            <h3 id="instTitle">Kuruluyor…</h3>
+            <div class="bar"><i id="instBar"></i></div>
+            <div class="log" id="instLog"></div>
+            <div class="row" id="instDone" hidden>
+              <a class="btn pri" id="mailGo" href="#">E-postayı gönder</a>
+              <a class="btn" id="waGo" href="#" target="_blank" rel="noopener">WhatsApp'tan gönder</a>
+            </div>
+          </div>
+          <div class="nav">
+            <button type="button" class="btn" id="wizBack" disabled>‹ Geri</button>
+            <button type="button" class="btn pri" id="wizNext">İleri ›</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="win" id="w-iletisim" data-w="440" data-x=".56" data-y=".22" role="dialog" aria-labelledby="t-iletisim">
+    <header class="tb"><button class="back" data-close>‹ Ana ekran</button><button class="close" data-close aria-label="Kapat"></button><h2 id="t-iletisim">İletişim</h2><button class="maxb" data-max aria-label="Büyüt"></button></header>
+    <div class="wbody">
+      <div class="contact">
+        <div class="card">
+          <div class="sub">Kartvizit · vCard 1.0</div>
+          <h3>Mes Dijital</h3>
+          <div class="sub">Dijital pazarlama &amp; kreatör ajansı</div>
+          <dl>
+            <dt>E-posta</dt><dd><a href="mailto:iletisim@mesdijital.com.tr">iletisim@mesdijital.com.tr</a></dd>
+            <dt>Telefon</dt><dd><a href="tel:+905394974327">+90 539 497 43 27</a></dd>
+            <dt>WhatsApp</dt><dd><a href="https://wa.me/905394974327" target="_blank" rel="noopener">Mesaj gönderin</a></dd>
+            <dt>Adres</dt><dd><a href="https://maps.google.com/?q=Namık+Kemal+Cad.+9C+Uşak" target="_blank" rel="noopener">Cumhuriyet Mah., Namık Kemal Cad. No: 9C, Uşak</a></dd>
+          </dl>
+        </div>
+        <div class="row" style="margin-top:16px"><button class="btn pri" data-open="sihirbaz">Teklif Sihirbazı</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRASH -->
+  <section class="win" id="w-cop" data-w="560" data-x=".4" data-y=".4" role="dialog" aria-labelledby="t-cop">
+    <header class="tb"><button class="back" data-close>‹ Ana ekran</button><button class="close" data-close aria-label="Kapat"></button><h2 id="t-cop">Çöp Kutusu</h2><button class="maxb" data-max aria-label="Büyüt"></button></header>
+    <div class="wbody">
+      <div class="trashwin">
+        <div class="warn"><span style="font-family:var(--px);font-size:20px;line-height:1">!</span><span>Sektörde hâlâ yaygın olan ama bizde çöpte duran şeyler. Geri yüklenemez.</span></div>
+        <div class="files" id="files"></div>
+      </div>
+    </div>
+    <footer class="status"><span>6 öğe</span><span>Hiç kullanılmadı</span></footer>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="win" id="w-about" data-w="360" data-x=".4" data-y=".2" role="dialog" aria-labelledby="t-about">
+    <header class="tb"><button class="back" data-close>‹ Ana ekran</button><button class="close" data-close aria-label="Kapat"></button><h2 id="t-about">Hakkında</h2></header>
+    <div class="wbody">
+      <div class="about">
+        <div class="logo">MES<i>/</i>OS</div>
+        <p>Sürüm 1.0 · Uşak'ta derlendi<br>Dizgi: Pixelify Sans, Geist, Geist Mono<br>© 2026 Mes Dijital Reklam Ajansı</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="dock" aria-label="Dock">
+    <button class="icon" data-open="hizmetler" data-ic="folder"><span>Hizmetler</span></button>
+    <button class="icon" data-open="sihirbaz" data-ic="disk"><span>Teklif</span></button>
+    <button class="icon" data-open="terminal" data-ic="term"><span>Terminal</span></button>
+    <button class="icon" data-open="iletisim" data-ic="mail"><span>İletişim</span></button>
+  </div>
+</main>
+
+<script>
+(() => {
+  const $ = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+  const mobile = () => matchMedia('(max-width:760px)').matches;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ───── Pixel icons ───── */
+  const PAL = {k:'#0a0a0a', w:'#fffdf8', r:'#e51b26', g:'#bdb7aa'};
+  const MAPS = {
+    folder:['................','................','.kkkkk..........','.kwwwwk.........','.kwwwwwkkkkkkkk.','.kwwwwwwwwwwwwk.','.kkkkkkkkkkkkkk.','.kwwwwwwwwwwwwk.','.kwwwwwwwwwwwwk.','.kwwwwwwwwwwwwk.','.kwwwwwwwwwwrrk.','.kwwwwwwwwwwrrk.','.kwwwwwwwwwwwwk.','.kkkkkkkkkkkkkk.','................','................'],
+    doc:['..kkkkkkkkk.....','..kwwwwwwwkk....','..kwwwwwwwkwk...','..kwkkkkkwkkkk..','..kwwwwwwwwwwk..','..kwkkkkkkkkwk..','..kwwwwwwwwwwk..','..kwkkkkkkkkwk..','..kwwwwwwwwwwk..','..kwkkkkkkwwwk..','..kwwwwwwwwwwk..','..kwrrrrrwwwwk..','..kwwwwwwwwwwk..','..kwwwwwwwwwwk..','..kkkkkkkkkkkk..','................'],
+    term:['................','.kkkkkkkkkkkkkk.','.kggggggggggggk.','.kkkkkkkkkkkkkk.','.kkkkkkkkkkkkkk.','.kkwkkkkkkkkkkk.','.kkkwkkkkkkkkkk.','.kkkkwkkkkkkkkk.','.kkkwkkkkkkkkkk.','.kkwkkkrrrrkkkk.','.kkkkkkkkkkkkkk.','.kkkkkkkkkkkkkk.','.kkkkkkkkkkkkkk.','.kkkkkkkkkkkkkk.','................','................'],
+    people:['................','................','.....kkkk.......','....kwwwwk..kkk.','....kwwwwk.kwwwk','....kwwwwk.kwwwk','.....kkkk...kkk.','...kkkkkkkk.....','..kwwwwwwwwkkkk.','..kwwwwwwwwkrrrk','..kwwwwwwwwkrrrk','..kwwwwwwwwkrrrk','..kkkkkkkkkkkkkk','................','................','................'],
+    image:['................','.kkkkkkkkkkkkkk.','.kwwwwwwwwwwwwk.','.kwwwwwwwwrrwwk.','.kwwwwwwwwrrwwk.','.kwwwwwwwwwwwwk.','.kwwwwkwwwwwwwk.','.kwwwkkkwwwwwwk.','.kwwkkkkkwwkwwk.','.kwkkkkkkkkkkwk.','.kkkkkkkkkkkkkk.','.kwwwwwwwwwwwwk.','.kkkkkkkkkkkkkk.','................','................','................'],
+    mail:['................','................','................','.kkkkkkkkkkkkkk.','.kkwwwwwwwwwwkk.','.kwkwwwwwwwwkwk.','.kwwkwwwwwwkwwk.','.kwwwkwwwwkwwwk.','.kwwwwkrrkwwwwk.','.kwwwwwkkwwwwwk.','.kwwwwwwwwwwwwk.','.kwwwwwwwwwwwwk.','.kkkkkkkkkkkkkk.','................','................','................'],
+    disk:['................','.kkkkkkkkkkkkk..','.kwkggggggkwwkk.','.kwkggggggkwwwk.','.kwkggggkgkwwwk.','.kwkggggkgkwwwk.','.kwkkkkkkkkwwwk.','.kwwwwwwwwwwwwk.','.kwkkkkkkkkkkwk.','.kwkrrrrrrrrkwk.','.kwkrwwwwwwrkwk.','.kwkrrrrrrrrkwk.','.kwkrwwwwwwrkwk.','.kwkrrrrrrrrkwk.','.kkkkkkkkkkkkkk.','................'],
+    trash:['................','......kkkk......','..kkkkkkkkkkkk..','..kwwwwwwwwwwk..','..kkkkkkkkkkkk..','...kwwwwwwwwk...','...kwkwkwkwwk...','...kwkwkwkwwk...','...kwkwkwkwwk...','...kwkwkwkwwk...','...kwkwkwkwwk...','...kwkwkwkwwk...','...kwwwwwwwwk...','...kkkkkkkkkk...','................','................'],
+    star:['................','.......kk.......','......krrk......','.....krrrrk.....','....krrrrrrk....','...krrrrrrrrk...','..krrrrwwrrrrk..','.krrrrwwwwrrrrk.','.krrrrwwwwrrrrk.','..krrrrwwrrrrk..','...krrrrrrrrk...','....krrrrrrk....','.....krrrrk.....','......krrk......','.......kk.......','................'],
+    file:['...kkkkkkk......','...kwwwwwkk.....','...kwwwwwkwk....','...kwwwwwkkkk...','...kwwwwwwwwk...','...kwwwwwwwwk...','...kwwrwwrwwk...','...kwwwrrwwwk...','...kwwwrrwwwk...','...kwwrwwrwwk...','...kwwwwwwwwk...','...kwwwwwwwwk...','...kkkkkkkkkk...','................','................','................']
+  };
+  function pix(name) {
+    const m = MAPS[name]; let r = '';
+    m.forEach((row, y) => [...row].slice(0, 16).forEach((c, x) => { if (PAL[c]) r += `<rect x="${x}" y="${y}" width="1.02" height="1.02" fill="${PAL[c]}"/>`; }));
+    return `<svg class="pix" viewBox="0 0 16 16" aria-hidden="true">${r}</svg>`;
+  }
+  $$('[data-ic]').forEach(b => b.insertAdjacentHTML('afterbegin', pix(b.dataset.ic)));
+
+  /* ───── Clock & uptime ───── */
+  const fmt = new Intl.DateTimeFormat('tr-TR', {timeZone:'Europe/Istanbul', weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+  const t0 = Date.now();
+  const tick = () => {
+    $('#clock').textContent = fmt.format(new Date());
+    const s = (Date.now() - t0) / 1000 | 0;
+    $('#uptime').textContent = String(s / 60 | 0).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+  };
+  tick(); setInterval(tick, 1000);
+
+  /* ───── Window manager ───── */
+  let z = 10;
+  const desk = $('#desk');
+  function place(w) {
+    if (w.dataset.placed) return;
+    const dw = desk.clientWidth, dh = desk.clientHeight;
+    const ww = Math.min(+w.dataset.w || 520, dw - 24);
+    w.style.width = ww + 'px';
+    if (w.dataset.h) w.style.height = Math.min(+w.dataset.h, dh - 24) + 'px';
+    const x = Math.max(12, Math.min(dw - ww - 12, dw * (+w.dataset.x || .3)));
+    const y = Math.max(12, Math.min(dh - 200, dh * (+w.dataset.y || .1)));
+    w.style.left = x + 'px'; w.style.top = y + 'px';
+    w.dataset.placed = 1;
+  }
+  function front(w) {
+    $$('.win.front').forEach(x => x.classList.remove('front'));
+    w.classList.add('front'); w.style.zIndex = ++z;
+  }
+  function zoom(from, to, cb) {
+    if (reduce || mobile() || !from) return cb();
+    const a = from.getBoundingClientRect(), b = to;
+    const r = document.createElement('div'); r.className = 'zoomrect'; document.body.appendChild(r);
+    r.animate([
+      {left:a.left + 'px', top:a.top + 'px', width:a.width + 'px', height:a.height + 'px'},
+      {left:b.left + 'px', top:b.top + 'px', width:b.width + 'px', height:b.height + 'px'}
+    ], {duration:260, easing:'steps(6)'}).onfinish = () => { r.remove(); cb(); };
+  }
+  function open(id, src) {
+    const w = $('#w-' + id); if (!w) return;
+    closeMenus();
+    if (w.classList.contains('open')) { front(w); return; }
+    place(w);
+    w.style.visibility = 'hidden'; w.classList.add('open');
+    const rect = w.getBoundingClientRect();
+    w.classList.remove('open'); w.style.visibility = '';
+    zoom(src, rect, () => {
+      w.classList.add('open'); front(w);
+      if (id === 'terminal') setTimeout(() => $('#tin').focus({preventScroll:true}), 30);
+      else { const f = $('.close', w); if (mobile()) $('.back', w).focus({preventScroll:true}); else f && f.focus({preventScroll:true}); }
+      if (onOpen[id]) onOpen[id]();
+    });
+  }
+  function close(w) { w.classList.remove('open', 'front', 'max'); const top = $$('.win.open').sort((a, b) => b.style.zIndex - a.style.zIndex)[0]; if (top) front(top); }
+  const onOpen = {};
+
+  // Icons: single click select, double click open (desktop); tap opens on touch / mobile
+  $$('.icon').forEach(ic => {
+    ic.addEventListener('click', e => {
+      $$('.icon.sel').forEach(x => x.classList.remove('sel')); ic.classList.add('sel');
+      if (mobile() || e.detail === 0 || matchMedia('(pointer:coarse)').matches) open(ic.dataset.open, ic);
+    });
+    ic.addEventListener('dblclick', () => open(ic.dataset.open, ic));
+  });
+  document.addEventListener('click', e => {
+    const o = e.target.closest('[data-open]:not(.icon)'); if (o) open(o.dataset.open, o);
+    const c = e.target.closest('[data-close]'); if (c) close(c.closest('.win'));
+    const m = e.target.closest('[data-max]'); if (m) m.closest('.win').classList.toggle('max');
+    if (!e.target.closest('.icon')) $$('.icon.sel').forEach(x => x.classList.remove('sel'));
+    if (!e.target.closest('.m')) closeMenus();
+  });
+  $$('.win').forEach(w => w.addEventListener('pointerdown', () => front(w)));
+
+  // Drag
+  $$('.tb').forEach(tb => {
+    tb.addEventListener('dblclick', e => { if (!e.target.closest('button')) tb.parentElement.classList.toggle('max'); });
+    tb.addEventListener('pointerdown', e => {
+      if (mobile() || e.target.closest('button')) return;
+      const w = tb.parentElement; if (w.classList.contains('max')) return;
+      const sx = e.clientX - w.offsetLeft, sy = e.clientY - w.offsetTop;
+      tb.setPointerCapture(e.pointerId); tb.style.cursor = 'grabbing';
+      const mv = ev => {
+        const x = Math.max(-w.offsetWidth + 80, Math.min(desk.clientWidth - 80, ev.clientX - sx));
+        const y = Math.max(0, Math.min(desk.clientHeight - 30, ev.clientY - sy));
+        w.style.left = x + 'px'; w.style.top = y + 'px';
+      };
+      const up = () => { tb.removeEventListener('pointermove', mv); tb.style.cursor = ''; };
+      tb.addEventListener('pointermove', mv); tb.addEventListener('pointerup', up, {once:true});
+    });
+  });
+  // Resize grip
+  $$('.grip').forEach(g => g.addEventListener('pointerdown', e => {
+    const w = g.parentElement, sw = w.offsetWidth, sh = w.offsetHeight, sx = e.clientX, sy = e.clientY;
+    g.setPointerCapture(e.pointerId);
+    const mv = ev => { w.style.width = Math.max(320, sw + ev.clientX - sx) + 'px'; w.style.height = Math.max(200, sh + ev.clientY - sy) + 'px'; };
+    g.addEventListener('pointermove', mv); g.addEventListener('pointerup', () => g.removeEventListener('pointermove', mv), {once:true});
+  }));
+
+  // Keyboard
+  addEventListener('keydown', e => {
+    if (e.key === 'Escape') { const top = $$('.win.open').sort((a, b) => b.style.zIndex - a.style.zIndex)[0]; if (top) close(top); closeMenus(); }
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); open('terminal'); }
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'e') { e.preventDefault(); open('sihirbaz'); }
+  });
+
+  /* ───── Menus ───── */
+  function closeMenus() { $$('.m.open').forEach(m => { m.classList.remove('open'); $('button', m).setAttribute('aria-expanded', 'false'); }); }
+  $$('.m > button').forEach(b => {
+    b.addEventListener('click', e => {
+      e.stopPropagation();
+      const m = b.parentElement, was = m.classList.contains('open');
+      closeMenus();
+      if (!was) { m.classList.add('open'); b.setAttribute('aria-expanded', 'true'); }
+    });
+    b.addEventListener('mouseenter', () => { if ($('.m.open') && !b.parentElement.classList.contains('open')) b.click(); });
+  });
+  const walls = ['red', 'black', 'paper'];
+  const tc = {red:'#e51b26', black:'#0a0a0a', paper:'#f1ede4'};
+  $$('[data-act]').forEach(b => b.addEventListener('click', () => {
+    const a = b.dataset.act; closeMenus();
+    if (a === 'wall') { const i = (walls.indexOf(document.body.dataset.wall) + 1) % walls.length; document.body.dataset.wall = walls[i]; $('meta[name=theme-color]').content = tc[walls[i]]; }
+    if (a === 'closeall') $$('.win.open').forEach(close);
+    if (a === 'tile') {
+      const ws = $$('.win.open'); ws.forEach((w, i) => { w.classList.remove('max'); w.style.left = (140 + i * 34) + 'px'; w.style.top = (20 + i * 30) + 'px'; front(w); });
+    }
+  }));
+
+  /* ───── Services ───── */
+  const SVC = [
+    {f:'sosyal-medya.srv', t:'Sosyal Medya', d:'Markanızın sesini bulur, her platformun diline çeviririz. Takvim doldurmak için değil, konuşulmak için içerik üretiriz.', inc:['İçerik stratejisi ve aylık takvim', 'Çekim, kurgu, tasarım', 'Topluluk yönetimi', 'Aylık rapor'], ch:['Instagram', 'TikTok', 'LinkedIn', 'YouTube']},
+    {f:'influencer.srv', t:'Influencer Marketing', d:'Kitlesi markanızla örtüşen kreatörleri bulur, brifinden raporuna kadar tüm süreci biz yönetiriz.', inc:['Kreatör araştırması ve seçimi', 'Brif, sözleşme, onay akışı', 'Yayın takibi', 'Erişim ve dönüşüm raporu'], ch:['Mikro', 'Makro', 'UGC', 'Elçilik']},
+    {f:'reklam.srv', t:'Reklam Yönetimi', d:'Bütçenizin her lirasını ölçülebilir bir hedefe bağlarız. İşe yarayanı büyütür, yaramayanı hızla keseriz.', inc:['Hedef kitle ve kampanya kurgusu', 'Kreatif A/B testleri', 'Pixel, GA4, dönüşüm takibi', 'Haftalık optimizasyon'], ch:['Meta', 'Google', 'TikTok']},
+    {f:'web.srv', t:'Web Tasarım', d:'Hızlı açılan, telefonda kusursuz görünen, arama motorunda bulunan siteler ve açılış sayfaları.', inc:['Bilgi mimarisi ve metin', 'Özgün arayüz tasarımı', 'Mobil öncelikli geliştirme', 'SEO ve hız optimizasyonu'], ch:['Kurumsal', 'E-ticaret', 'Landing']},
+    {f:'strateji.srv', t:'Dijital Strateji', d:'Önce nerede durduğunuzu, sonra nereye gideceğinizi netleştiririz. Kanal, bütçe ve ölçüm tek dokümanda.', inc:['Pazar ve rakip analizi', 'Marka konumlandırma', 'Kanal ve bütçe planı', 'KPI ve ölçüm kurulumu'], ch:['Konumlandırma', 'Analitik']}
+  ];
+  const svcList = $('#svcList'), svcDetail = $('#svcDetail');
+  SVC.forEach((s, i) => svcList.insertAdjacentHTML('beforeend', `<li><button role="tab" aria-selected="${i === 0}" data-i="${i}">${pix('doc')}${s.f}</button></li>`));
+  function showSvc(i) {
+    const s = SVC[i];
+    $$('button', svcList).forEach(b => b.setAttribute('aria-selected', b.dataset.i == i));
+    svcDetail.innerHTML = `<span class="kind">Hizmet dosyası · 0${i + 1}/05</span><h3>${s.t}</h3><p>${s.d}</p>
+      <div class="chips">${s.ch.map(c => `<span class="chip">${c}</span>`).join('')}</div>
+      <dl>${s.inc.map((x, k) => `<dt>0${k + 1}</dt><dd>${x}</dd>`).join('')}</dl>
+      <button class="btn pri" data-open="sihirbaz">Bu hizmet için teklif al</button>`;
+  }
+  svcList.addEventListener('click', e => { const b = e.target.closest('button'); if (b) showSvc(+b.dataset.i); });
+  showSvc(0);
+
+  /* ───── Works (pixel art) ───── */
+  const R = '#e51b26', K = '#0a0a0a', C = '#fffdf8';
+  function pixArt(fn, bg) {
+    const W = 48, H = 30; let s = `<svg class="pix" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice"><rect width="${W}" height="${H}" fill="${bg}"/>`;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const c = fn(x, y, W, H); if (c) s += `<rect x="${x}" y="${y}" width="1.03" height="1.03" fill="${c}"/>`; }
+    return s + '</svg>';
+  }
+  const WORKS = [
+    {t:'El dokuması halı atölyesi', d:'Uşak halısının motiflerini kısa videolara taşıyan içerik serisi ve yurt dışı hedefli reklam kurgusu.', n:'+240%', tags:['Sosyal medya', 'Reklam'], bg:R,
+      f:(x, y) => { const cx = Math.abs(((x + 3) % 12) - 6), cy = Math.abs((y % 12) - 6); if (cx + cy === 5) return K; if (cx + cy < 2) return C; const X = Math.abs(x - 24), Y = Math.abs(y - 15); if (X + Y < 11 && X + Y > 8) return C; if (X + Y <= 3) return K; return null; }},
+    {t:'Deri aksesuar markası', d:'Mikro kreatörlerle ürün gönderimi ve UGC kampanyası; en iyi içerikler reklam kreatifine dönüştü.', n:'38 kreatör', tags:['Influencer', 'UGC'], bg:K,
+      f:(x, y) => { const d = Math.hypot(x - 17, y - 15); if (Math.round(d) % 4 === 0 && d < 15) return Math.round(d) === 8 ? R : C; const e = Math.hypot(x - 36, y - 15); if (Math.abs(e - 8) < .6) return R; return null; }},
+    {t:'Yöresel gıda üreticisi', d:'Tarhana ve yöresel ürünler için hızlı bir e-ticaret sitesi ve dönüşüm odaklı Meta reklamları.', n:'3,1×', tags:['Web', 'Reklam'], bg:C,
+      f:(x, y, W, H) => { if (y === H - 3) return K; const col = Math.floor(x / 4), h = [2, 3, 3, 4, 5, 5, 7, 8, 10, 12, 15, 19][col] || 0; if (x % 4 < 3 && y < H - 3 && y >= H - 3 - h) return col > 8 ? R : K; return null; }},
+    {t:'Kanyon ve doğa turizmi', d:'Gezi kreatörleriyle bölge tanıtımı: rota içerikleri, Reels serisi ve hafta sonu kampanyası.', n:'1,2 Mn', tags:['Sosyal medya', 'Influencer'], bg:K,
+      f:(x, y) => { if (Math.hypot(x - 36, y - 7) < 4) return R; for (let i = 0; i < 6; i++) { const yy = 12 + i * 3 + Math.round(Math.sin(x / 5 + i) * 2); if (y === yy) return i === 3 ? R : C; } return null; }}
+  ];
+  const stage = $('#stage'), cap = $('#cap'), thumbs = $('#thumbs');
+  WORKS.forEach((w, i) => { w.svg = pixArt(w.f, w.bg); thumbs.insertAdjacentHTML('beforeend', `<button role="tab" aria-label="${w.t}" aria-current="${i === 0}" data-i="${i}">${w.svg}</button>`); });
+  function showWork(i) {
+    const w = WORKS[i];
+    stage.innerHTML = w.svg + `<span class="lbl">ÖRNEK VAKA · 0${i + 1}</span><span class="num">${w.n}</span>`;
+    cap.innerHTML = `<h3>${w.t}</h3><div class="chips" style="margin:0">${w.tags.map(t => `<span class="chip">${t}</span>`).join('')}</div><p>${w.d}</p>`;
+    $$('button', thumbs).forEach(b => b.setAttribute('aria-current', b.dataset.i == i));
+    $('#workIdx').textContent = `${i + 1} / ${WORKS.length}`;
+  }
+  thumbs.addEventListener('click', e => { const b = e.target.closest('button'); if (b) showWork(+b.dataset.i); });
+  showWork(0);
+
+  /* ───── Creators list ───── */
+  const CR = [
+    ['Yemek & yöresel', 'Mikro', 'Instagram, TikTok', 'Ürün tanıtımı'],
+    ['Moda & tekstil', 'Mikro–Orta', 'Instagram', 'Lansman, UGC'],
+    ['Gezi & doğa', 'Orta', 'YouTube, Instagram', 'Bölge tanıtımı'],
+    ['Anne & çocuk', 'Mikro', 'Instagram', 'Uzun vadeli elçilik'],
+    ['Teknoloji', 'Orta–Makro', 'YouTube, TikTok', 'İnceleme'],
+    ['Spor & yaşam', 'Mikro–Orta', 'TikTok, Instagram', 'Challenge'],
+    ['Ev & dekorasyon', 'Mikro', 'Instagram, Pinterest', 'Önce / sonra'],
+    ['Oyun', 'Orta', 'YouTube, Twitch', 'Canlı yayın'],
+    ['Yerel yaşam · Uşak', 'Nano–Mikro', 'Instagram, TikTok', 'Açılış, etkinlik']
+  ];
+  const tb = $('#list tbody');
+  let sortCol = -1, asc = true;
+  const drawList = () => { tb.innerHTML = CR.map(r => `<tr><td>${pix('people')}${r[0]}</td><td>${r[1]}</td><td class="hm">${r[2]}</td><td class="hm">${r[3]}</td></tr>`).join(''); };
+  $$('#list th button').forEach(b => b.addEventListener('click', () => {
+    const c = +b.dataset.sort; asc = sortCol === c ? !asc : true; sortCol = c;
+    CR.sort((a, b2) => a[c].localeCompare(b2[c], 'tr') * (asc ? 1 : -1));
+    $$('#list th span').forEach(s => s.textContent = '↕'); $('span', b).textContent = asc ? '↑' : '↓';
+    drawList();
+  }));
+  drawList();
+
+  /* ───── Trash ───── */
+  const TRASH = [['satın-alınmış-takipçi.zip', 'etkileşim sıfır'], ['stok-foto-el-sıkışma.jpg', 'kimse inanmadı'], ['slogan-yığını.docx', 'tek cümle yeter'], ['rapor-yok.xlsx', 'her hafta rakam'], ['her-şeyi-yaparız.pdf', 'odak > liste'], ['belki-bir-gün-ölçeriz.txt', 'önce ölçü']];
+  $('#files').innerHTML = TRASH.map(([n, w]) => `<div class="file">${pix('file')}<s>${n}</s><em>${w}</em></div>`).join('');
+
+  /* ───── Terminal ───── */
+  const tout = $('#tout'), tin = $('#tin');
+  const hist = []; let hi = 0;
+  const esc = s => s.replace(/[&<>]/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;'}[c]));
+  const print = html => { tout.insertAdjacentHTML('beforeend', html + '\n'); $('#w-terminal .wbody').scrollTop = 1e6; };
+  const LOGO = `<span class="r">  ███╗   ███╗███████╗███████╗
+  ████╗ ████║██╔════╝██╔════╝
+  ██╔████╔██║█████╗  ███████╗
+  ██║╚██╔╝██║██╔══╝  ╚════██║
+  ██║ ╚═╝ ██║███████╗███████║
+  ╚═╝     ╚═╝╚══════╝╚══════╝</span>`;
+  const CMDS = {
+    yardim: () => `Kullanılabilir komutlar:
+  <span class="g">hizmetler</span>   hizmet listesini yazdırır
+  <span class="g">teklif</span>      Teklif Sihirbazı'nı açar
+  <span class="g">kreator</span>     Kreatör Ağı'nı açar
+  <span class="g">isler</span>       İşler penceresini açar
+  <span class="g">iletisim</span>    iletişim bilgileri
+  <span class="g">manifesto</span>   manifesto.txt'yi yazdırır
+  <span class="g">sistem</span>      sistem bilgisi
+  <span class="g">ls</span>          masaüstü dosyaları
+  <span class="g">temizle</span>     ekranı temizler`,
+    hizmetler: () => SVC.map((s, i) => `  0${i + 1}  ${s.t.padEnd(22)}<span class="d">${s.ch.join(' · ')}</span>`).join('\n'),
+    teklif: () => (open('sihirbaz'), 'Teklif Sihirbazı başlatılıyor…'),
+    kreator: () => (open('kreator'), 'Kreatör Ağı açılıyor…'),
+    isler: () => (open('isler'), 'İşler açılıyor…'),
+    iletisim: () => `  e-posta   <a href="mailto:iletisim@mesdijital.com.tr">iletisim@mesdijital.com.tr</a>
+  telefon   <a href="tel:+905394974327">+90 539 497 43 27</a>
+  whatsapp  <a href="https://wa.me/905394974327" target="_blank" rel="noopener">wa.me/905394974327</a>
+  adres     Cumhuriyet Mah., Namık Kemal Cad. No: 9C, Uşak`,
+    manifesto: () => esc($('.note').textContent.replace(/\n+$/, '')),
+    sistem: () => `${LOGO}
+  <span class="r">misafir</span>@<span class="r">mes-os</span>
+  ─────────────────────
+  <span class="g">OS</span>        MES/OS 1.0
+  <span class="g">Konum</span>     Uşak, TR (38.68°K 29.41°D)
+  <span class="g">Çekirdek</span>  strateji-5.x
+  <span class="g">Paketler</span>  5 hizmet, 1 ekip
+  <span class="g">Kabuk</span>     mesh
+  <span class="g">Oturum</span>    ${$('#uptime').textContent}
+  <span class="g">Durum</span>     yeni projelere açık`,
+    ls: () => 'Hoş geldiniz  Hizmetler/  İşler/  Kreatör Ağı/  manifesto.txt  Terminal  Teklif Sihirbazı  İletişim  Çöp Kutusu/',
+    temizle: () => (tout.innerHTML = '', null),
+    whoami: () => 'misafir — muhtemelen yakında müşterimiz',
+    tarih: () => new Date().toLocaleString('tr-TR', {timeZone:'Europe/Istanbul'})
+  };
+  const ALIAS = {help:'yardim', 'yardım':'yardim', clear:'temizle', cls:'temizle', neofetch:'sistem', date:'tarih', 'iletişim':'iletisim', 'kreatör':'kreator', 'işler':'isler', 'cat manifesto.txt':'manifesto'};
+  function run(raw) {
+    const cmd = raw.trim(); const low = cmd.toLocaleLowerCase('tr');
+    print(`<span class="r">misafir@mes-os</span> <span class="d">~$</span> ${esc(cmd)}`);
+    if (!cmd) return;
+    if (low.startsWith('sudo')) return print('Bu sistemde tek süper kullanıcı müşteridir. Yetki reddedildi.');
+    if (low.startsWith('rm -rf')) return print('<span class="g">Gürültü temizlendi.</span> Geriye sinyal kaldı.');
+    const k = CMDS[low] ? low : ALIAS[low];
+    if (!k) return print(`komut bulunamadı: ${esc(cmd)} — <span class="g">yardim</span> yazın.`);
+    const out = CMDS[k](); if (out) print(out);
+  }
+  print(`MES/OS 1.0 — mesh kabuğu\nBaşlamak için <span class="g">yardim</span> yazın.\n`);
+  tin.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { hist.push(tin.value); hi = hist.length; run(tin.value); tin.value = ''; }
+    if (e.key === 'ArrowUp') { hi = Math.max(0, hi - 1); tin.value = hist[hi] || ''; e.preventDefault(); }
+    if (e.key === 'ArrowDown') { hi = Math.min(hist.length, hi + 1); tin.value = hist[hi] || ''; }
+  });
+  $('#term').addEventListener('click', () => tin.focus());
+
+  /* ───── Wizard ───── */
+  const wiz = $('#wiz'), pages = $$('.page', wiz), steps = $$('#wizSteps li');
+  let p = 0;
+  const next = $('#wizNext'), back = $('#wizBack');
+  function go(n) {
+    p = n; pages.forEach((pg, i) => pg.hidden = i !== p);
+    steps.forEach((s, i) => s.classList.toggle('on', i === p));
+    back.disabled = p === 0 || p === 4;
+    next.textContent = p === 3 ? 'Kur ›' : p === 4 ? 'Bitti' : 'İleri ›';
+    next.hidden = p === 4;
+    if (p === 4) install();
+  }
+  next.addEventListener('click', () => {
+    if (p === 3) {
+      const bad = $$('input[required]', pages[3]).find(i => !i.value.trim());
+      if (bad) { bad.focus(); bad.style.borderColor = 'var(--red)'; return; }
+    }
+    go(Math.min(4, p + 1));
+  });
+  back.addEventListener('click', () => go(Math.max(0, p - 1)));
+  function install() {
+    const fd = new FormData(wiz);
+    const svc = fd.getAll('svc');
+    const body = `Merhaba Mes Dijital,\n\nBen ${fd.get('name')}${fd.get('brand') ? ', ' + fd.get('brand') + ' adına' : ''} yazıyorum.\n\nİlgilendiğim hizmetler: ${svc.join(', ') || 'Henüz emin değilim'}\nAylık bütçe: ${fd.get('budget')}\nZamanlama: ${fd.get('when')}\n\nBana şuradan ulaşabilirsiniz: ${fd.get('reach')}\n\n(MES/OS Teklif Sihirbazı ile hazırlandı)`;
+    $('#mailGo').href = 'mailto:iletisim@mesdijital.com.tr?subject=' + encodeURIComponent('Teklif talebi — ' + (fd.get('brand') || fd.get('name'))) + '&body=' + encodeURIComponent(body);
+    $('#waGo').href = 'https://wa.me/905394974327?text=' + encodeURIComponent(body);
+    const lines = ['Bileşenler hazırlanıyor…', ...svc.map(s => '  + ' + s), 'Bütçe ayarlanıyor… ' + fd.get('budget'), 'Takvim senkronize ediliyor… ' + fd.get('when'), 'Gürültü filtresi etkin.'];
+    const bar = $('#instBar'), log = $('#instLog'); log.textContent = ''; bar.style.width = '0'; $('#instDone').hidden = true; $('#instTitle').textContent = 'Kuruluyor…';
+    let i = 0;
+    const iv = setInterval(() => {
+      if (i < lines.length) log.textContent += lines[i] + '\n';
+      bar.style.width = Math.min(100, (i + 1) / lines.length * 100) + '%';
+      if (++i > lines.length) { clearInterval(iv); $('#instTitle').textContent = 'Kurulum tamamlandı.'; $('#instDone').hidden = false; }
+    }, reduce ? 10 : 320);
+  }
+  onOpen.sihirbaz = () => { if (p === 4) go(0); };
+
+  /* ───── Boot ───── */
+  const boot = $('#boot'), bl = $('#bootLog'), bb = $('#bootBar');
+  const BOOT = ['Çekirdek: strateji-5.x yükleniyor… tamam', 'Kreatör ağı bağlanıyor… tamam', 'Reklam hesapları taranıyor… tamam', 'Gürültü filtresi etkinleştiriliyor… tamam', 'Masaüstü hazırlanıyor…'];
+  let bi = 0, booted = false;
+  function finishBoot() {
+    if (booted) return; booted = true;
+    boot.classList.add('done'); setTimeout(() => boot.remove(), 450);
+    if (!mobile()) open('hosgeldin');
+  }
+  if (reduce) finishBoot();
+  else {
+    const bIv = setInterval(() => {
+      if (bi < BOOT.length) bl.textContent += BOOT[bi] + '\n';
+      bb.style.width = ((bi + 1) / BOOT.length * 100) + '%';
+      if (++bi > BOOT.length) { clearInterval(bIv); setTimeout(finishBoot, 200); }
+    }, 240);
+    boot.addEventListener('click', finishBoot);
+    addEventListener('keydown', finishBoot, {once:true});
+  }
+})();
+</script>
+</body>
+</html>

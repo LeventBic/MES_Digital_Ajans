@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mes Dijital — Markanız başrolde</title>
+<meta name="description" content="Mes Dijital: Uşak merkezli dijital pazarlama, içerik üretimi, reklam, web tasarım ve influencer marketing ajansı.">
+<meta name="theme-color" content="#0b0a09">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#0b0a09; --film:#14120f; --ivory:#f4efe6; --dim:rgba(244,239,230,.55); --line:rgba(244,239,230,.16);
+  --red:#e51b26; --amber:#ff8a3d;
+  --serif:"Bodoni Moda",Didot,serif; --mono:"DM Mono",ui-monospace,monospace; --script:"Courier Prime","Courier New",monospace;
+  --lb:44px; --g:clamp(16px,3vw,44px);
+  --ease:cubic-bezier(.19,1,.22,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--black);color:var(--ivory);font-family:var(--serif);font-size:17px;line-height:1.5;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+::selection{background:var(--red);color:var(--ivory)}
+:focus-visible{outline:1.5px solid var(--amber);outline-offset:3px}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;line-height:1.5}
+.dim{color:var(--dim)}
+
+/* ───────── FILM GRAIN + VIGNETTE ───────── */
+.grain{position:fixed;inset:-50%;z-index:95;pointer-events:none;opacity:.10;background-size:220px 220px;animation:grain .5s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-4%)}60%{transform:translate(-4%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
+.vignette{position:fixed;inset:0;z-index:94;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55) 100%)}
+
+/* ───────── LETTERBOX HUD ───────── */
+.lb{position:fixed;left:0;right:0;height:var(--lb);background:#000;z-index:96;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 var(--g)}
+.lb.top{top:0}
+.lb.bot{bottom:0;justify-content:center}
+.lb .l,.lb .r{display:flex;align-items:center;gap:18px}
+.rec{display:inline-flex;align-items:center;gap:8px;color:var(--ivory)}
+.rec i{width:8px;height:8px;border-radius:50%;background:var(--red);animation:rec 1s steps(1) infinite}
+@keyframes rec{50%{opacity:0}}
+.brand{font-family:var(--serif);font-style:italic;font-weight:600;font-size:18px;letter-spacing:-.01em;text-transform:none;text-decoration:none}
+.brand b{font-style:normal;font-weight:800}
+#tc{font-variant-numeric:tabular-nums;min-width:11ch}
+.navtoggle{border:1px solid var(--line);padding:6px 12px;border-radius:99px}
+.navtoggle:hover{border-color:var(--ivory)}
+.sub{font-family:var(--serif);font-style:italic;font-size:clamp(14px,1.35vw,18px);text-align:center;max-width:70ch;color:#fff7c9;opacity:0;transform:translateY(6px);transition:opacity .5s,transform .5s var(--ease);text-shadow:0 1px 0 #000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sub.on{opacity:1;transform:none}
+
+/* scene menu */
+.scenes{position:fixed;inset:var(--lb) 0 var(--lb) 0;z-index:97;background:rgba(11,10,9,.97);display:grid;align-content:center;padding:var(--g);opacity:0;visibility:hidden;transition:opacity .5s,visibility .5s}
+.scenes.open{opacity:1;visibility:visible}
+.scenes ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:var(--g)}
+.scenes a{display:flex;flex-direction:column;gap:10px;text-decoration:none;border-top:1px solid var(--line);padding-top:14px}
+.scenes a .t{font-size:clamp(28px,3vw,44px);font-style:italic;line-height:1}
+.scenes a:hover .t{color:var(--red)}
+.scenes .thumb{aspect-ratio:2.39/1;background:var(--film);border:1px solid var(--line);position:relative;overflow:hidden}
+.scenes .thumb::after{content:"";position:absolute;inset:0;background:var(--bgi)}
+
+/* ───────── INTRO (film leader) ───────── */
+.leader{position:fixed;inset:0;z-index:200;background:#15130f;display:grid;place-items:center;cursor:pointer;transition:opacity .6s}
+.leader.done{opacity:0;pointer-events:none}
+.leader .ring{position:relative;width:min(56vmin,420px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;border:2px solid rgba(244,239,230,.6)}
+.leader .ring::before{content:"";position:absolute;inset:8%;border-radius:50%;border:1px solid rgba(244,239,230,.45)}
+.leader .sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(rgba(244,239,230,.28) var(--a,0deg),transparent 0)}
+.leader .cross{position:absolute;inset:0;background:linear-gradient(transparent calc(50% - .5px),rgba(244,239,230,.4) 0 calc(50% + .5px),transparent 0),linear-gradient(90deg,transparent calc(50% - .5px),rgba(244,239,230,.4) 0 calc(50% + .5px),transparent 0)}
+.leader .n{position:relative;font-family:var(--serif);font-weight:500;font-size:min(34vmin,260px);line-height:1;color:var(--ivory)}
+.leader .title{position:absolute;inset:0;display:grid;place-items:center;text-align:center;opacity:0;transition:opacity .6s;background:#000}
+.leader .title.on{opacity:1}
+.leader .title p{margin:0;font-style:italic;font-size:clamp(20px,2.4vw,30px)}
+.leader .title small{display:block;margin-top:12px}
+.leader .skip{position:absolute;bottom:24px;left:50%;transform:translateX(-50%)}
+
+/* ───────── SCENE FRAME ───────── */
+main{position:relative}
+.scene{position:relative;padding:calc(var(--lb) + clamp(56px,8vw,120px)) var(--g) clamp(64px,9vw,140px)}
+.slate{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;margin-bottom:clamp(28px,4vw,56px);padding-bottom:12px;border-bottom:1px solid var(--line)}
+.slate b{font-weight:500;color:var(--ivory)}
+.slate .cl{display:inline-block;width:40px;height:14px;background:repeating-linear-gradient(-45deg,var(--ivory) 0 6px,#000 6px 12px);border:1px solid var(--ivory)}
+h2.st{margin:0 0 clamp(28px,4vw,56px);font-weight:500;font-size:clamp(44px,7.6vw,132px);line-height:.92;letter-spacing:-.02em;font-variation-settings:"opsz" 96}
+h2.st em{font-weight:400;color:var(--red)}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(30px);transition:opacity 1.2s var(--ease),transform 1.2s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.iris{clip-path:circle(0% at 50% 50%);transition:clip-path 1.6s var(--ease)}
+.iris.in{clip-path:circle(75% at 50% 50%)}
+
+/* ───────── SAHNE 1 — HERO ───────── */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:calc(var(--lb) + 24px) var(--g) calc(var(--lb) + 40px);overflow:hidden}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;filter:saturate(1.1)}
+.hero .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,10,9,.2),rgba(11,10,9,.1) 40%,rgba(11,10,9,.85))}
+.hero .top{position:absolute;top:calc(var(--lb) + 22px);left:var(--g);right:var(--g);display:flex;justify-content:space-between;gap:16px;z-index:2}
+.hero h1{position:relative;z-index:2;margin:0;font-weight:500;font-size:clamp(64px,13.2vw,250px);line-height:.84;letter-spacing:-.035em;font-variation-settings:"opsz" 96}
+.hero h1 .l{display:block;overflow:hidden;padding-bottom:.06em}
+.hero h1 .l > span{display:block;transform:translateY(110%);transition:transform 1.6s var(--ease)}
+.hero.go h1 .l > span{transform:none}
+.hero h1 .l:nth-child(2) > span{transition-delay:.15s}
+.hero h1 em{font-style:italic;font-weight:400}
+.hero h1 .red{color:var(--red)}
+.hero .foot{position:relative;z-index:2;display:grid;grid-template-columns:1.1fr 1fr auto;gap:24px var(--g);align-items:end;margin-top:clamp(20px,3vw,40px)}
+.hero .foot p{margin:0;font-size:clamp(17px,1.5vw,22px);line-height:1.4;max-width:40ch}
+.hero .foot .cr{display:grid;grid-template-columns:auto 1fr;gap:4px 14px}
+.btn{display:inline-flex;align-items:center;gap:12px;height:52px;padding:0 24px;border-radius:99px;background:var(--ivory);color:var(--black);text-decoration:none;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:background .3s,color .3s,transform .5s var(--ease)}
+.btn:hover{background:var(--red);color:var(--ivory);transform:translateY(-2px)}
+.btn.ghost{background:none;color:var(--ivory);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--red);background:var(--red)}
+
+/* ───────── SAHNE 2 — SCREENPLAY ───────── */
+.script{display:grid;grid-template-columns:1fr minmax(0,720px) 1fr;gap:var(--g)}
+.page{grid-column:2;background:#f7f3ea;color:#1a1814;font-family:var(--script);font-size:clamp(14px,1.2vw,16.5px);line-height:1.6;padding:clamp(28px,5vw,72px) clamp(22px,6vw,90px);box-shadow:0 40px 90px rgba(0,0,0,.5);position:relative;transform:rotate(-.6deg)}
+.page::before{content:"2.";position:absolute;right:clamp(22px,4vw,48px);top:clamp(18px,3vw,36px)}
+.page .h{font-weight:700;text-transform:uppercase;margin:0 0 1.2em}
+.page .a{margin:0 0 1.2em}
+.page .c{margin:1.4em 0 0;text-align:center;text-transform:uppercase;padding-left:10%}
+.page .p{margin:0;text-align:center;font-style:italic;padding-left:10%}
+.page .d{margin:0 auto 1em;max-width:34ch}
+.page .tr{text-align:right;text-transform:uppercase;margin:1.4em 0 0}
+.page mark{background:none;color:var(--red);font-weight:700}
+.script aside{grid-column:3;align-self:end;display:flex;flex-direction:column;gap:10px}
+
+/* ───────── SAHNE 3 — FILM STRIP ───────── */
+.strip-wrap{height:340vh;position:relative}
+.strip-sticky{position:sticky;top:0;height:100svh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding-top:var(--lb)}
+.strip-head{padding:0 var(--g);display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:22px}
+.strip-head h2.st{margin:0}
+.strip{display:flex;width:max-content;will-change:transform;padding-left:var(--g);
+  background:#050505;
+  --hole:radial-gradient(circle at center,var(--black) 0 0) ;
+}
+.frame{
+  position:relative;flex:none;width:min(62vw,860px);aspect-ratio:1.9/1;padding:34px 22px;
+  background:
+    repeating-linear-gradient(90deg,transparent 0 10px,#222 10px 24px,transparent 24px 34px) top/100% 18px no-repeat,
+    repeating-linear-gradient(90deg,transparent 0 10px,#222 10px 24px,transparent 24px 34px) bottom/100% 18px no-repeat,
+    #050505;
+}
+.frame .img{position:absolute;inset:34px 10px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column;justify-content:space-between;padding:clamp(16px,2.2vw,32px)}
+.frame .img::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,rgba(255,255,255,.12),transparent 50%),radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.5));pointer-events:none}
+.frame .k{display:flex;justify-content:space-between;position:relative;z-index:1}
+.frame h3{position:relative;z-index:1;margin:0;font-weight:500;font-style:italic;font-size:clamp(34px,4.6vw,78px);line-height:.92;letter-spacing:-.02em}
+.frame .row{position:relative;z-index:1;display:grid;grid-template-columns:1.2fr 1fr;gap:16px;align-items:end}
+.frame p{margin:0;font-size:clamp(14px,1.15vw,17px);max-width:38ch}
+.frame ul{margin:0;padding:0;list-style:none;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.frame li{padding:4px 0;border-top:1px solid rgba(244,239,230,.25)}
+.fnum{position:absolute;left:14px;top:2px;font-family:var(--mono);font-size:10px;color:#9a8f7c;letter-spacing:.1em;z-index:2}
+
+/* ───────── SAHNE 4 — POSTERS ───────── */
+.posters{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(14px,2vw,28px)}
+.poster{position:relative;aspect-ratio:2/3;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(14px,1.5vw,22px);text-decoration:none;color:var(--ivory);background:var(--bg);transition:transform .8s var(--ease),box-shadow .8s var(--ease)}
+.poster:hover{transform:translateY(-10px) rotate(-.6deg);box-shadow:0 40px 80px rgba(0,0,0,.6)}
+.poster .art{position:absolute;inset:0}
+.poster .art svg{width:100%;height:100%}
+.poster > *:not(.art){position:relative;z-index:1}
+.poster .tag{align-self:flex-start;background:var(--ivory);color:var(--black);padding:3px 8px}
+.poster .tl{text-align:center}
+.poster .tl small{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.3em;text-transform:uppercase;margin-bottom:8px}
+.poster h3{margin:0;font-weight:800;font-size:clamp(34px,3.6vw,60px);line-height:.86;letter-spacing:-.02em;text-transform:uppercase}
+.poster .q{display:block;font-style:italic;font-size:clamp(14px,1.2vw,17px);margin-top:10px;line-height:1.25}
+.poster .gise{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid rgba(244,239,230,.5);padding-top:8px;margin-top:10px}
+.poster .gise b{font-weight:700;font-size:clamp(20px,1.8vw,28px)}
+.billing{font-family:var(--mono);font-size:7.5px;line-height:1.35;letter-spacing:.06em;text-transform:uppercase;text-align:center;opacity:.8;margin-top:10px}
+.billing b{font-size:9px}
+.post-note{margin-top:24px}
+
+/* ───────── SAHNE 5 — EDIT TIMELINE ───────── */
+.editor{border:1px solid var(--line);background:#0f0e0c;font-family:var(--mono);font-size:11px}
+.ed-top{display:flex;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+.ruler{position:relative;height:26px;margin-left:92px;border-bottom:1px solid var(--line);background:repeating-linear-gradient(90deg,var(--line) 0 1px,transparent 1px 2.5%)}
+.ruler span{position:absolute;top:6px;color:var(--dim);transform:translateX(4px)}
+.tracks{position:relative}
+.trk{display:flex;height:46px;border-bottom:1px solid rgba(244,239,230,.07)}
+.trk .lab{flex:none;width:92px;display:flex;align-items:center;padding-left:14px;color:var(--dim);border-right:1px solid var(--line);letter-spacing:.1em}
+.lane{position:relative;flex:1}
+.clip{position:absolute;top:7px;bottom:7px;border-radius:4px;padding:0 10px;display:flex;align-items:center;white-space:nowrap;overflow:hidden;color:#fff;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(255,255,255,.25)}
+.clip.v{background:linear-gradient(180deg,#e51b26,#b8121b)}
+.clip.k{background:linear-gradient(180deg,#d9772f,#a8531a)}
+.clip.a{background:repeating-linear-gradient(90deg,rgba(255,255,255,.22) 0 1px,transparent 1px 4px),linear-gradient(180deg,#2c6e63,#1d4b43)}
+.clip.r{background:linear-gradient(180deg,#5b5bd6,#3b3ba8)}
+.playhead{position:absolute;top:-26px;bottom:0;left:calc(92px + var(--p,0) * (100% - 92px));width:2px;background:var(--ivory);z-index:3;pointer-events:none}
+.playhead::before{content:"";position:absolute;top:0;left:-6px;border:7px solid transparent;border-top:10px solid var(--ivory)}
+.markers{position:absolute;inset:-26px 0 auto 92px;height:26px;pointer-events:none}
+.markers i{position:absolute;top:0;width:2px;height:100vh;max-height:210px;background:rgba(229,27,38,.5)}
+.beats{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--g);margin-top:clamp(28px,4vw,52px)}
+.beat{opacity:.3;transition:opacity .6s;border-top:1px solid var(--line);padding-top:14px}
+.beat.on{opacity:1;border-top-color:var(--red)}
+.beat h3{margin:8px 0 8px;font-weight:500;font-style:italic;font-size:clamp(30px,3vw,48px);line-height:1}
+.beat p{margin:0;font-size:16px;color:var(--dim);max-width:30ch}
+.beat.on p{color:var(--ivory)}
+
+/* ───────── SAHNE 6 — CASTING ───────── */
+.casting{background:var(--red);color:var(--black)}
+.casting .slate{border-bottom-color:rgba(11,10,9,.25)}
+.casting .slate b,.casting .dim{color:var(--black)}
+.casting .slate .cl{border-color:var(--black);background:repeating-linear-gradient(-45deg,var(--black) 0 6px,var(--red) 6px 12px)}
+.cast-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:var(--g);align-items:end}
+.casting h2{margin:0;font-weight:800;font-size:clamp(56px,11vw,200px);line-height:.94;letter-spacing:-.03em;text-transform:uppercase}
+.casting h2 em{display:block;font-weight:400;text-transform:none;font-size:.42em;line-height:1.1;letter-spacing:-.01em;margin-top:.35em}
+.req{list-style:none;margin:0;padding:0;border-top:2px solid var(--black)}
+.req li{display:grid;grid-template-columns:40px 1fr;padding:12px 0;border-bottom:1px solid rgba(11,10,9,.3);font-size:18px}
+.req li span{font-family:var(--mono);font-size:11px;padding-top:5px}
+.casting .btn{background:var(--black);color:var(--ivory);margin-top:24px}
+.casting .btn:hover{background:var(--ivory);color:var(--black)}
+
+/* ───────── SAHNE 7 — CREDITS ───────── */
+.credits{height:100svh;overflow:hidden;position:relative;padding:0;-webkit-mask:linear-gradient(transparent 8%,#000 22%,#000 78%,transparent 92%);mask:linear-gradient(transparent 8%,#000 22%,#000 78%,transparent 92%)}
+.roll{position:absolute;left:0;right:0;top:100%;text-align:center;animation:roll 38s linear infinite;animation-play-state:paused}
+.credits.play .roll{animation-play-state:running}
+.credits:hover .roll{animation-play-state:paused}
+@keyframes roll{to{transform:translateY(calc(-100% - 100svh))}}
+.roll .end{font-style:italic;font-weight:400;font-size:clamp(60px,10vw,160px);line-height:1;margin:0 0 18vh}
+.roll dl{display:grid;grid-template-columns:1fr 1fr;gap:10px 28px;max-width:760px;margin:0 auto 12vh;padding:0 var(--g)}
+.roll dt{text-align:right;font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);padding-top:6px}
+.roll dd{margin:0;text-align:left;font-size:clamp(20px,1.9vw,28px);font-style:italic}
+.roll h4{margin:0 0 28px;font-family:var(--mono);font-weight:400;font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
+.roll .big{font-size:clamp(34px,4vw,60px);font-weight:600;margin:0 0 12vh;line-height:1.05}
+
+.contact{padding-bottom:calc(var(--lb) + 60px)}
+.contact h2.st{margin-bottom:24px}
+.cgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px var(--g);border-top:1px solid var(--line);padding-top:24px;margin-top:clamp(32px,5vw,64px)}
+.cgrid div{display:flex;flex-direction:column;gap:6px}
+.cgrid a{text-decoration:none;font-size:clamp(18px,1.5vw,22px);font-style:italic}
+.cgrid a:hover{color:var(--red)}
+.post{margin-top:clamp(60px,10vw,140px);border:1px dashed var(--line);padding:20px 22px;max-width:520px}
+.post p{margin:6px 0 0;font-style:italic;font-size:20px}
+
+/* ───────── RESPONSIVE ───────── */
+@media (max-width:900px){
+  :root{--lb:40px}
+  .lb .hide-m{display:none}
+  .hero .foot{grid-template-columns:1fr}
+  .script{grid-template-columns:1fr}
+  .page,.script aside{grid-column:1}
+  .page{transform:none}
+  .strip-wrap{height:auto}
+  .strip-sticky{position:relative;height:auto;padding-top:0}
+  .strip-head{flex-direction:column;align-items:flex-start}
+  .strip{flex-direction:column;width:auto;padding:0 var(--g);gap:0;transform:none!important;background:none}
+  .frame{width:100%;aspect-ratio:auto;min-height:480px}
+  .frame .row{grid-template-columns:1fr}
+  .posters{grid-template-columns:1fr 1fr}
+  .beats{grid-template-columns:1fr 1fr}
+  .cast-grid{grid-template-columns:1fr}
+  .cgrid{grid-template-columns:1fr 1fr}
+  .scenes ol{grid-template-columns:1fr 1fr}
+  .roll dl{grid-template-columns:1fr;gap:2px}
+  .roll dt,.roll dd{text-align:center}
+  .roll dd{margin-bottom:16px}
+  .sub{font-size:13px;white-space:normal;line-height:1.2;max-height:2.4em}
+  .trk .lab{width:56px;padding-left:8px;font-size:9px}
+  .ruler{margin-left:56px}
+  .markers{left:56px}
+  .playhead{left:calc(56px + var(--p,0) * (100% - 56px))}
+  .clip{font-size:9px;padding:0 6px}
+}
+@media (max-width:520px){
+  .posters{grid-template-columns:1fr}
+  .poster{aspect-ratio:3/4}
+  .beats{grid-template-columns:1fr}
+  .cgrid{grid-template-columns:1fr}
+  .hero .top .hide-s{display:none}
+  .lb .brand{font-size:16px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}.iris{clip-path:none}.hero h1 .l > span{transform:none}.roll{position:static;padding-top:40px}.credits{height:auto;-webkit-mask:none;mask:none}}
+</style>
+</head>
+<body>
+
+<!-- FILM LEADER -->
+<div class="leader" id="leader" role="presentation">
+  <div class="ring"><div class="sweep" id="sweep"></div><div class="cross"></div><span class="n" id="count">3</span></div>
+  <div class="title" id="ltitle"><div><p>Mes Dijital sunar</p><small class="mono dim">Uşak · 2026</small></div></div>
+  <span class="skip mono dim">Atlamak için dokunun</span>
+</div>
+
+<div class="grain" id="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<!-- LETTERBOX -->
+<header class="lb top">
+  <div class="l">
+    <a class="brand" href="#s1"><b>Mes</b> Dijital</a>
+    <span class="rec mono hide-m"><i></i>Kayıt</span>
+    <span class="mono dim hide-m" id="sceneLbl">Sahne 01 — Açılış</span>
+  </div>
+  <div class="r">
+    <span class="mono dim hide-m" id="tc">00:00:00:00</span>
+    <button class="navtoggle mono" id="navBtn" aria-expanded="false" aria-controls="scenes">Sahneler</button>
+  </div>
+</header>
+<div class="lb bot" aria-live="polite"><p class="sub" id="sub"></p></div>
+
+<nav class="scenes" id="scenes" aria-label="Sahne seçimi">
+  <ol>
+    <li><a href="#s1"><span class="thumb" style="--bgi:radial-gradient(circle at 30% 60%,#e51b26,transparent 60%),radial-gradient(circle at 80% 30%,#ff8a3d,transparent 50%)"></span><span class="mono dim">Sahne 01</span><span class="t">Açılış</span></a></li>
+    <li><a href="#s2"><span class="thumb" style="--bgi:linear-gradient(#f7f3ea,#e8e2d4)"></span><span class="mono dim">Sahne 02</span><span class="t">Senaryo</span></a></li>
+    <li><a href="#s3"><span class="thumb" style="--bgi:repeating-linear-gradient(90deg,#050505 0 30%,#e51b26 30% 33%)"></span><span class="mono dim">Sahne 03</span><span class="t">Kadro</span></a></li>
+    <li><a href="#s4"><span class="thumb" style="--bgi:linear-gradient(90deg,#e51b26 25%,#1d4b43 25% 50%,#d9772f 50% 75%,#3b3ba8 75%)"></span><span class="mono dim">Sahne 04</span><span class="t">Gişe</span></a></li>
+    <li><a href="#s5"><span class="thumb" style="--bgi:repeating-linear-gradient(#0f0e0c 0 20%,#e51b26 20% 26%)"></span><span class="mono dim">Sahne 05</span><span class="t">Kurgu</span></a></li>
+    <li><a href="#s6"><span class="thumb" style="--bgi:#e51b26"></span><span class="mono dim">Sahne 06</span><span class="t">Seçmeler</span></a></li>
+    <li><a href="#s7"><span class="thumb" style="--bgi:linear-gradient(#000,#14120f)"></span><span class="mono dim">Sahne 07</span><span class="t">Jenerik</span></a></li>
+    <li><a href="#s8"><span class="thumb" style="--bgi:radial-gradient(circle,#f4efe6 0 8%,transparent 9%),#0b0a09"></span><span class="mono dim">Sahne 08</span><span class="t">İletişim</span></a></li>
+  </ol>
+</nav>
+
+<main>
+<!-- ───────── SAHNE 01 ───────── -->
+<section class="scene hero" id="s1" data-scene="Sahne 01 — Açılış" data-sub="— Görünmek yetmez. Hatırlanmak gerekir.">
+  <canvas id="footage" aria-hidden="true"></canvas>
+  <div class="scrim"></div>
+  <div class="top mono">
+    <span>Bir Mes Dijital yapımı</span>
+    <span class="hide-s dim">Dijital pazarlama · İçerik · Reklam · Kreatör</span>
+    <span class="dim">Uşak, TR</span>
+  </div>
+  <h1><span class="l"><span>Markanız,</span></span><span class="l"><span><em>başrolde<span class="red">.</span></em></span></span></h1>
+  <div class="foot">
+    <p>Mes Dijital, Uşak merkezli bir dijital pazarlama ve kreatör ajansı. Hikâyenizi yazar, içeriğinizi çeker, reklamla büyütür, kreatörlerle anlatırız.</p>
+    <dl class="cr mono">
+      <dt class="dim">Tür</dt><dd style="margin:0">Dijital pazarlama</dd>
+      <dt class="dim">Süre</dt><dd style="margin:0">Uzun soluklu</dd>
+      <dt class="dim">Çekim yeri</dt><dd style="margin:0">Uşak → Türkiye</dd>
+    </dl>
+    <a class="btn" href="#s8">Başrolü alın →</a>
+  </div>
+</section>
+
+<!-- ───────── SAHNE 02 ───────── -->
+<section class="scene" id="s2" data-scene="Sahne 02 — Senaryo" data-sub="— Her iyi kampanya, iyi bir senaryoyla başlar.">
+  <div class="slate mono dim"><span class="cl"></span><b>Sahne 02</b><span>Senaryo</span><span>Çekim 1</span><span>Strateji</span></div>
+  <div class="script">
+    <article class="page rv" aria-label="Senaryo sayfası">
+      <p class="h">Sahne 2. İç mekân — Mes Dijital ofisi, Uşak — Gündüz</p>
+      <p class="a">Masada iki fincan çay. Duvarda bir takvim, üzerinde kırmızı kalemle işaretlenmiş bir lansman günü. MARKA, telefonunu masaya bırakır.</p>
+      <p class="c">Marka</p>
+      <p class="d">Her gün paylaşıyoruz. Beğeni geliyor, satış gelmiyor.</p>
+      <p class="c">Mes</p>
+      <p class="p">(fincanı bırakır)</p>
+      <p class="d">Çünkü paylaşmak bir strateji değil. Önce kime konuştuğunuzu bulalım. Sonra tek bir net mesaj.</p>
+      <p class="c">Marka</p>
+      <p class="d">Ya influencer'lar? Herkes onlarla çalışıyor.</p>
+      <p class="c">Mes</p>
+      <p class="d">Herkesle değil, <mark>kitlesi sizinkiyle örtüşenle.</mark> Sonra en iyi içeriği reklamla büyütür, her hafta rakamla bakarız.</p>
+      <p class="a" style="margin-top:1.4em">MARKA gülümser. Takvimdeki kırmızı işarete bakar.</p>
+      <p class="tr">Kesme:</p>
+    </article>
+    <aside class="mono dim rv">
+      <span>Not düşülen yer —</span>
+      <span style="color:var(--ivory)">Strateji önce gelir.<br>Çekim sonra.</span>
+    </aside>
+  </div>
+</section>
+
+<!-- ───────── SAHNE 03 ───────── -->
+<section id="s3" data-scene="Sahne 03 — Kadro" data-sub="— Beş rol, tek ekip. Hepsi aynı hikâyeyi anlatır.">
+  <div class="strip-wrap" id="stripWrap">
+    <div class="strip-sticky">
+      <div class="strip-head">
+        <div>
+          <div class="slate mono dim" style="margin-bottom:18px"><span class="cl"></span><b>Sahne 03</b><span>Kadro</span><span>Hizmetler</span></div>
+          <h2 class="st">Oyuncu <em>kadrosu.</em></h2>
+        </div>
+        <span class="mono dim">Kaydırın → 05 kare</span>
+      </div>
+      <div class="strip" id="strip">
+        <div class="frame"><span class="fnum">KARE 01 · MES-35MM</span><div class="img" style="--bg:linear-gradient(135deg,#7a0f14,#e51b26 55%,#ff8a3d)">
+          <div class="k mono"><span>Başrolde</span><span>01 / 05</span></div>
+          <h3>Sosyal medya</h3>
+          <div class="row"><p>Her gün sahnede. Markanızın sesini bulur, her platformun diline çeviririz.</p><ul><li>Strateji ve aylık takvim</li><li>Çekim, kurgu, tasarım</li><li>Topluluk yönetimi</li></ul></div>
+        </div></div>
+        <div class="frame"><span class="fnum">KARE 02 · MES-35MM</span><div class="img" style="--bg:linear-gradient(160deg,#a8531a,#d9772f 50%,#f2c28b)">
+          <div class="k mono"><span>Konuk oyuncular</span><span>02 / 05</span></div>
+          <h3>Influencer marketing</h3>
+          <div class="row"><p>Kitlesi markanızla örtüşen kreatörler. Seçimden rapora kadar süreci biz yönetiriz.</p><ul><li>Kreatör seçimi</li><li>Brif ve sözleşme</li><li>Yayın ve dönüşüm takibi</li></ul></div>
+        </div></div>
+        <div class="frame"><span class="fnum">KARE 03 · MES-35MM</span><div class="img" style="--bg:linear-gradient(200deg,#10302b,#1d4b43 50%,#2c6e63)">
+          <div class="k mono"><span>Işık &amp; ses</span><span>03 / 05</span></div>
+          <h3>Reklam yönetimi</h3>
+          <div class="row"><p>Doğru kişiyi doğru anda aydınlatırız. Her lira ölçülebilir bir hedefe bağlanır.</p><ul><li>Meta · Google · TikTok</li><li>Kreatif A/B testleri</li><li>Haftalık optimizasyon</li></ul></div>
+        </div></div>
+        <div class="frame"><span class="fnum">KARE 04 · MES-35MM</span><div class="img" style="--bg:linear-gradient(135deg,#1f1f5a,#3b3ba8 50%,#8b8bf0)">
+          <div class="k mono"><span>Set tasarımı</span><span>04 / 05</span></div>
+          <h3>Web tasarım</h3>
+          <div class="row"><p>Hikâyenin geçtiği yer. Hızlı, telefonda kusursuz, arama motorunda bulunan siteler.</p><ul><li>Kurumsal ve e-ticaret</li><li>Mobil öncelikli</li><li>SEO ve hız</li></ul></div>
+        </div></div>
+        <div class="frame" style="margin-right:var(--g)"><span class="fnum">KARE 05 · MES-35MM</span><div class="img" style="--bg:linear-gradient(135deg,#1a1814,#3a342b 50%,#6d6252)">
+          <div class="k mono"><span>Yönetmen</span><span>05 / 05</span></div>
+          <h3>Dijital strateji</h3>
+          <div class="row"><p>Her sahnenin nedeni. Konumlandırma, kanal ve bütçe planı, ölçüm altyapısı.</p><ul><li>Pazar ve rakip analizi</li><li>Konumlandırma</li><li>KPI kurulumu</li></ul></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── SAHNE 04 ───────── -->
+<section class="scene" id="s4" data-scene="Sahne 04 — Gişe" data-sub="— Her proje bir film. Sonucu gişe söyler.">
+  <div class="slate mono dim"><span class="cl"></span><b>Sahne 04</b><span>Gişe</span><span>Seçili işler</span></div>
+  <h2 class="st rv">Vizyondaki <em>işler.</em></h2>
+  <div class="posters">
+    <a class="poster rv" href="#s8" style="--bg:#7a0f14">
+      <div class="art" data-art="0"></div>
+      <span class="tag mono">Örnek</span>
+      <div class="tl"><small>Bir halı atölyesinin hikâyesi</small><h3>Düğüm</h3><span class="q">Uşak halısı, 15 saniyede.</span>
+        <div class="gise mono"><span>Gişe</span><b>+240%</b></div>
+        <div class="billing">Mes Dijital sunar · <b>Düğüm</b> · Sosyal medya · Reklam yönetimi · İçerik üretimi · Çekim yeri Uşak</div></div>
+    </a>
+    <a class="poster rv" href="#s8" style="--bg:#3a2415">
+      <div class="art" data-art="1"></div>
+      <span class="tag mono">Örnek</span>
+      <div class="tl"><small>Bir deri markasının hikâyesi</small><h3>Tabakhane</h3><span class="q">38 kreatör, tek bir çanta.</span>
+        <div class="gise mono"><span>Gişe</span><b>38 kreatör</b></div>
+        <div class="billing">Mes Dijital sunar · <b>Tabakhane</b> · Influencer marketing · UGC · Reklam kreatifi</div></div>
+    </a>
+    <a class="poster rv" href="#s8" style="--bg:#1d4b43">
+      <div class="art" data-art="2"></div>
+      <span class="tag mono">Örnek</span>
+      <div class="tl"><small>Yöresel bir lezzetin hikâyesi</small><h3>Tarhana</h3><span class="q">Mutfaktan dijital rafa.</span>
+        <div class="gise mono"><span>Gişe</span><b>3,1×</b></div>
+        <div class="billing">Mes Dijital sunar · <b>Tarhana</b> · Web tasarım · E-ticaret · Meta reklamları</div></div>
+    </a>
+    <a class="poster rv" href="#s8" style="--bg:#1f1f5a">
+      <div class="art" data-art="3"></div>
+      <span class="tag mono">Örnek</span>
+      <div class="tl"><small>Bir hafta sonu hikâyesi</small><h3>Kanyon</h3><span class="q">Rotayı kreatörler çizdi.</span>
+        <div class="gise mono"><span>Gişe</span><b>1,2 Mn</b></div>
+        <div class="billing">Mes Dijital sunar · <b>Kanyon</b> · Sosyal medya · Gezi kreatörleri · Reels serisi</div></div>
+    </a>
+  </div>
+  <p class="post-note mono dim">* Örnek içerik — tasarım için yer tutucudur, gerçek vakalar ve rakamlarla değiştirilecek.</p>
+</section>
+
+<!-- ───────── SAHNE 05 ───────── -->
+<section class="scene" id="s5" data-scene="Sahne 05 — Kurgu" data-sub="— Kurgu masasında her şey aynı zaman çizelgesinde.">
+  <div class="slate mono dim"><span class="cl"></span><b>Sahne 05</b><span>Kurgu</span><span>Süreç</span></div>
+  <h2 class="st rv">Tek <em>zaman çizelgesi.</em></h2>
+  <div class="editor rv" id="editor">
+    <div class="ed-top"><span>Proje: Marka_Kampanya_v4</span><span id="edtc">00:00:00:00</span></div>
+    <div class="ruler" aria-hidden="true"><span style="left:0">Hafta 1</span><span style="left:25%">Hafta 2</span><span style="left:50%">Hafta 3</span><span style="left:75%">Hafta 4</span></div>
+    <div class="tracks" id="tracks">
+      <div class="markers" aria-hidden="true"><i style="left:0"></i><i style="left:25%"></i><i style="left:50%"></i><i style="left:75%"></i></div>
+      <div class="trk"><span class="lab">V1</span><div class="lane"><span class="clip r" style="left:1%;width:22%">Dinle · analiz</span><span class="clip v" style="left:50%;width:22%">İçerik serisi</span><span class="clip v" style="left:74%;width:24%">Reels</span></div></div>
+      <div class="trk"><span class="lab">V2</span><div class="lane"><span class="clip r" style="left:26%;width:22%">Ayıkla · mesaj</span><span class="clip k" style="left:52%;width:30%">Kreatör yayınları</span></div></div>
+      <div class="trk"><span class="lab">A1</span><div class="lane"><span class="clip a" style="left:56%;width:42%">Reklam · Meta / Google / TikTok</span></div></div>
+      <div class="trk"><span class="lab">A2</span><div class="lane"><span class="clip r" style="left:24%;width:2.5%"></span><span class="clip r" style="left:49%;width:2.5%"></span><span class="clip r" style="left:74%;width:2.5%"></span><span class="clip r" style="left:97%;width:2.5%"></span></div></div>
+      <div class="playhead" id="playhead"></div>
+    </div>
+  </div>
+  <div class="beats" id="beats">
+    <div class="beat"><span class="mono dim">Hafta 1 · 00:00</span><h3>Dinle.</h3><p>Pazarı, rakipleri ve kitlenizi dinler; kimin nerede ne konuştuğunu haritalarız.</p></div>
+    <div class="beat"><span class="mono dim">Hafta 2 · 00:25</span><h3>Ayıkla.</h3><p>Gürültüyü ayıklar, tek bir net mesaj ve ölçülebilir hedef belirleriz.</p></div>
+    <div class="beat"><span class="mono dim">Hafta 3 · 00:50</span><h3>Yayınla.</h3><p>İçerik, kreatör ve reklam aynı takvimde, aynı hikâyeyle yayına çıkar.</p></div>
+    <div class="beat"><span class="mono dim">Hafta 4 · 01:15</span><h3>Ölç.</h3><p>Her hafta rakamla raporlar, işe yarayanı büyütür, yaramayanı keseriz.</p></div>
+  </div>
+</section>
+
+<!-- ───────── SAHNE 06 ───────── -->
+<section class="scene casting" id="s6" data-scene="Sahne 06 — Seçmeler" data-sub="— Kamera karşısında rahat mısınız? Sizi arıyoruz.">
+  <div class="slate mono dim"><span class="cl"></span><b>Sahne 06</b><span>Seçmeler</span><span>Kreatörler için</span></div>
+  <div class="cast-grid">
+    <h2 class="rv">Seçmeler<br>başladı<em>İçerik üreticileri aranıyor.</em></h2>
+    <div class="rv">
+      <ul class="req">
+        <li><span>01</span>Kitlesiyle gerçek bir bağı olan</li>
+        <li><span>02</span>Yemekten gezmeye, modadan oyuna her kategoride</li>
+        <li><span>03</span>Uşak, Denizli, Afyon, Kütahya, Manisa, İzmir ve ötesi</li>
+        <li><span>04</span>Adil ücret, net brif, zamanında ödeme bekleyen</li>
+      </ul>
+      <a class="btn" href="mailto:iletisim@mesdijital.com.tr?subject=Se%C3%A7melere%20ba%C5%9Fvuru%20%E2%80%94%20Kreat%C3%B6r">Seçmelere katılın →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── SAHNE 07 ───────── -->
+<section class="credits" id="s7" data-scene="Sahne 07 — Jenerik" data-sub="— Jenerik akarken kalkmayın. Sonunda bir sahne daha var.">
+  <div class="roll" id="roll">
+    <p class="end">Son.</p>
+    <h4>Bir Mes Dijital yapımı</h4>
+    <p class="big">Markanız, başrolde.</p>
+    <dl>
+      <dt>Yapım</dt><dd>Mes Dijital Reklam Ajansı</dd>
+      <dt>Yönetmen</dt><dd>Dijital strateji</dd>
+      <dt>Görüntü yönetmeni</dt><dd>Sosyal medya</dd>
+      <dt>Oyuncular</dt><dd>Kreatör ağımız</dd>
+      <dt>Işık &amp; ses</dt><dd>Reklam yönetimi</dd>
+      <dt>Set tasarımı</dt><dd>Web tasarım</dd>
+      <dt>Kurgu</dt><dd>Haftalık raporlar</dd>
+      <dt>Çekim yeri</dt><dd>Uşak, Türkiye</dd>
+      <dt>Dizgi</dt><dd>Bodoni Moda, DM Mono, Courier Prime</dd>
+    </dl>
+    <h4>Özel teşekkür</h4>
+    <p class="big" style="font-style:italic;font-weight:400">Bu sayfayı sonuna kadar izleyen size.</p>
+  </div>
+</section>
+
+<!-- ───────── SAHNE 08 ───────── -->
+<section class="scene contact" id="s8" data-scene="Sahne 08 — İletişim" data-sub="— Jenerik sonrası sahne: hâlâ buradaysanız, bir kahveye gelin.">
+  <div class="slate mono dim"><span class="cl"></span><b>Sahne 08</b><span>Jenerik sonrası</span><span>İletişim</span></div>
+  <h2 class="st rv">Sıradaki film <em>sizinki.</em></h2>
+  <div style="display:flex;flex-wrap:wrap;gap:12px" class="rv">
+    <a class="btn" href="mailto:iletisim@mesdijital.com.tr?subject=Yeni%20proje">E-posta gönderin →</a>
+    <a class="btn ghost" href="https://wa.me/905394974327" target="_blank" rel="noopener">WhatsApp</a>
+  </div>
+  <div class="cgrid rv">
+    <div><span class="mono dim">E-posta</span><a href="mailto:iletisim@mesdijital.com.tr">iletisim@mesdijital.com.tr</a></div>
+    <div><span class="mono dim">Telefon</span><a href="tel:+905394974327">+90 539 497 43 27</a></div>
+    <div><span class="mono dim">Adres</span><a href="https://maps.google.com/?q=Namık+Kemal+Cad.+9C+Uşak" target="_blank" rel="noopener">Cumhuriyet Mah., Namık Kemal Cad. No: 9C, Uşak</a></div>
+    <div><span class="mono dim">Yerel saat</span><span style="font-size:22px;font-style:italic" id="clock">—</span></div>
+  </div>
+  <div class="post rv">
+    <span class="mono dim">Jenerik sonrası sahne</span>
+    <p>Hâlâ buradaysanız, sizi Namık Kemal Caddesi'nde bir çaya bekliyoruz.</p>
+  </div>
+  <p class="mono dim" style="margin-top:48px">© 2026 Mes Dijital Reklam Ajansı · Tüm hakları saklıdır.</p>
+</section>
+</main>
+
+<script>
+(() => {
+  const $ = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+
+  /* ── Grain texture ── */
+  (() => {
+    const c = document.createElement('canvas'); c.width = c.height = 220;
+    const x = c.getContext('2d'), d = x.createImageData(220, 220);
+    for (let i = 0; i < d.data.length; i += 4) { const v = Math.random() * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; }
+    x.putImageData(d, 0, 0);
+    $('#grain').style.backgroundImage = `url(${c.toDataURL()})`;
+  })();
+
+  /* ── Timecode (24 fps, since page open) ── */
+  const t0 = performance.now(), tc = $('#tc'), edtc = $('#edtc');
+  const fmtTC = s => { const f = Math.floor((s % 1) * 24); s = Math.floor(s); return [s / 3600 | 0, (s / 60 | 0) % 60, s % 60, f].map(n => String(n).padStart(2, '0')).join(':'); };
+  const clk = new Intl.DateTimeFormat('tr-TR', {timeZone:'Europe/Istanbul', hour:'2-digit', minute:'2-digit'});
+  setInterval(() => { tc.textContent = fmtTC((performance.now() - t0) / 1000); }, 1000 / 24);
+  const setClock = () => $('#clock').textContent = clk.format(new Date()) + ' · TSİ'; setClock(); setInterval(setClock, 15000);
+
+  /* ── Film leader intro ── */
+  const leader = $('#leader'), hero = $('#s1');
+  let introDone = false;
+  function endIntro() {
+    if (introDone) return; introDone = true;
+    leader.classList.add('done'); setTimeout(() => leader.remove(), 700);
+    hero.classList.add('go');
+  }
+  if (reduce) endIntro();
+  else {
+    const sweep = $('#sweep'), cnt = $('#count');
+    let n = 3, start = performance.now();
+    (function spin(now) {
+      if (introDone) return;
+      const e = (now - start) / 600;
+      if (e >= 1) { n--; start = now; if (n === 0) { $('#ltitle').classList.add('on'); setTimeout(endIntro, 1100); return; } cnt.textContent = n; }
+      sweep.style.setProperty('--a', (e % 1) * 360 + 'deg');
+      requestAnimationFrame(spin);
+    })(start);
+    leader.addEventListener('click', endIntro);
+    addEventListener('keydown', endIntro, {once:true});
+  }
+
+  /* ── Hero "footage": moving light leaks on a low-res canvas ── */
+  const cv = $('#footage'), ctx = cv.getContext('2d');
+  cv.width = 192; cv.height = 108;
+  const blobs = [
+    {c:'229,27,38', r:.62, x:.3, y:.62, sx:.13, sy:.09, p:0},
+    {c:'255,138,61', r:.42, x:.78, y:.3, sx:.1, sy:.12, p:2},
+    {c:'120,10,20', r:.7, x:.6, y:.9, sx:.08, sy:.05, p:4},
+    {c:'255,214,170', r:.18, x:.66, y:.42, sx:.18, sy:.1, p:1}
+  ];
+  let T = 0, mx = .5, my = .5;
+  addEventListener('pointermove', e => { mx = e.clientX / innerWidth; my = e.clientY / innerHeight; }, {passive:true});
+  function paint() {
+    const w = cv.width, h = cv.height;
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = '#0b0a09'; ctx.fillRect(0, 0, w, h);
+    ctx.globalCompositeOperation = 'lighter';
+    blobs.forEach((b, i) => {
+      const x = (b.x + Math.sin(T * b.sx + b.p) * .18 + (mx - .5) * .06 * (i + 1)) * w;
+      const y = (b.y + Math.cos(T * b.sy + b.p) * .14 + (my - .5) * .05 * (i + 1)) * h;
+      const g = ctx.createRadialGradient(x, y, 0, x, y, b.r * w);
+      g.addColorStop(0, `rgba(${b.c},.9)`); g.addColorStop(1, `rgba(${b.c},0)`);
+      ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    });
+    // anamorphic streak
+    ctx.globalCompositeOperation = 'lighter';
+    const sy = (.42 + Math.sin(T * .2) * .05) * h;
+    const lg = ctx.createLinearGradient(0, 0, w, 0);
+    lg.addColorStop(0, 'rgba(255,170,120,0)'); lg.addColorStop(.5, 'rgba(255,190,140,.35)'); lg.addColorStop(1, 'rgba(255,170,120,0)');
+    ctx.fillStyle = lg; ctx.fillRect(0, sy, w, 1.2);
+    T += .016;
+    if (!reduce && scrollY < innerHeight * 1.3) requestAnimationFrame(paint); else if (!reduce) setTimeout(() => requestAnimationFrame(paint), 300);
+  }
+  paint();
+
+  /* ── Scene label + subtitles ── */
+  const sub = $('#sub'), lbl = $('#sceneLbl');
+  let curSub = '';
+  const sio = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    const s = e.target;
+    lbl.textContent = s.dataset.scene;
+    if (curSub !== s.dataset.sub) {
+      curSub = s.dataset.sub; sub.classList.remove('on');
+      setTimeout(() => { sub.textContent = curSub; sub.classList.add('on'); }, 250);
+    }
+  }), {rootMargin:'-50% 0px -50% 0px'});
+  $$('[data-scene]').forEach(s => sio.observe(s));
+
+  /* ── Reveals ── */
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), {rootMargin:'0px 0px -10% 0px'});
+  $$('.rv,.iris').forEach(el => io.observe(el));
+
+  /* ── Scene menu ── */
+  const scenes = $('#scenes'), nb = $('#navBtn');
+  const setNav = o => { scenes.classList.toggle('open', o); nb.setAttribute('aria-expanded', o); nb.textContent = o ? 'Kapat' : 'Sahneler'; };
+  nb.addEventListener('click', () => setNav(!scenes.classList.contains('open')));
+  $$('a', scenes).forEach(a => a.addEventListener('click', () => setNav(false)));
+  addEventListener('keydown', e => { if (e.key === 'Escape') setNav(false); });
+
+  /* ── Film strip horizontal scroll ── */
+  const wrap = $('#stripWrap'), strip = $('#strip');
+  const desk = () => matchMedia('(min-width:901px)').matches;
+  function stripFrame() {
+    if (desk()) {
+      const r = wrap.getBoundingClientRect();
+      const p = clamp(-r.top / (r.height - innerHeight));
+      const max = strip.scrollWidth - innerWidth;
+      strip.style.transform = `translateX(${-p * max}px)`;
+    }
+  }
+
+  /* ── Edit timeline playhead ── */
+  const editor = $('#editor'), ph = $('#tracks'), beats = $$('#beats .beat');
+  function editFrame() {
+    const r = editor.getBoundingClientRect();
+    const p = clamp((innerHeight * .75 - r.top) / (innerHeight * .9));
+    ph.style.setProperty('--p', p.toFixed(4));
+    edtc.textContent = fmtTC(p * 100);
+    const k = Math.min(3, Math.floor(p * 4 + .001));
+    beats.forEach((b, i) => b.classList.toggle('on', p > 0 && i <= k));
+  }
+
+  function onScroll() { stripFrame(); editFrame(); }
+  addEventListener('scroll', onScroll, {passive:true});
+  addEventListener('resize', onScroll);
+  onScroll();
+
+  /* ── Credits roll when visible ── */
+  const credits = $('#s7');
+  new IntersectionObserver(es => es.forEach(e => credits.classList.toggle('play', e.isIntersecting)), {threshold:.4}).observe(credits);
+
+  /* ── Poster art ── */
+  const ART = [
+    // Düğüm — knot / carpet medallion
+    `<svg viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice"><defs><radialGradient id="g0" cx=".5" cy=".35" r=".7"><stop offset="0" stop-color="#e51b26"/><stop offset="1" stop-color="#3d070a"/></radialGradient></defs><rect width="200" height="300" fill="url(#g0)"/><g transform="translate(100 110)" fill="none" stroke="#f4efe6" stroke-width="1.2" opacity=".9">${[...Array(8)].map((_, i) => `<path d="M0 ${-78 + i * 8}L${78 - i * 8} 0L0 ${78 - i * 8}L${-78 + i * 8} 0Z"/>`).join('')}</g><circle cx="100" cy="110" r="10" fill="#f4efe6"/></svg>`,
+    // Tabakhane — leather folds
+    `<svg viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8a4a22"/><stop offset="1" stop-color="#1c100a"/></linearGradient></defs><rect width="200" height="300" fill="url(#g1)"/>${[...Array(14)].map((_, i) => `<path d="M-10 ${40 + i * 12} C60 ${20 + i * 12} 120 ${70 + i * 12} 210 ${30 + i * 12}" fill="none" stroke="#f2c28b" stroke-opacity="${.15 + (i % 3) * .12}" stroke-width="1.5"/>`).join('')}<circle cx="140" cy="70" r="26" fill="#e51b26"/></svg>`,
+    // Tarhana — steam & bowl
+    `<svg viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice"><defs><radialGradient id="g2" cx=".5" cy=".45" r=".7"><stop offset="0" stop-color="#2c6e63"/><stop offset="1" stop-color="#0b201c"/></radialGradient></defs><rect width="200" height="300" fill="url(#g2)"/><path d="M40 130 Q100 200 160 130Z" fill="#e51b26"/><rect x="36" y="126" width="128" height="6" rx="3" fill="#f4efe6"/>${[0, 1, 2].map(i => `<path d="M${76 + i * 24} 116 c-10 -14 10 -22 0 -36 c-10 -14 10 -22 0 -36" fill="none" stroke="#f4efe6" stroke-width="2" stroke-linecap="round" opacity=".7"/>`).join('')}</svg>`,
+    // Kanyon — layered cliffs & sun
+    `<svg viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="g3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b3ba8"/><stop offset=".6" stop-color="#ff8a3d"/><stop offset="1" stop-color="#e51b26"/></linearGradient></defs><rect width="200" height="300" fill="url(#g3)"/><circle cx="100" cy="120" r="34" fill="#f4efe6" opacity=".9"/><path d="M0 170 L40 140 L70 165 L110 130 L150 160 L200 135 V300 H0Z" fill="#7a0f14"/><path d="M0 200 L50 175 L90 195 L140 170 L200 190 V300 H0Z" fill="#3d070a"/><path d="M0 235 L60 215 L120 232 L200 212 V300 H0Z" fill="#0b0a09"/></svg>`
+  ];
+  $$('.poster .art').forEach(a => a.innerHTML = ART[+a.dataset.art]);
+})();
+</script>
+</body>
+</html>

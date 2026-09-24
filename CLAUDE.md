@@ -56,4 +56,6 @@ Bakım sayfasıyla tutarlılık: Eina 04, marka kırmızısı `#e51b26` (dolgu/l
 metin kırmızısı `#c4141d` (açık zeminde WCAG için), zemin `#fcfbfb`, kart
 `#ffffff`. Logo `public/assets/img/mes-logo.png` (şeffaf), favicon seti
 kırmızı "M". Ana sayfa tasarımı henüz yapılmadı; `src/pages/index.astro`
-yer tutucudur ve canlıda bakım modu açık.
+yer tutucudur ve canlıda bakım modu açık. Altı statik tasarım önerisi
+`docs/tasarim-onerileri/` altında (24 Eylül 2026); seçilen öneri Astro'ya
+taşınacak, içlerindeki vaka ve rakamlar yer tutucudur.

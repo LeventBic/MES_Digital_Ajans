@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mes Dijital — Afiş</title>
+<meta name="description" content="Mes Dijital: Uşak merkezli dijital pazarlama, sosyal medya, reklam, web tasarım ve influencer marketing ajansı.">
+<meta name="theme-color" content="#ffffff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --white:#ffffff; --ink:#111111; --red:#e51b26; --red-t:#c4141d; --grey:#8a8a85; --rule:#111111;
+  --g:clamp(16px,2.2vw,32px);           /* gutter / margin */
+  --col:calc((100vw - var(--g) * 13) / 12);
+  --f:"Inter Tight",Helvetica,Arial,sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--white);color:var(--ink);font-family:var(--f);font-size:16px;line-height:1.4;font-weight:400;overflow-x:hidden;-webkit-font-smoothing:antialiased;font-feature-settings:"ss01","cv11"}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+::selection{background:var(--red);color:#fff}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.sm{font-size:12px;line-height:1.35;letter-spacing:.01em}
+.cap{font-size:12px;line-height:1.35;text-transform:uppercase;letter-spacing:.06em;font-weight:500}
+.red{color:var(--red)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--g);padding-inline:var(--g)}
+
+/* ───────── GRID OVERLAY ───────── */
+.overlay{position:fixed;inset:0;z-index:90;pointer-events:none;opacity:0;transition:opacity .4s}
+.overlay.on{opacity:1}
+.overlay .grid{height:100%}
+.overlay .grid i{background:rgba(229,27,38,.08);border-inline:1px solid rgba(229,27,38,.35)}
+.overlay .base{position:absolute;inset:0;background:repeating-linear-gradient(transparent 0 23px,rgba(229,27,38,.18) 23px 24px)}
+
+/* ───────── HEADER ───────── */
+header.top{position:fixed;inset:0 0 auto 0;z-index:80;padding-block:13px;background:var(--white);color:var(--ink);border-bottom:1px solid var(--ink)}
+.tools .cnt{font-variant-numeric:tabular-nums;font-weight:400}
+.tools .cnt b{font-weight:800}
+header.top .grid{align-items:baseline}
+.brand{grid-column:1/4;font-weight:800;font-size:18px;letter-spacing:-.02em;text-decoration:none}
+.nav{grid-column:4/10;display:flex;gap:28px}
+.nav a{text-decoration:none;font-size:14px;font-weight:500}
+.nav a span{font-weight:300;margin-right:6px}
+.nav a:hover{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px}
+.tools{grid-column:10/13;justify-self:end;white-space:nowrap;display:flex;gap:18px;font-size:14px;font-weight:500}
+.tools button[aria-pressed="true"]{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px}
+
+/* poster counter */
+.counter{position:fixed;left:var(--g);bottom:var(--g);z-index:80;display:flex;align-items:flex-end;gap:10px;mix-blend-mode:difference;color:#fff}
+.counter b{font-weight:900;font-size:40px;line-height:.8;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.counter span{font-size:12px;line-height:1.2}
+.prog{position:fixed;right:var(--g);top:50%;height:30vh;width:2px;background:rgba(17,17,17,.12);transform:translateY(-50%);z-index:80}
+.prog i{position:absolute;inset:0 0 auto 0;height:0;background:var(--red)}
+
+/* ───────── POSTERS ───────── */
+.poster{position:relative;min-height:100svh;overflow:hidden}
+.poster.pad{padding-block:calc(var(--g) * 4) calc(var(--g) * 3)}
+
+/* P1 — Hero */
+.p1 .circle{position:absolute;width:min(78vw,86vh);aspect-ratio:1;border-radius:50%;background:var(--red);right:-8vw;top:8vh;will-change:transform}
+.p1 .arcs{position:absolute;width:min(78vw,86vh);aspect-ratio:1;right:-8vw;top:8vh;pointer-events:none;will-change:transform}
+.p1 .mes{
+  position:absolute;left:calc(var(--g) - .06em);bottom:-.19em;margin:0;
+  font-weight:900;font-size:clamp(160px,41vw,720px);line-height:.8;letter-spacing:-.075em;mix-blend-mode:multiply;will-change:transform;
+}
+.p1 .mes span{display:inline-block}
+.p1 .meta{position:relative;z-index:2;padding-top:calc(var(--g) * 3.4);row-gap:var(--g)}
+.p1 .lead{grid-column:1/7;font-size:clamp(26px,3.3vw,54px);line-height:1.02;letter-spacing:-.035em;font-weight:500;margin:0}
+.p1 .lead em{font-style:italic;font-weight:200}
+.p1 .list{grid-column:8/10;grid-row:1;margin:0;padding:0;list-style:none}
+.p1 .coords{grid-column:10/13;grid-row:1}
+.p1 .year{position:absolute;right:var(--g);bottom:calc(var(--g) * 1.2);z-index:2;font-weight:200;font-size:clamp(40px,7vw,120px);line-height:.8;letter-spacing:-.05em;color:#fff;writing-mode:vertical-rl;transform:rotate(180deg)}
+
+/* P2 — Services */
+.p2 .five{
+  position:absolute;right:calc(var(--g) * -1);top:-.12em;margin:0;
+  font-size:clamp(360px,92vw,1500px);line-height:.8;letter-spacing:-.08em;font-weight:100;color:var(--ink);pointer-events:none;opacity:.06;
+}
+.p2 .head{row-gap:var(--g);margin-bottom:calc(var(--g) * 2)}
+.p2 h2{grid-column:1/8;margin:0;font-weight:800;font-size:clamp(46px,7.4vw,128px);line-height:.86;letter-spacing:-.055em}
+.p2 h2 span{font-weight:150;font-style:italic;letter-spacing:-.04em}
+.p2 .intro{grid-column:9/13;align-self:end;margin:0;font-size:17px;max-width:34ch}
+.svc{border-top:2px solid var(--ink)}
+.svc .row{position:relative;padding-block:18px;border-bottom:1px solid var(--ink);align-items:baseline;transition:color .3s}
+.svc .row::before{content:"";position:absolute;inset:0;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease);z-index:-1}
+.svc .row:hover{color:#fff}
+.svc .row:hover::before{transform:none}
+.svc .n{grid-column:1/2;font-weight:300;font-size:14px}
+.svc h3{grid-column:2/7;margin:0;font-weight:700;font-size:clamp(28px,3.4vw,56px);line-height:.95;letter-spacing:-.04em;transition:font-weight .5s var(--ease)}
+.svc .row:hover h3{font-weight:900;font-style:italic}
+.svc p{grid-column:7/11;margin:0;font-size:15px;max-width:40ch}
+.svc .tags{grid-column:11/13;justify-self:end;text-align:right}
+.svc{isolation:isolate}
+
+/* P3 — Weight ladder */
+.p3{background:var(--red);color:var(--ink);display:flex;align-items:center}
+.p3 .ladder{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-12deg);white-space:nowrap;text-align:left;margin:0}
+.p3 .ladder span{display:block;font-size:clamp(64px,12.5vw,230px);line-height:.8;letter-spacing:-.06em;will-change:transform}
+.p3 .ladder span:nth-child(odd){color:#fff}
+.p3 .grid{position:relative;z-index:2;width:100%;align-self:stretch;align-content:space-between;padding-block:calc(var(--g) * 3.4) var(--g)}
+.p3 .q{grid-column:1/5;margin:0;font-size:17px;font-weight:500;max-width:30ch;color:var(--ink)}
+.p3 .sig{grid-column:9/13;justify-self:end;text-align:right}
+
+/* P4 — Work index */
+.p4 .head{margin-bottom:calc(var(--g) * 2);align-items:end}
+.p4 h2{grid-column:1/9;margin:0;font-weight:800;font-size:clamp(46px,7.4vw,128px);line-height:.86;letter-spacing:-.055em}
+.p4 h2 span{font-weight:150;font-style:italic}
+.p4 .note{grid-column:9/13;margin:0}
+.index{border-top:2px solid var(--ink)}
+.index .th{padding-block:10px;border-bottom:1px solid var(--ink)}
+.index a{text-decoration:none}
+.index .tr{padding-block:22px;border-bottom:1px solid var(--ink);align-items:baseline;transition:padding .5s var(--ease),background-color .3s}
+.index .tr:hover{padding-block:34px;background:var(--ink);color:#fff}
+.c1{grid-column:1/2}.c2{grid-column:2/7}.c3{grid-column:7/10}.c4{grid-column:10/11}.c5{grid-column:11/13;justify-self:end}
+.index .c2{font-weight:600;font-size:clamp(22px,2.4vw,40px);line-height:1;letter-spacing:-.035em}
+.index .c5{font-weight:800;font-size:clamp(22px,2.4vw,40px);line-height:1;letter-spacing:-.04em;color:var(--red)}
+.index .thumb{display:none}
+.index .th span{font-size:12px;font-weight:500;letter-spacing:.06em;line-height:1.35;color:var(--ink)}
+.float{position:fixed;left:0;top:0;width:min(30vw,420px);aspect-ratio:3/4;z-index:70;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.85);transition:opacity .25s,transform .45s var(--ease);box-shadow:0 30px 60px rgba(0,0,0,.25)}
+.float.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.float svg{width:100%;height:100%}
+
+/* P5 — Process */
+.p5 .head{margin-bottom:calc(var(--g) * 3);align-items:end}
+.p5 h2{grid-column:1/9;margin:0;font-weight:800;font-size:clamp(46px,7.4vw,128px);line-height:.86;letter-spacing:-.055em}
+.p5 h2 span{font-weight:150;font-style:italic}
+.track{position:relative;height:2px;background:rgba(17,17,17,.15);margin-inline:var(--g);margin-bottom:28px}
+.track i{position:absolute;inset:0 auto 0 0;width:0;background:var(--red)}
+.steps .st{grid-column:span 3;display:flex;flex-direction:column;gap:18px}
+.steps svg{width:clamp(56px,6vw,96px);height:auto}
+.steps .num{font-weight:100;font-size:clamp(80px,11vw,190px);line-height:.8;letter-spacing:-.07em;transition:font-weight 1s var(--ease)}
+.steps .st.on .num{font-weight:900}
+.steps h3{margin:0;font-weight:700;font-size:clamp(22px,2vw,32px);letter-spacing:-.03em;line-height:1}
+.steps p{margin:0;font-size:15px;max-width:30ch}
+
+/* P6 — Two audiences */
+.p6{display:grid;grid-template-columns:1fr 1fr;min-height:100svh}
+.half{padding:calc(var(--g) * 3.4) var(--g) var(--g);display:flex;flex-direction:column;justify-content:space-between;gap:40px;position:relative;overflow:hidden;text-decoration:none}
+.half.dark{background:var(--ink);color:#fff}
+.half h2{margin:0;font-weight:900;font-size:clamp(48px,8vw,140px);line-height:.84;letter-spacing:-.06em}
+.half h2 i{font-weight:150}
+.half ul{list-style:none;margin:0;padding:0;border-top:2px solid currentColor}
+.half li{display:flex;gap:18px;padding:12px 0;border-bottom:1px solid currentColor;font-size:17px}
+.half li span{font-weight:300;min-width:2ch}
+.half .go{display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:18px}
+.half .go b{display:inline-grid;place-items:center;width:64px;height:64px;border-radius:50%;background:var(--red);color:#fff;font-size:26px;transition:transform .6s var(--ease)}
+.half:hover .go b{transform:rotate(-45deg) scale(1.1)}
+.half .shape{position:absolute;right:-6%;top:12%;width:44%;opacity:1;pointer-events:none}
+
+/* P7 — Contact */
+.p7{padding-block:calc(var(--g) * 4) var(--g);display:flex;flex-direction:column;justify-content:space-between;gap:calc(var(--g) * 3)}
+.p7 .bigmail{display:block;text-decoration:none;font-weight:900;font-size:clamp(46px,10.6vw,190px);line-height:.84;letter-spacing:-.065em;padding-inline:var(--g);position:relative;z-index:2}
+.p7 .bigmail span{display:block;transition:transform .6s var(--ease),color .3s}
+.p7 .bigmail:hover span:nth-child(1){transform:translateX(2vw)}
+.p7 .bigmail:hover span:nth-child(2){transform:translateX(5vw);color:var(--red)}
+.p7 .bigmail:hover span:nth-child(3){transform:translateX(8vw)}
+.p7 .half-circle{position:absolute;right:-18vw;top:10vh;width:52vw;aspect-ratio:1;border-radius:50%;background:var(--red);z-index:1}
+.p7 .info{row-gap:28px;position:relative;z-index:2}
+.p7 .info div{grid-column:span 3;display:flex;flex-direction:column;gap:6px;border-top:2px solid var(--ink);padding-top:10px}
+.p7 .info a{text-decoration:none;font-size:18px;font-weight:500}
+.p7 .info a:hover{color:var(--red)}
+.colophon{border-top:1px solid var(--ink);padding-top:12px;row-gap:8px;position:relative;z-index:2}
+.colophon span{grid-column:span 3}
+
+/* reveal */
+.rv{clip-path:inset(0 100% 0 0);transition:clip-path 1.2s var(--ease)}
+.rv.in{clip-path:inset(0 0 0 0)}
+.fade{opacity:0;transform:translateY(24px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
+.fade.in{opacity:1;transform:none}
+
+/* ───────── RESPONSIVE ───────── */
+@media (max-width:900px){
+  .nav{display:none}
+  .brand{grid-column:1/7}
+  .tools{grid-column:7/13}
+  .p1 .circle,.p1 .arcs{width:92vw;right:-30vw;top:24vh}
+  .p1 .meta{padding-top:84px}
+  .p1 .lead{grid-column:1/-1;font-size:clamp(28px,8vw,44px)}
+  .p1 .list{grid-column:1/7;grid-row:auto}
+  .p1 .coords{grid-column:7/13;grid-row:auto}
+  .p1 .year{display:none}
+  .p2 h2,.p2 .intro,.p4 h2,.p4 .note,.p5 h2{grid-column:1/-1}
+  .p2 .intro{margin-top:18px}
+  .svc h3{grid-column:2/-1}
+  .svc p{grid-column:2/-1;margin-top:10px}
+  .svc .tags{grid-column:2/-1;justify-self:start;text-align:left;margin-top:8px}
+  .p3 .q{grid-column:1/-1}
+  .p3 .sig{grid-column:1/-1;justify-self:start;text-align:left}
+  .index .th{display:none}
+  .index .tr{grid-template-columns:auto 1fr;row-gap:6px}
+  .c1{grid-column:1/2}.c2{grid-column:2/3}.c3{grid-column:2/3}.c4{display:none}.c5{grid-column:2/3;justify-self:start}
+  .index .thumb{display:block;grid-column:1/-1;aspect-ratio:16/9;margin-bottom:12px;overflow:hidden}
+  .index .thumb svg{width:100%;height:100%}
+  .float{display:none}
+  .steps .st{grid-column:span 6;margin-bottom:40px}
+  .track{display:none}
+  .p6{grid-template-columns:1fr}
+  .half{min-height:80svh}
+  .p7 .info div{grid-column:span 6}
+  .colophon span{grid-column:span 12}
+  .prog{display:none}
+}
+@media (max-width:520px){
+  .steps .st{grid-column:1/-1}
+  .p7 .info div{grid-column:1/-1}
+  .tools .hs{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.rv{clip-path:none}.fade{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" aria-hidden="true"><div class="base"></div><div class="grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+
+<header class="top">
+  <div class="grid">
+    <a class="brand" href="#p1">Mes Dijital</a>
+    <nav class="nav" aria-label="Ana menü">
+      <a href="#p2"><span>1</span>Hizmetler</a>
+      <a href="#p4"><span>2</span>İşler</a>
+      <a href="#p5"><span>3</span>Süreç</a>
+      <a href="#p7"><span>4</span>İletişim</a>
+    </nav>
+    <div class="tools">
+      <span class="cnt hs" aria-hidden="true">Afiş <b id="cnt">01</b>/07</span>
+      <button id="gridBtn" class="hs" aria-pressed="false" title="Izgarayı göster (G)">Izgara</button>
+      <a href="#p7">Konuşalım ↗</a>
+    </div>
+  </div>
+</header>
+
+<div class="prog" aria-hidden="true"><i id="prog"></i></div>
+
+<main>
+<!-- ───────── AFİŞ 01 ───────── -->
+<section class="poster p1" id="p1" data-n="01" aria-label="Giriş">
+  <div class="circle" id="circle"></div>
+  <svg class="arcs" id="arcs" viewBox="0 0 200 200" aria-hidden="true">
+    <circle cx="100" cy="100" r="99" fill="none" stroke="#111" stroke-width=".4"/>
+    <circle cx="100" cy="100" r="80" fill="none" stroke="#fff" stroke-width=".4" stroke-dasharray="2 3"/>
+    <path d="M100 1 A99 99 0 0 1 199 100" fill="none" stroke="#111" stroke-width="3"/>
+    <line x1="100" y1="0" x2="100" y2="200" stroke="#fff" stroke-width=".4"/>
+    <line x1="0" y1="100" x2="200" y2="100" stroke="#fff" stroke-width=".4"/>
+  </svg>
+  <div class="grid meta">
+    <p class="lead fade">Markalar için dijital görünürlük. <em>Uşak'tan,</em> ölçülebilir biçimde.</p>
+    <ul class="list sm fade">
+      <li>Sosyal medya</li><li>Influencer marketing</li><li>Reklam yönetimi</li><li>Web tasarım</li><li>Dijital strateji</li>
+    </ul>
+    <div class="coords sm fade">Uşak, Türkiye<br>38° 40′ K &nbsp;29° 24′ D<br><span id="clock">—</span></div>
+  </div>
+  <h1 class="mes" id="mes" aria-label="Mes Dijital"><span>m</span><span>e</span><span>s</span></h1>
+  <div class="year" aria-hidden="true">2026</div>
+</section>
+
+<!-- ───────── AFİŞ 02 ───────── -->
+<section class="poster p2 pad" id="p2" data-n="02" aria-labelledby="h2">
+  <p class="five" id="five" aria-hidden="true">5</p>
+  <div class="grid head">
+    <h2 id="h2" class="rv">Beş disiplin,<br><span>tek ekip.</span></h2>
+    <p class="intro fade">Sosyal medyadan reklama, web sitesinden kreatör kampanyasına kadar her şey aynı masada planlanır, aynı takvimde yayınlanır, aynı raporda ölçülür.</p>
+  </div>
+  <div class="svc">
+    <div class="grid row"><span class="n">1.1</span><h3>Sosyal medya</h3><p>İçerik stratejisi, aylık takvim, çekim ve kurgu, topluluk yönetimi.</p><span class="tags cap">Instagram<br>TikTok · LinkedIn</span></div>
+    <div class="grid row"><span class="n">1.2</span><h3>Influencer marketing</h3><p>Kreatör seçimi, brif, sözleşme, yayın takibi ve dönüşüm raporu.</p><span class="tags cap">Mikro · Makro<br>UGC</span></div>
+    <div class="grid row"><span class="n">1.3</span><h3>Reklam yönetimi</h3><p>Hedefleme, kreatif testleri, dönüşüm takibi, haftalık bütçe optimizasyonu.</p><span class="tags cap">Meta · Google<br>TikTok</span></div>
+    <div class="grid row"><span class="n">1.4</span><h3>Web tasarım</h3><p>Hızlı, mobil öncelikli, arama motorunda bulunan siteler ve açılış sayfaları.</p><span class="tags cap">Kurumsal<br>E-ticaret</span></div>
+    <div class="grid row"><span class="n">1.5</span><h3>Dijital strateji</h3><p>Pazar ve rakip analizi, konumlandırma, kanal ve bütçe planı, ölçüm kurulumu.</p><span class="tags cap">Analitik<br>KPI</span></div>
+  </div>
+</section>
+
+<!-- ───────── AFİŞ 03 ───────── -->
+<section class="poster p3" id="p3" data-n="03" aria-label="İlke">
+  <p class="ladder" id="ladder" aria-hidden="true">
+    <span style="font-weight:100">daha az gürültü</span>
+    <span style="font-weight:200">daha az gürültü</span>
+    <span style="font-weight:300">daha az gürültü</span>
+    <span style="font-weight:400">daha az gürültü</span>
+    <span style="font-weight:500">daha çok sonuç</span>
+    <span style="font-weight:600">daha çok sonuç</span>
+    <span style="font-weight:700">daha çok sonuç</span>
+    <span style="font-weight:800">daha çok sonuç</span>
+    <span style="font-weight:900">daha çok sonuç</span>
+  </p>
+  <div class="grid">
+    <p class="q">Her kampanyaya başlamadan önce neyi ölçeceğimizi yazarız. Rapor günü sürpriz olmaz; işe yarayanı büyütür, yaramayanı keseriz.</p>
+    <span class="sig cap">İlke 03 · Mes Dijital</span>
+  </div>
+</section>
+
+<!-- ───────── AFİŞ 04 ───────── -->
+<section class="poster p4 pad" id="p4" data-n="04" aria-labelledby="h4">
+  <div class="grid head">
+    <h2 id="h4" class="rv">Seçili işler,<br><span>dizin.</span></h2>
+    <p class="note sm fade">Örnek içerik. Tasarım için yer tutucudur, gerçek vakalar ve rakamlarla değiştirilecek.</p>
+  </div>
+  <div class="index" id="index">
+    <div class="grid th cap"><span class="c1">No.</span><span class="c2">Proje</span><span class="c3">Hizmet</span><span class="c4">Yıl</span><span class="c5">Sonuç</span></div>
+    <a class="grid tr" href="#p7" data-art="0"><span class="c1 sm">01</span><span class="c2">El dokuması halı atölyesi</span><span class="c3 sm">Sosyal medya, reklam</span><span class="c4 sm">2026</span><span class="c5">+240%</span></a>
+    <a class="grid tr" href="#p7" data-art="1"><span class="c1 sm">02</span><span class="c2">Deri aksesuar markası</span><span class="c3 sm">Influencer, UGC</span><span class="c4 sm">2026</span><span class="c5">38 kreatör</span></a>
+    <a class="grid tr" href="#p7" data-art="2"><span class="c1 sm">03</span><span class="c2">Yöresel gıda üreticisi</span><span class="c3 sm">Web, e-ticaret, reklam</span><span class="c4 sm">2025</span><span class="c5">3,1×</span></a>
+    <a class="grid tr" href="#p7" data-art="3"><span class="c1 sm">04</span><span class="c2">Kanyon ve doğa turizmi</span><span class="c3 sm">Sosyal medya, influencer</span><span class="c4 sm">2025</span><span class="c5">1,2 Mn</span></a>
+    <a class="grid tr" href="#p7" data-art="4"><span class="c1 sm">05</span><span class="c2">Tekstil üreticisi, B2B</span><span class="c3 sm">Web, strateji</span><span class="c4 sm">2025</span><span class="c5">2 dil</span></a>
+  </div>
+  <div class="float" id="float" aria-hidden="true"></div>
+</section>
+
+<!-- ───────── AFİŞ 05 ───────── -->
+<section class="poster p5 pad" id="p5" data-n="05" aria-labelledby="h5">
+  <div class="grid head">
+    <h2 id="h5" class="rv">Dört adım,<br><span>tek döngü.</span></h2>
+  </div>
+  <div class="track" aria-hidden="true"><i id="track"></i></div>
+  <div class="grid steps" id="steps">
+    <div class="st">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48" fill="#e51b26"/></svg>
+      <span class="num">01</span><h3>Dinle</h3><p>Pazarı, rakipleri ve kitlenizi dinler; hangi platformda ne konuşulduğunu haritalarız.</p>
+    </div>
+    <div class="st">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><rect x="2" y="2" width="96" height="96" fill="#111"/></svg>
+      <span class="num">02</span><h3>Ayıkla</h3><p>Gürültüyü ayıklar, tek bir net mesaj ve ölçülebilir bir hedef belirleriz.</p>
+    </div>
+    <div class="st">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><path d="M50 2 98 98H2Z" fill="none" stroke="#111" stroke-width="4"/></svg>
+      <span class="num">03</span><h3>Yayınla</h3><p>İçerik, reklam ve kreatör iş birlikleri aynı takvimde, aynı hikâyeyle yayına çıkar.</p>
+    </div>
+    <div class="st">
+      <svg viewBox="0 0 100 100" aria-hidden="true"><rect x="0" y="40" width="100" height="20" fill="#e51b26"/><rect x="40" y="0" width="20" height="100" fill="#111"/></svg>
+      <span class="num">04</span><h3>Ölç</h3><p>Her hafta rakamla raporlar, işe yarayanı büyütür, yaramayanı keseriz. Sonra döngü yeniden başlar.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ───────── AFİŞ 06 ───────── -->
+<section class="p6" id="p6" data-n="06" aria-label="Markalar ve kreatörler">
+  <a class="half dark" href="mailto:iletisim@mesdijital.com.tr?subject=Teklif%20talebi">
+    <span class="cap">A — Markalar için</span>
+    <svg class="shape" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="50" fill="#e51b26"/></svg>
+    <h2>Marka<br><i>mısınız?</i></h2>
+    <ul>
+      <li><span>1</span>Strateji ve içerik takvimi</li>
+      <li><span>2</span>Meta, Google, TikTok reklamları</li>
+      <li><span>3</span>Kreatör eşleştirme</li>
+      <li><span>4</span>Rakamlı haftalık rapor</li>
+    </ul>
+    <span class="go">Teklif isteyin <b>→</b></span>
+  </a>
+  <a class="half" href="mailto:iletisim@mesdijital.com.tr?subject=Kreat%C3%B6r%20a%C4%9F%C4%B1%20ba%C5%9Fvurusu">
+    <span class="cap">B — İçerik üreticileri için</span>
+    <svg class="shape" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 0 100 100H0Z" fill="#111"/></svg>
+    <h2>Kreatör<br><i>müsünüz?</i></h2>
+    <ul>
+      <li><span>1</span>Kitlenize uygun markalar</li>
+      <li><span>2</span>Net brif, zamanında ödeme</li>
+      <li><span>3</span>Kreatif ve prodüksiyon desteği</li>
+      <li><span>4</span>Bölgesel ve ulusal kampanyalar</li>
+    </ul>
+    <span class="go">Ağa katılın <b>→</b></span>
+  </a>
+</section>
+
+<!-- ───────── AFİŞ 07 ───────── -->
+<section class="poster p7" id="p7" data-n="07" aria-labelledby="h7">
+  <div class="half-circle" aria-hidden="true"></div>
+  <div class="grid" style="position:relative;z-index:2"><span class="cap" id="h7" style="grid-column:1/-1">Afiş 07 — İletişim</span></div>
+  <a class="bigmail" href="mailto:iletisim@mesdijital.com.tr" aria-label="iletisim@mesdijital.com.tr adresine e-posta gönderin"><span>iletisim@</span><span>mesdijital</span><span>.com.tr</span></a>
+  <div>
+    <div class="grid info">
+      <div><span class="cap">Telefon</span><a href="tel:+905394974327">+90 539 497 43 27</a></div>
+      <div><span class="cap">WhatsApp</span><a href="https://wa.me/905394974327" target="_blank" rel="noopener">Mesaj gönderin ↗</a></div>
+      <div><span class="cap">Adres</span><a href="https://maps.google.com/?q=Namık+Kemal+Cad.+9C+Uşak" target="_blank" rel="noopener">Cumhuriyet Mah., Namık Kemal Cad. No: 9C, Uşak</a></div>
+      <div><span class="cap">Yerel saat</span><span style="font-size:18px;font-weight:500" id="clock2">—</span></div>
+    </div>
+    <div class="grid colophon sm" style="margin-top:calc(var(--g) * 2)">
+      <span>© 2026 Mes Dijital Reklam Ajansı</span>
+      <span>Dizgi: Inter Tight, 100–900</span>
+      <span>Izgara: 12 kolon, <span id="gutter">24</span> px oluk</span>
+      <span>Uluslararası Tipografik Stil'e saygıyla</span>
+    </div>
+  </div>
+</section>
+</main>
+
+<script>
+(() => {
+  const $ = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* clock */
+  const fmt = new Intl.DateTimeFormat('tr-TR', {timeZone:'Europe/Istanbul', hour:'2-digit', minute:'2-digit'});
+  const tick = () => { const t = fmt.format(new Date()) + ' TSİ'; $('#clock').textContent = t; $('#clock2').textContent = t; };
+  tick(); setInterval(tick, 10000);
+  $('#gutter').textContent = Math.round(parseFloat(getComputedStyle($('.grid')).columnGap));
+
+  /* grid overlay */
+  const ov = $('#overlay'), gb = $('#gridBtn');
+  const toggleGrid = () => { const on = !ov.classList.contains('on'); ov.classList.toggle('on', on); gb.setAttribute('aria-pressed', on); };
+  gb.addEventListener('click', toggleGrid);
+  addEventListener('keydown', e => { if (e.key.toLowerCase() === 'g' && !e.target.closest('input,textarea')) toggleGrid(); });
+
+  /* reveals */
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), {rootMargin:'0px 0px -12% 0px'});
+  $$('.rv,.fade').forEach(el => io.observe(el));
+
+  /* poster counter */
+  const cnt = $('#cnt');
+  const pio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) cnt.textContent = e.target.dataset.n; }), {rootMargin:'-50% 0px -50% 0px'});
+  $$('[data-n]').forEach(s => pio.observe(s));
+
+  /* scroll-driven motion */
+  const circle = $('#circle'), arcs = $('#arcs'), mes = $('#mes'), five = $('#five'), ladder = $('#ladder'), prog = $('#prog'), track = $('#track');
+  const p2 = $('#p2'), p3 = $('#p3'), p5 = $('#p5');
+  const ladderSpans = $$('#ladder span');
+  const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+  const progress = el => { const r = el.getBoundingClientRect(); return clamp((innerHeight - r.top) / (innerHeight + r.height)); };
+  let mx = 0, my = 0;
+  addEventListener('pointermove', e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; }, {passive:true});
+  function frame() {
+    const y = scrollY, h = innerHeight;
+    prog.style.height = (y / (document.documentElement.scrollHeight - h) * 100) + '%';
+    if (!reduce) {
+      const a = clamp(y / h);
+      circle.style.transform = `translate(${mx * -30}px, ${my * -30 + a * 120}px) scale(${1 - a * .25})`;
+      arcs.style.transform = `translate(${mx * -30}px, ${my * -30 + a * 120}px) scale(${1 - a * .25}) rotate(${y * .12}deg)`;
+      mes.style.transform = `translate(${mx * 18}px, ${a * -40}px)`;
+      const p = progress(p2);
+      five.style.fontWeight = Math.round(100 + p * 800);
+      five.style.transform = `translateY(${(p - .5) * -120}px)`;
+      const q = progress(p3);
+      ladderSpans.forEach((s, i) => s.style.transform = `translateX(${(q - .5) * (i % 2 ? 1 : -1) * (80 + i * 22)}px)`);
+      track.style.width = (clamp((progress(p5) - .25) / .5) * 100) + '%';
+    }
+    requestAnimationFrame(frame);
+  }
+  frame();
+
+  /* process steps highlight */
+  const sts = $$('#steps .st');
+  const sio = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('on', e.isIntersecting)), {rootMargin:'-35% 0px -35% 0px'});
+  sts.forEach(s => sio.observe(s));
+
+  /* Swiss poster generator for work previews */
+  const R = '#e51b26', K = '#111', W = '#fff';
+  const ART = [
+    () => `<svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice"><rect width="300" height="400" fill="${R}"/>${[...Array(7)].map((_, i) => `<rect x="${-40 + i * 50}" y="${60 + i * 34}" width="150" height="18" fill="${i % 2 ? K : W}" transform="rotate(-30 150 200)"/>`).join('')}<circle cx="210" cy="300" r="60" fill="${K}"/><text x="18" y="378" font-family="Inter Tight" font-weight="900" font-size="56" fill="${W}" letter-spacing="-3">halı</text></svg>`,
+    () => `<svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice"><rect width="300" height="400" fill="${W}"/>${[...Array(9)].map((_, i) => `<circle cx="150" cy="170" r="${130 - i * 14}" fill="${i % 2 ? W : (i === 4 ? R : K)}"/>`).join('')}<text x="18" y="378" font-family="Inter Tight" font-weight="900" font-size="56" fill="${K}" letter-spacing="-3">deri</text></svg>`,
+    () => `<svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice"><rect width="300" height="400" fill="${K}"/>${[40, 60, 70, 95, 120, 150, 190, 240].map((v, i) => `<rect x="${20 + i * 34}" y="${330 - v}" width="26" height="${v}" fill="${i > 5 ? R : W}"/>`).join('')}<text x="18" y="60" font-family="Inter Tight" font-weight="200" font-size="52" fill="${W}" letter-spacing="-2">3,1×</text></svg>`,
+    () => `<svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice"><rect width="300" height="400" fill="${W}"/><circle cx="220" cy="90" r="50" fill="${R}"/>${[...Array(12)].map((_, i) => `<path d="M0 ${170 + i * 18} Q75 ${140 + i * 18} 150 ${170 + i * 18} T300 ${170 + i * 18}" fill="none" stroke="${K}" stroke-width="${i === 6 ? 6 : 1.5}"/>`).join('')}<text x="18" y="378" font-family="Inter Tight" font-weight="900" font-size="56" fill="${K}" letter-spacing="-3">kanyon</text></svg>`,
+    () => `<svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid slice"><rect width="300" height="400" fill="${R}"/>${[...Array(15)].map((_, i) => `<rect x="${i * 20}" y="0" width="10" height="400" fill="${K}"/>`).join('')}<rect x="30" y="140" width="240" height="120" fill="${W}"/><text x="150" y="222" text-anchor="middle" font-family="Inter Tight" font-weight="900" font-size="72" fill="${K}" letter-spacing="-4">B2B</text></svg>`
+  ];
+  const fl = $('#float');
+  $$('#index .tr').forEach(tr => {
+    const i = +tr.dataset.art;
+    tr.insertAdjacentHTML('afterbegin', `<span class="thumb" aria-hidden="true">${ART[i]()}</span>`);
+    tr.addEventListener('pointerenter', () => { fl.innerHTML = ART[i](); fl.classList.add('on'); });
+    tr.addEventListener('pointerleave', () => fl.classList.remove('on'));
+  });
+  let fx = 0, fy = 0, tx = 0, ty = 0;
+  addEventListener('pointermove', e => { tx = e.clientX; ty = e.clientY; }, {passive:true});
+  (function follow() { fx += (tx - fx) * .16; fy += (ty - fy) * .16; fl.style.left = fx + 'px'; fl.style.top = fy + 'px'; requestAnimationFrame(follow); })();
+})();
+</script>
+</body>
+</html>
