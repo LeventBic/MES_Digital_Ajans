@@ -1,0 +1,126 @@
+/* =========================================================
+   Mes Dijital — ana sayfa: açılış + proje seçim ekranı
+   ========================================================= */
+
+body.home { height: 100svh; overflow: hidden; overscroll-behavior: none; }
+
+.stage { position: fixed; inset: 0; }
+
+/* ---------- Proje sütunu ---------- */
+.reel {
+  --cw: clamp(170px, 17vw, 260px);
+  position: absolute; inset: 0;
+  touch-action: none; outline: none;
+  cursor: grab;
+  transform: translateY(105vh);
+  transition: transform 1.4s var(--ease-io);
+}
+.reel.is-in { transform: none; }
+.reel.is-drag { cursor: grabbing; }
+.reel__track { position: absolute; left: 50%; top: 50%; width: var(--cw); will-change: transform; }
+.reel__item {
+  --d: 0;
+  display: block; position: relative;
+  width: var(--cw); aspect-ratio: 4 / 5;
+  margin-bottom: 14px; overflow: hidden;
+  opacity: calc(1 - var(--d) * .2);
+  transform: scale(calc(1 - var(--d) * .05));
+  transition: filter .6s;
+  filter: grayscale(calc(var(--d) * .6));
+  -webkit-user-drag: none; user-select: none;
+}
+.reel__item img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.reel__item .ph { transition: transform 1s var(--ease-out); }
+.reel__item.is-active:hover .ph,
+.reel__item.is-active:hover img { transform: scale(1.04); }
+/* yer tutucu tonları — gerçek görsel gelince önemsiz */
+.reel__item:nth-child(4n+1) .ph { background-color: #dcd8cf; }
+.reel__item:nth-child(4n+2) .ph { background-color: #c9c5bb; }
+.reel__item:nth-child(4n+3) .ph { background-color: #e4e1da; }
+.reel__item:nth-child(4n+4) .ph { background-color: #bfbab0; }
+
+/* ---------- İkiye bölünmüş M çerçevesi ---------- */
+.frame {
+  --fh: clamp(96px, 11vw, 168px);
+  --open: 0px;
+  position: fixed; inset: 0; z-index: 60;
+  pointer-events: none;
+  color: var(--paper);
+  transition: color .9s var(--ease-io), opacity .4s;
+}
+.frame__half {
+  position: absolute; top: 50%; left: 50%;
+  height: var(--fh); width: calc(var(--fh) / 2);
+  margin-top: calc(var(--fh) / -2);
+  overflow: visible;
+  transition: transform 1.2s var(--ease-io), height 1.2s var(--ease-io), width 1.2s var(--ease-io), margin 1.2s var(--ease-io);
+}
+.frame__half.l { margin-left: calc(var(--fh) / -2); transform: translateX(calc(-1 * var(--open))); }
+.frame__half.r { margin-left: 0; transform: translateX(var(--open)); }
+.frame polygon {
+  fill: currentColor; fill-opacity: 0;
+  stroke: currentColor; stroke-width: 1.1; vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1; stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.5s var(--ease-io), fill-opacity .6s var(--ease-out);
+}
+.frame.is-drawn polygon { stroke-dashoffset: 0; }
+.frame.is-filled polygon { fill-opacity: 1; }
+.frame.is-dark { color: var(--ink); }
+body.menu-open .frame { opacity: 0; }
+
+/* ---------- Açılış ---------- */
+.intro {
+  position: fixed; inset: 0; z-index: 55;
+  background: #000; color: var(--paper);
+  transition: opacity .9s var(--ease-io);
+}
+.intro.is-out { opacity: 0; pointer-events: none; }
+.intro__flash {
+  position: absolute; left: 50%; top: 50%;
+  width: calc(var(--fh-intro, 130px) * .62); aspect-ratio: 4 / 5;
+  transform: translate(-50%, -50%) scale(.6);
+  opacity: 0; overflow: hidden;
+  transition: opacity .35s, transform .7s var(--ease-out);
+}
+.intro__flash.is-on { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.intro__flash > * { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; visibility: hidden; }
+.intro__flash > .on { visibility: visible; }
+.intro__flash .ph { color: #1a1a1a; }
+.intro__count {
+  position: absolute; right: var(--gutter); top: 50%; transform: translateY(-50%);
+  font-variant-numeric: tabular-nums;
+  transition: opacity .4s;
+}
+
+/* ---------- Seçili proje bilgisi ---------- */
+.info, .count { position: absolute; z-index: 5; transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); }
+.info--l { left: var(--gutter); bottom: var(--gutter); display: grid; gap: 8px; }
+.info__idx, .info__title { display: block; overflow: hidden; }
+.info__idx { font-size: clamp(64px, 9vw, 150px); font-weight: 500; letter-spacing: -.06em; line-height: .82; font-variant-numeric: tabular-nums; }
+.info__title { font-size: clamp(18px, 1.6vw, 24px); font-weight: 500; letter-spacing: -.02em; }
+.info--r { right: var(--gutter); bottom: var(--gutter); display: grid; justify-items: end; gap: 4px; }
+.info--r > .swap { display: block; }
+.count { right: var(--gutter); top: 50%; transform: translateY(-50%); font-variant-numeric: tabular-nums; }
+
+.swap { display: inline-block; }
+.swap.is-swap { animation: swap-in .75s var(--ease-out); }
+@keyframes swap-in { from { transform: translateY(100%); opacity: 0; } }
+
+/* açılış sırasında arayüz gizli */
+body.is-intro .header,
+body.is-intro .info,
+body.is-intro .count { opacity: 0; pointer-events: none; }
+body.is-intro .info--l, body.is-intro .info--r { transform: translateY(16px); }
+.header { transition: transform .6s var(--ease-out), opacity .8s var(--ease-out); }
+
+/* ---------- Mobil ---------- */
+@media (max-width: 900px) {
+  .reel { --cw: 50vw; }
+  .count { top: auto; bottom: calc(var(--gutter) + 4px); transform: none; }
+  .info--r { bottom: auto; top: 72px; }
+  .info__idx { font-size: 18vw; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not(.force-motion) .reel { transform: none; }
+}

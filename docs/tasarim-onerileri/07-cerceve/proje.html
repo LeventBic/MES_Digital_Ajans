@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Proje Adı — Mes Dijital</title>
+  <meta name="description" content="Mes Dijital proje sayfası.">
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap&subset=latin-ext" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css?v=7">
+</head>
+<body id="top">
+
+  <div class="loader" aria-hidden="true">
+    <span class="loader__panel l"></span><span class="loader__panel r"></span>
+    <span class="mark mark--line"><svg viewBox="0 0 100 100"><polygon class="half l" pathLength="1" points="8,86 8,14 24,14 47,50 47,74 24,40 24,86"/><polygon class="half r" pathLength="1" points="92,86 92,14 76,14 53,50 53,74 76,40 76,86"/></svg></span>
+    <span class="loader__count mono">000</span>
+  </div>
+  <div class="curtain" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><span class="cursor__label">Aç</span></div>
+
+  <header class="header">
+    <a href="index.html" class="logo" aria-label="Mes Dijital ana sayfa">
+      <span class="mark"><svg viewBox="0 0 100 100"><polygon class="half l" points="8,86 8,14 24,14 47,50 47,74 24,40 24,86"/><polygon class="half r" points="92,86 92,14 76,14 53,50 53,74 76,40 76,86"/></svg></span>
+      Mes Dijital
+    </a>
+    <nav class="nav" aria-label="Ana menü">
+      <a href="index.html">İşler</a>
+      <a href="ajans.html#katalog">Katalog</a>
+      <a href="ajans.html#hizmetler">Hizmetler</a>
+      <a href="ajans.html#iletisim">İletişim</a>
+    </nav>
+    <button class="menu-btn" aria-expanded="false" aria-controls="mobile-menu">Menü</button>
+  </header>
+  <nav class="mobile-menu" id="mobile-menu" aria-label="Mobil menü">
+    <a href="index.html">İşler</a>
+    <a href="ajans.html#katalog">Katalog</a>
+    <a href="ajans.html#hizmetler">Hizmetler</a>
+    <a href="ajans.html#iletisim">İletişim</a>
+  </nav>
+
+  <main>
+    <!-- Başlık + künye -->
+    <section class="case-hero wrap">
+      <div class="grid case-hero__top">
+        <a class="back mono" href="index.html"><span class="arr">←</span> Geri</a>
+        <h1 class="h1" data-split>Proje Adı</h1>
+      </div>
+      <div class="grid case-info">
+        <div data-reveal><span class="mono muted">Müşteri</span><span>[ Müşteri adı ]</span></div>
+        <div data-reveal><span class="mono muted">Sektör</span><span>[ Sektör, Sektör ]</span></div>
+        <div data-reveal><span class="mono muted">Hizmetler</span><span>[ Hizmet, Hizmet ]</span></div>
+        <div data-reveal><span class="mono muted">Bağlantı</span><a class="live" href="#" target="_blank" rel="noopener">Canlı Site <span>↗</span></a></div>
+      </div>
+    </section>
+
+    <!-- Kapak -->
+    <section class="wrap case-media-full">
+      <div class="media r-16x9"><div class="media__inner" data-parallax="10"><div class="ph mono">Kapak görseli — 16:9</div></div></div>
+    </section>
+
+    <!-- Tanıtım metni -->
+    <section class="wrap grid case-block case-text">
+      <p class="mono">(01) Proje</p>
+      <p class="lead" data-split>[ Projenin özeti — markanın ihtiyacı ve bizim yaklaşımımız, iki üç cümle. ]</p>
+    </section>
+
+    <!-- Görsel düzen: 7 + 5 -->
+    <section class="wrap grid case-block">
+      <div class="span-7">
+        <div class="media r-4x5"><div class="media__inner" data-parallax="8"><div class="ph mono">Görsel — 4:5</div></div></div>
+        <div class="caption mono muted"><span>[ Açıklama ]</span><span>01</span></div>
+      </div>
+      <div class="span-5 self-end">
+        <div class="media r-3x4"><div class="media__inner" data-parallax="8"><div class="ph mono">Görsel — 3:4</div></div></div>
+        <div class="caption mono muted"><span>[ Açıklama ]</span><span>02</span></div>
+      </div>
+    </section>
+
+    <!-- Detay metni -->
+    <section class="wrap grid case-block case-text">
+      <p class="mono">(02) Yaklaşım</p>
+      <p class="body" data-reveal>[ Süreç, strateji, üretim detayları. Paragraf metni buraya gelecek. ]</p>
+    </section>
+
+    <!-- Tam genişlik -->
+    <section class="wrap case-block">
+      <div class="media r-21x9" data-cursor="İzle"><div class="media__inner" data-parallax="10"><div class="ph mono">Video / Görsel — 21:9</div></div></div>
+    </section>
+
+    <!-- Ortalanmış -->
+    <section class="wrap grid case-block">
+      <div class="off-2">
+        <div class="media r-16x9"><div class="media__inner" data-parallax="6"><div class="ph mono">Görsel — 16:9</div></div></div>
+      </div>
+    </section>
+
+    <!-- Üçlü -->
+    <section class="wrap grid case-block">
+      <div class="span-4"><div class="media r-3x4"><div class="media__inner" data-parallax="6"><div class="ph mono">3:4</div></div></div></div>
+      <div class="span-4"><div class="media r-3x4"><div class="media__inner" data-parallax="6"><div class="ph mono">3:4</div></div></div></div>
+      <div class="span-4"><div class="media r-3x4"><div class="media__inner" data-parallax="6"><div class="ph mono">3:4</div></div></div></div>
+    </section>
+
+    <!-- Sonuç -->
+    <section class="wrap grid case-block case-text">
+      <p class="mono">(03) Sonuç</p>
+      <p class="lead" data-split>[ Sonuç / rakamlar / müşteri yorumu. ]</p>
+    </section>
+
+    <!-- Sonraki proje -->
+    <section class="wrap">
+      <a class="next" href="proje.html" data-cursor="Sonraki">
+        <div class="next__row mono muted"><span>Sonraki Proje</span><span>→</span></div>
+        <p class="h1">Sonraki Proje Adı</p>
+      </a>
+    </section>
+  </main>
+
+  <footer class="footer" id="iletisim">
+    <div class="wrap">
+      <p class="mono muted">(04) İletişim</p>
+      <a class="cta" href="mailto:iletisim@mesdijital.com.tr">
+        <span class="display" data-split>Birlikte çalışalım <span class="arrow">→</span></span>
+      </a>
+      <div class="grid footer__cols">
+        <div><span class="mono muted">Adres</span><span>Cumhuriyet Mah., Namık Kemal Cad. No: 9C, Uşak</span></div>
+        <div><span class="mono muted">İletişim</span><a href="tel:+905394974327">+90 539 497 43 27</a><a href="mailto:iletisim@mesdijital.com.tr">iletisim@mesdijital.com.tr</a></div>
+        <div><span class="mono muted">Sosyal</span><a href="#" data-magnet>Instagram</a><a href="#" data-magnet>LinkedIn</a><a href="#" data-magnet>TikTok</a></div>
+        <div><span class="mono muted">Yerel saat</span><span data-clock>--:--:--</span></div>
+      </div>
+      <div class="footer__bottom mono muted"><span>© <span data-year>2026</span> Mes Dijital</span><a href="#top">Başa dön ↑</a></div>
+    </div>
+    <p class="footer__word" aria-hidden="true">Mes Dijital</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="assets/js/main.js?v=7"></script>
+</body>
+</html>

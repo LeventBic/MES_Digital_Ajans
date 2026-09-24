@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mes Dijital — Dijital & Influencer Ajansı</title>
+  <meta name="description" content="Mes Dijital, Uşak merkezli dijital pazarlama ve influencer ajansı.">
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap&subset=latin-ext" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css?v=8">
+  <link rel="stylesheet" href="assets/css/home.css?v=8">
+</head>
+<body class="home is-intro">
+
+  <div class="curtain" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><span class="cursor__label">Aç</span></div>
+
+  <header class="header">
+    <a href="index.html" class="logo" aria-label="Mes Dijital ana sayfa">
+      <span class="mark"><svg viewBox="0 0 100 100"><polygon class="half l" points="8,86 8,14 24,14 47,50 47,74 24,40 24,86"/><polygon class="half r" points="92,86 92,14 76,14 53,50 53,74 76,40 76,86"/></svg></span>
+      Mes Dijital
+    </a>
+    <nav class="nav" aria-label="Ana menü">
+      <a href="index.html" aria-current="page">İşler</a>
+      <a href="ajans.html#katalog">Katalog</a>
+      <a href="ajans.html#hizmetler">Hizmetler</a>
+      <a href="ajans.html#iletisim">İletişim</a>
+    </nav>
+    <button class="menu-btn" aria-expanded="false" aria-controls="mobile-menu">Menü</button>
+  </header>
+  <nav class="mobile-menu" id="mobile-menu" aria-label="Mobil menü">
+    <a href="index.html">İşler</a>
+    <a href="ajans.html#katalog">Katalog</a>
+    <a href="ajans.html#hizmetler">Hizmetler</a>
+    <a href="ajans.html#iletisim">İletişim</a>
+  </nav>
+
+  <main class="stage" aria-label="Kategoriler">
+    <!-- Kategori sütunu: her kart bir hizmet kategorisi. Görsel gelince .ph yerine <img> konur. -->
+    <div class="reel" tabindex="0" aria-roledescription="kaydırılabilir kategori listesi">
+      <div class="reel__track">
+        <a class="reel__item" href="proje.html" data-title="Web Tasarım" data-cat="Kategori" data-date="[ Kısa açıklama ]"><div class="ph mono">01</div></a>
+        <a class="reel__item" href="proje.html" data-title="Sosyal Medya" data-cat="Kategori" data-date="[ Kısa açıklama ]"><div class="ph mono">02</div></a>
+        <a class="reel__item" href="proje.html" data-title="Influencer Pazarlama" data-cat="Kategori" data-date="[ Kısa açıklama ]"><div class="ph mono">03</div></a>
+        <a class="reel__item" href="proje.html" data-title="Marka Kimliği" data-cat="Kategori" data-date="[ Kısa açıklama ]"><div class="ph mono">04</div></a>
+        <a class="reel__item" href="proje.html" data-title="Prodüksiyon" data-cat="Kategori" data-date="[ Kısa açıklama ]"><div class="ph mono">05</div></a>
+        <a class="reel__item" href="proje.html" data-title="Reklam Yönetimi" data-cat="Kategori" data-date="[ Kısa açıklama ]"><div class="ph mono">06</div></a>
+        <a class="reel__item" href="proje.html" data-title="SEO & İçerik" data-cat="Kategori" data-date="[ Kısa açıklama ]"><div class="ph mono">07</div></a>
+        <a class="reel__item" href="proje.html" data-title="E-Ticaret" data-cat="Kategori" data-date="[ Kısa açıklama ]"><div class="ph mono">08</div></a>
+      </div>
+    </div>
+
+    <!-- Seçili kategori bilgisi -->
+    <div class="info info--l">
+      <span class="info__idx"><span class="swap" data-f="idx">01</span></span>
+      <span class="info__title"><span class="swap" data-f="title">Web Tasarım</span></span>
+    </div>
+    <div class="info info--r mono">
+      <span class="swap" data-f="cat">Kategori</span>
+      <span class="swap muted" data-f="year">[ Kısa açıklama ]</span>
+    </div>
+    <div class="count mono"><span data-f="pos">01</span> / <span data-f="total">08</span></div>
+  </main>
+
+  <!-- Açılış: siyah zemin, sayaç, M'nin arasında değişen kareler -->
+  <div class="intro" aria-hidden="true">
+    <div class="intro__flash"></div>
+    <span class="intro__count mono">000</span>
+  </div>
+
+  <!-- İkiye bölünmüş M: açılışta logo, sonra seçili projenin çerçevesi -->
+  <div class="frame" aria-hidden="true">
+    <svg class="frame__half l" viewBox="0 0 50 100" preserveAspectRatio="none"><polygon pathLength="1" points="8,86 8,14 24,14 47,50 47,74 24,40 24,86"/></svg>
+    <svg class="frame__half r" viewBox="50 0 50 100" preserveAspectRatio="none"><polygon pathLength="1" points="92,86 92,14 76,14 53,50 53,74 76,40 76,86"/></svg>
+  </div>
+
+  <script src="assets/js/main.js?v=8"></script>
+  <script src="assets/js/home.js?v=8"></script>
+</body>
+</html>
