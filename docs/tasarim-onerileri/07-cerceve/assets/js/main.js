@@ -278,4 +278,10 @@
     tick(); setInterval(tick, 1000);
   }
   $$("[data-year]").forEach((y) => (y.textContent = new Date().getFullYear()));
+
+  /* ---------- Gece / gündüz ---------- */
+  window.mdTheme && window.mdTheme.sync();
+  document.addEventListener("click", (e) => {
+    if (e.target.closest("[data-theme-toggle]")) window.mdTheme && window.mdTheme.toggle();
+  });
 })();

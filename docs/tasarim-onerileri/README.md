@@ -18,7 +18,7 @@ Astro build'ine girmez. Dosyayı tarayıcıda doğrudan açmak yeterli.
 | 04 | `04-mes-os/` | Ajans işletim sistemi: pencereler, terminal, teklif sihirbazı, çöp kutusu | Pixelify Sans, Geist, Geist Mono | Uncommon, Hello Monday, Active Theory |
 | 05 | `05-afis/` | İsviçre tipografi afişleri: 12 kolon ızgara (G tuşu), ağırlık merdiveni | Inter Tight (100–900) | Pentagram, Work & Co, R/GA, Obys |
 | 06 | `06-sahne/` | Ajans filmi: geri sayım, senaryo, film şeridi, kurgu zaman çizelgesi, jenerik | Bodoni Moda, Courier Prime, DM Mono | Dogstudio, W+K, Exo Ape |
-| 07 | `07-cerceve/` | Açılışta ikiye bölünmüş M çizilir, arada kareler akar; yarılar ayrılıp dikey kategori sütununu çerçeveler ve seçim beklenir. Ayrıca ajans ve proje sayfası iskeleti | Inter Tight, JetBrains Mono | Obys |
+| 07 | `07-cerceve/` | Açılışta ikiye bölünmüş M çizilir, arada kareler akar; yarılar ayrılıp kategori sütununu çerçeveler. Dikey/Yatay/Izgara görünüm, veri dosyasından çizilen kategori ve çalışma sayfaları, gece/gündüz | Inter Tight, JetBrains Mono | Obys |
 
 ## Notlar
 
@@ -32,12 +32,11 @@ Astro build'ine girmez. Dosyayı tarayıcıda doğrudan açmak yeterli.
 
 ### 07 Çerçeve (25 Eylül 2026)
 
-Tek dosya değil, çok sayfalı bir iskelet: `index.html` (açılış + kategori
-seçici), `ajans.html` (katalog, hizmetler, iletişim), `proje.html` (vaka
-şablonu), ortak `assets/css` ve `assets/js`. Yumuşak kaydırma için Lenis
-jsDelivr'den yüklenir. Açılış oturumda bir kez oynar, `?loader` ile her
-seferinde zorlanır. Kategoriler ve bütün içerik yer tutucudur, kullanıcı
-yönlendirdikçe doldurulacak. Kart görselleri gelince `.ph` yerine `<img>`
-konur, açılıştaki kareler de bu görsellerden otomatik oluşur. Obys'in açılış
-akışından ilham alındı. Kod, logo ve görseller sıfırdan yazıldı, Obys'ten
-dosya alınmadı. Yapım: Claude (Opus 5.5).
+Çok sayfalı iskelet; ayrıntılar `07-cerceve/README.md` içinde. Bütün kategori
+ve çalışmalar `07-cerceve/assets/js/data.js` dosyasından gelir: ana sayfa
+seçicisi, `kategori.html?k=…` ve `proje.html?k=…&p=…` sayfaları bu dosyadan
+çizilir. Ajans sayfası (`ajans.html`) tanıtım, görsel şeridi, hizmetler,
+sektörler, ödüller, ekip ve katalog bölümlerinden oluşur. Gece/gündüz anahtarı
+var. Yumuşak kaydırma için Lenis jsDelivr'den yüklenir. İçerik yer tutucudur.
+Obys'in açılış ve seçim akışından ilham alındı; kod, logo, metin ve görseller
+sıfırdan yazıldı. Yapım: Claude (Opus 5.5).

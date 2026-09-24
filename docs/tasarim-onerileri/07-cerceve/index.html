@@ -5,63 +5,69 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mes Dijital — Dijital & Influencer Ajansı</title>
   <meta name="description" content="Mes Dijital, Uşak merkezli dijital pazarlama ve influencer ajansı.">
+  <script src="assets/js/theme.js?v=12"></script>
   <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap&subset=latin-ext" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=8">
-  <link rel="stylesheet" href="assets/css/home.css?v=8">
+  <link rel="stylesheet" href="assets/css/style.css?v=12">
+  <link rel="stylesheet" href="assets/css/home.css?v=12">
 </head>
 <body class="home is-intro">
 
   <div class="curtain" aria-hidden="true"></div>
   <div class="cursor" aria-hidden="true"><span class="cursor__label">Aç</span></div>
 
-  <header class="header">
-    <a href="index.html" class="logo" aria-label="Mes Dijital ana sayfa">
-      <span class="mark"><svg viewBox="0 0 100 100"><polygon class="half l" points="8,86 8,14 24,14 47,50 47,74 24,40 24,86"/><polygon class="half r" points="92,86 92,14 76,14 53,50 53,74 76,40 76,86"/></svg></span>
-      Mes Dijital
-    </a>
-    <nav class="nav" aria-label="Ana menü">
-      <a href="index.html" aria-current="page">İşler</a>
-      <a href="ajans.html#katalog">Katalog</a>
-      <a href="ajans.html#hizmetler">Hizmetler</a>
-      <a href="ajans.html#iletisim">İletişim</a>
+  <!-- Üst bant: büyük yazı logo, menü, yerel saat, iletişim -->
+  <header class="top">
+    <a href="index.html" class="wordmark" aria-label="Mes Dijital ana sayfa">Mes Dijital</a>
+    <nav class="top__nav" aria-label="Ana menü">
+      <a href="index.html" aria-current="page">Kategoriler</a>, <a href="ajans.html">Ajans</a>
     </nav>
+    <span class="top__clock mono">Uşak <span data-clock>--:--:--</span></span>
+    <span class="top__end">
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Gece ve gündüz modu arasında geç"><span class="theme-toggle__dot" aria-hidden="true"></span><span data-theme-label>Gece</span></button>
+      <a class="top__contact" href="ajans.html#iletisim">İletişim</a>
+    </span>
     <button class="menu-btn" aria-expanded="false" aria-controls="mobile-menu">Menü</button>
   </header>
   <nav class="mobile-menu" id="mobile-menu" aria-label="Mobil menü">
-    <a href="index.html">İşler</a>
-    <a href="ajans.html#katalog">Katalog</a>
+    <a href="index.html">Kategoriler</a>
+    <a href="ajans.html">Ajans</a>
     <a href="ajans.html#hizmetler">Hizmetler</a>
     <a href="ajans.html#iletisim">İletişim</a>
+    <button class="theme-toggle mono" type="button" data-theme-toggle><span class="theme-toggle__dot" aria-hidden="true"></span><span data-theme-label>Gece</span></button>
   </nav>
 
   <main class="stage" aria-label="Kategoriler">
-    <!-- Kategori sütunu: her kart bir hizmet kategorisi. Görsel gelince .ph yerine <img> konur. -->
+    <!-- Kategori sütunu ve soldaki liste assets/js/data.js'ten üretilir -->
     <div class="reel" tabindex="0" aria-roledescription="kaydırılabilir kategori listesi">
-      <div class="reel__track">
-        <a class="reel__item" href="proje.html" data-title="Web Tasarım" data-cat="Kategori" data-date="[ Kısa açıklama ]"><div class="ph mono">01</div></a>
-        <a class="reel__item" href="proje.html" data-title="Sosyal Medya" data-cat="Kategori" data-date="[ Kısa açıklama ]"><div class="ph mono">02</div></a>
-        <a class="reel__item" href="proje.html" data-title="Influencer Pazarlama" data-cat="Kategori" data-date="[ Kısa açıklama ]"><div class="ph mono">03</div></a>
-        <a class="reel__item" href="proje.html" data-title="Marka Kimliği" data-cat="Kategori" data-date="[ Kısa açıklama ]"><div class="ph mono">04</div></a>
-        <a class="reel__item" href="proje.html" data-title="Prodüksiyon" data-cat="Kategori" data-date="[ Kısa açıklama ]"><div class="ph mono">05</div></a>
-        <a class="reel__item" href="proje.html" data-title="Reklam Yönetimi" data-cat="Kategori" data-date="[ Kısa açıklama ]"><div class="ph mono">06</div></a>
-        <a class="reel__item" href="proje.html" data-title="SEO & İçerik" data-cat="Kategori" data-date="[ Kısa açıklama ]"><div class="ph mono">07</div></a>
-        <a class="reel__item" href="proje.html" data-title="E-Ticaret" data-cat="Kategori" data-date="[ Kısa açıklama ]"><div class="ph mono">08</div></a>
-      </div>
+      <div class="reel__track"></div>
     </div>
 
-    <!-- Seçili kategori bilgisi -->
-    <div class="info info--l">
-      <span class="info__idx"><span class="swap" data-f="idx">01</span></span>
-      <span class="info__title"><span class="swap" data-f="title">Web Tasarım</span></span>
+    <!-- Sol: tüm kategoriler (seçili olan koyu) -->
+    <nav class="cats" aria-label="Kategoriler">
+      <ol></ol>
+    </nav>
+
+    <!-- Seçili kategorinin bilgileri, çerçevenin iki yanında -->
+    <span class="meta meta--l"><span class="swap" data-f="cat">[ Alt başlık ]</span></span>
+    <span class="meta meta--r"><span class="swap" data-f="year">[ Hizmetler ]</span></span>
+    <span class="meta meta--n"><span class="swap" data-f="idx">01</span></span>
+
+    <!-- Sağ üst: kısa tanıtım -->
+    <div class="about">
+      <p>[ Ajansı anlatan iki üç cümlelik kısa tanıtım metni buraya gelecek. ]</p>
+      <p>İletişim:<br><a href="mailto:iletisim@mesdijital.com.tr">iletisim@mesdijital.com.tr</a></p>
     </div>
-    <div class="info info--r mono">
-      <span class="swap" data-f="cat">Kategori</span>
-      <span class="swap muted" data-f="year">[ Kısa açıklama ]</span>
-    </div>
-    <div class="count mono"><span data-f="pos">01</span> / <span data-f="total">08</span></div>
+
+    <!-- Izgara görünümü -->
+    <div class="gridv" aria-label="Kategoriler ızgarası"><div class="gridv__inner"></div></div>
+
+    <nav class="foot foot--l views" aria-label="Görünüm">
+      <button type="button" data-view="v">Dikey</button>, <button type="button" data-view="h">Yatay</button>, <button type="button" data-view="g">Izgara</button>
+    </nav>
+    <span class="foot foot--r muted">© <span data-year>2026</span> Mes Dijital</span>
   </main>
 
   <!-- Açılış: siyah zemin, sayaç, M'nin arasında değişen kareler -->
@@ -76,7 +82,8 @@
     <svg class="frame__half r" viewBox="50 0 50 100" preserveAspectRatio="none"><polygon pathLength="1" points="92,86 92,14 76,14 53,50 53,74 76,40 76,86"/></svg>
   </div>
 
-  <script src="assets/js/main.js?v=8"></script>
-  <script src="assets/js/home.js?v=8"></script>
+  <script src="assets/js/data.js?v=12"></script>
+  <script src="assets/js/main.js?v=12"></script>
+  <script src="assets/js/home.js?v=12"></script>
 </body>
 </html>
