@@ -15,6 +15,7 @@ Python yoksa herhangi bir statik sunucu olur (ör. VS Code Live Server).
 | Dosya | Ne gösterir |
 |---|---|
 | `index.html` | Açılış animasyonu + kategori seçici (Dikey / Yatay / Izgara görünüm) |
+| `index.html?k=<slug>` | Aynı sayfada portfolyo görünümü: kategori bilgisi + sonsuz görsel sütunu |
 | `kategori.html?k=<slug>` | Kategori sayfası: giriş, hizmetler, çalışmalar ve ekran görüntüleri |
 | `proje.html?k=<slug>&p=<slug>` | Çalışma sayfası: künye, özet, ekran görüntüleri, sonraki çalışma |
 | `ajans.html` | Ajans: tanıtım, görsel şeridi, hizmetler, sektörler, ödüller, sosyal, ekip, katalog, iletişim |
@@ -54,8 +55,32 @@ Ajans sayfasındaki metinler (tanıtım, sektörler, ödüller, ekip) doğrudan
   aralanır ve arada kategori kareleri akar; sonra yarılar seçili kartın iki
   yanına geçip çerçeve olur. Oturumda bir kez oynar, `?loader` ile zorlanır.
 - **Seçici**: tekerlek, sürükleme, ok tuşları, Tab; soldaki liste ve kart sütunu
-  sonsuz döngü. Ortadaki karta tıklamak kategoriyi açar, yandaki karta tıklamak
-  önce onu ortalar. Yatay görünümde çerçeve 90° döner.
+  sonsuz döngü. Ortadaki karta tıklamak portfolyo görünümünü açar, yandaki karta
+  tıklamak önce onu ortalar. Yatay görünümde çerçeve 90° döner.
+- **Portfolyo görünümü** (Obys'in proje görünümünün yapısı, kendi kodumuzla):
+  ortadaki karta, ızgaradaki bir karta ya da zaten seçili liste satırına
+  tıklayınca sayfa değişmeden açılır. Liste satırları yukarı maskelenir,
+  kartlar söner, M yarıları ortada birleşip küçük bir logo olur, üstte ince
+  çizgi dolar; sonra "Mes Dijital" sol üste küçülür, bilgiler satır satır
+  açılır, görseller sağdan gelir (~1,5 sn).
+  - Adres `index.html?k=<slug>` olur (`history.pushState`); bu adres
+    paylaşılabilir ve doğrudan açılınca açılış animasyonu atlanıp görünüm
+    geçişsiz gelir. Bilinmeyen slug normal ana sayfayı açar.
+  - Sol: kategori adı (`h1`), yanında (`.meta--l` hizası, 17vw) `sub`,
+    `services` ve "Tüm çalışmalar ↗" (`kategori.html?k=<slug>`). Sol altta "Geri".
+  - Orta: kapanmış M, beyaz + `mix-blend-mode: difference`; üst bant da
+    görsellerin üstünde aynı yolla ters renk olur.
+  - Sağ yarı: kategorinin çalışmalarından sırayla her birinin `cover`'ı (varsa)
+    ve `shots`'ı; aralarında boşluk yok, sağ kenara yaslı, yatay kareler
+    (16:9, 21:9) 50vw, diğerleri 42.5vw genişlikte. Tekerlek, sürükleme,
+    dokunma ve ok / PageUp-PageDown ile kayar, son görselden sonra ilki gelir.
+    Her görsel `proje.html?k=<kategori>&p=<çalışma>` açar.
+  - Kapatma: "Geri", Esc, üst banttaki logo ya da tarayıcının geri tuşu.
+    Seçici aynı kartta ve aynı görünümde (Dikey / Yatay / Izgara) kalır.
+  - Açıkken seçicinin tamamı `inert`; odak başlığa, kapanınca karta döner.
+  - Mobil (≤900 px): bölünmüş düzen yok. Küçük logo + Menü, altında bilgiler,
+    kalan alanda tam genişlikte (yatay 100vw, diğerleri 88vw) görsel sütunu,
+    en altta kendi bandında "Geri"; ortadaki M gizli.
 - **Gece / Gündüz**: üst menüdeki anahtar; seçim tarayıcıda hatırlanır,
   seçim yoksa cihaz ayarı izlenir. Açılış animasyonu iki temada da görünür.
 - **İletişim**: e-posta, telefon, WhatsApp ve "Haritada aç" linki; mobil menüde de WhatsApp.
@@ -77,16 +102,16 @@ Ajans sayfasındaki metinler (tanıtım, sektörler, ödüller, ekip) doğrudan
 
 ```
 assets/css/style.css   ortak stil + gece modu değişkenleri + iç sayfalar
-assets/css/home.css    ana sayfa (açılış, seçici, görünümler)
+assets/css/home.css    ana sayfa (açılış, seçici, görünümler, portfolyo görünümü)
 assets/js/theme.js     gece/gündüz (head içinde, CSS'ten önce)
 assets/js/data.js      İÇERİK (kategoriler, çalışmalar, iletişim, sosyal)
 assets/js/pages.js     kategori / proje / ajans sayfalarını veriden çizer
 assets/js/main.js      ortak etkileşimler (geçiş, imleç, açılma efektleri, sosyal, menü…)
-assets/js/home.js      ana sayfa açılışı ve seçici
+assets/js/home.js      ana sayfa açılışı, seçici ve portfolyo görünümü
 assets/img/logo.svg    favicon (kırmızı M)
 ```
 
-CSS ve JS dosyaları HTML'de `?v=13` sorgusuyla bağlanır (tarayıcı önbelleğini
+CSS ve JS dosyaları HTML'de `?v=14` sorgusuyla bağlanır (tarayıcı önbelleğini
 kırmak için); CSS/JS değişince dört HTML dosyasındaki sürüm numarası birlikte artırılmalı.
 
 ## Astro'ya taşırken dikkat
@@ -100,6 +125,12 @@ kırmak için); CSS/JS değişince dört HTML dosyasındaki sürüm numarası bi
 - **Seçicide tıklama**: `setPointerCapture` basılır basılmaz çağrılırsa tıklama
   karta değil `.reel`'e düşer ve kart açılmaz; yakalama yalnızca 6 px'lik
   gerçek sürüklemeden sonra başlar (`home.js`).
+- **Portfolyo sütunu**: öğeler `translateY` ile tek tek, set boyuna göre modüler
+  dizilir (sonsuz döngü). Kaydırma ve yükseklikler tam piksele yuvarlanır; yarım
+  pikselde iki görsel arasında ince çizgi görünür. Sütunda `overflow: clip`
+  kullanılır: `hidden` olsaydı Tab ile odaklanan görsel için tarayıcı kutuyu
+  kendisi kaydırırdı. Karta tıklama `preventDefault` + `stopPropagation` ile
+  main.js'in perde geçişine ulaşmaz.
 - **Açılış renkleri**: siyah zemin üstündeki M ve sayaç temadan bağımsız sabit
   `#f3f1ec`; `var(--paper)` kullanılırsa gece modunda kaybolur.
 - **Lenis** jsDelivr'den yükleniyor; Astro'da paket olarak eklenmeli.

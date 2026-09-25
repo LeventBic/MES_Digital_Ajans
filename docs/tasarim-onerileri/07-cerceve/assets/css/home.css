@@ -256,3 +256,125 @@ body.view-g .top { background: linear-gradient(var(--bg-home) 70%, transparent);
   .foot--r { display: none; }
   .reel.is-h .reel__item, .reel.is-h .reel__item:not(.is-land):not(.is-sq) { height: 46vw; }
 }
+
+/* =========================================================
+   Portfolyo görünümü (index.html?k=slug)
+   Ortadaki karta tıklayınca seçici yerinde açılır:
+   sol = başlık + bilgiler, orta = kapanmış M, sağ = sonsuz görsel sütunu.
+   Aşamalar (body sınıfları, home.js yönetir):
+     pf-out  seçicinin parçaları çekilir, M yarıları kapanır, üst çizgi dolar
+     pf-on   yazı logo küçülür, bilgiler açılır, görseller sağdan gelir
+   ========================================================= */
+
+/* ---------- 1) Seçici çekilir ---------- */
+.cats li { overflow: hidden; }
+.meta .swap { transition: transform .8s var(--ease-out); }
+body.pf-out .cats li button { transform: translateY(-110%); transition: color .45s, transform .55s var(--ease-io); }
+body.pf-out .meta .swap { transform: translateY(-110%); transition: transform .55s var(--ease-io); }
+body.pf-out .reel { opacity: 0; pointer-events: none; transition: opacity .45s, transform 1.4s var(--ease-io); }
+body.pf-out .about, body.pf-out .foot { opacity: 0; pointer-events: none; transition-duration: .45s; }
+body.pf-out .gridv { opacity: 0; visibility: hidden; transition: opacity .45s, visibility 0s .45s; }
+body.pf-out .top { background: none; }
+
+/* M yarıları ortada birleşir; yatay görünümün 90° dönüşü ve ızgaranın gizlemesi geri alınır */
+body.pf-out .frame.is-h { transform: none; }
+body.pf-out .frame.is-gone { opacity: 1; }
+body.pf-out.menu-open .frame { opacity: 0; }
+.frame.is-pf .frame__half { transition-duration: .9s; }
+/* görsellerin üstünde de okunsun: beyaz + fark karışımı (iki temada da çalışır).
+   Renk geçişi kapalı: aksi halde karışım açıkken siyahtan beyaza geçerken bir an kaybolur */
+.frame.is-pf { color: #fff; mix-blend-mode: difference; transition: opacity .5s, transform 1.1s var(--ease-io); }
+
+/* üst çizgi (yükleme göstergesi) */
+.pf-bar {
+  position: fixed; left: 0; top: 0; z-index: 60;
+  width: 100%; height: 2.5px;
+  background: var(--ink);
+  transform: scaleX(0); transform-origin: 0 50%;
+  opacity: 0; pointer-events: none;
+}
+.pf-bar.is-run { opacity: 1; transform: scaleX(1); transition: transform .6s var(--ease-io); }
+.pf-bar.is-run.is-done { opacity: 0; transition: opacity .4s; }
+
+/* ---------- 2) Üst bant: yazı logo küçülür, görsellerin üstünde ters renk ---------- */
+.wordmark { transition: font-size .8s var(--ease-io), letter-spacing .8s var(--ease-io), line-height .8s var(--ease-io); }
+body.pf-on .wordmark { font-size: 20px; letter-spacing: -.035em; line-height: 1; }
+body.pf-on:not(.menu-open) .top { mix-blend-mode: difference; color: #fff; }
+body.pf-on:not(.menu-open) .top a:hover,
+body.pf-on:not(.menu-open) .top button:hover { color: #fff; opacity: .6; }
+
+/* ---------- 3) Görünümün kendisi ---------- */
+.pf { position: fixed; inset: 0; z-index: 10; pointer-events: none; }
+.pf[hidden] { display: none; }
+.pf > * { pointer-events: auto; }
+
+/* satır maskesi: her satır alttan açılır (seçicideki .swap ile aynı dil) */
+.pf__ln { display: block; margin: 0; overflow: hidden; padding-bottom: .2em; margin-bottom: -.2em; }
+.pf__ln > span { display: inline-block; transform: translateY(110%); transition: transform .5s var(--ease-io); }
+body.pf-on .pf__ln > span {
+  transform: none;
+  transition: transform 1s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 70ms + 80ms);
+}
+
+/* sol blok: dikeyde ortada; başlık kenarda, bilgiler .meta--l hizasında (17vw) */
+.pf__info {
+  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 46vw; padding-left: var(--gutter);
+  display: grid; grid-template-columns: calc(17vw - var(--gutter)) minmax(0, 1fr); align-items: start;
+  font-size: 15px; font-weight: 500; letter-spacing: -.01em; line-height: 1.2;
+}
+.pf__title { margin: 0; font: inherit; letter-spacing: inherit; padding-right: 12px; }
+.pf__title:focus { outline: none; }
+.pf__title:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
+.pf__more { margin-top: .85em; }
+.pf__link, .pf__back { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.pf__link:hover { color: var(--red-text); }
+
+/* sol alt: geri */
+.pf__foot { position: absolute; left: var(--gutter); bottom: var(--gutter); font-size: 15px; font-weight: 500; letter-spacing: -.01em; }
+.pf__back { color: var(--muted); transition: color .3s; }
+.pf__back:hover { color: var(--ink); }
+
+/* sağ yarı: görsel sütunu (JS her öğeyi translateY ile dizer, döngü için modüler) */
+.pf__gallery {
+  position: absolute; top: 0; bottom: 0; left: 50vw; right: 0;
+  overflow: hidden; overflow: clip; /* clip: odaklanınca tarayıcı kendi kaydırmasın */
+  touch-action: none; user-select: none; -webkit-user-select: none;
+  cursor: grab;
+}
+.pf__gallery.is-drag { cursor: grabbing; }
+.pf__track { position: absolute; inset: 0; }
+.pf__item {
+  position: absolute; top: 0; right: 0;
+  display: block; width: 85%;           /* dikey kareler: 42.5vw */
+  will-change: transform;
+  -webkit-user-drag: none;
+}
+.pf__item.is-wide { width: 100%; }      /* yatay / geniş kareler: 50vw */
+.pf__item:focus-visible { outline: 2px solid #fff; outline-offset: -6px; }
+.pf__media { overflow: hidden; transform: translate3d(100%, 0, 0); transition: transform .8s var(--ease-io); }
+body.pf-on .pf__media { transform: none; transition: transform 1.1s var(--ease-out); transition-delay: calc(var(--k, 0) * 70ms + 40ms); }
+.pf__media > * { width: 100%; height: 100%; object-fit: cover; transition: transform 1s var(--ease-out); pointer-events: none; }
+.pf__item:hover .pf__media > * { transform: scale(1.03); }
+.pf__media .ph { display: grid; place-items: center; }
+
+/* tek sefer geçişsiz uygulama (doğrudan ?k= ile açılış, yeniden boyutlandırma) */
+html.pf-snap *, html.pf-snap *::before, html.pf-snap *::after { transition: none !important; animation: none !important; }
+
+/* ---------- Mobil: bölünmüş düzen yok ---------- */
+@media (max-width: 900px) {
+  .pf { display: flex; flex-direction: column; padding-top: calc(var(--gutter) + 44px); }
+  .pf[hidden] { display: none; }
+  .pf__info {
+    position: static; transform: none; width: auto;
+    display: block; padding: 0 var(--gutter) 22px;
+  }
+  .pf__title { padding: 0 0 10px; }
+  .pf__gallery { position: relative; inset: auto; flex: 1 1 auto; min-height: 0; }
+  .pf__item { width: 88%; }
+  .pf__item.is-wide { width: 100%; }
+  /* geri: görselin üstüne binmesin diye altta kendi bandında */
+  .pf__foot { position: static; flex: none; padding: 14px var(--gutter) var(--gutter); margin: 0; }
+  .frame.is-pf { opacity: 0; }
+}

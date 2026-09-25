@@ -8,6 +8,10 @@
    Sütun ve soldaki liste sonsuz döngüdür: öğeler üç kopya halinde
    dizilir, konum ortadaki kopyanın dışına çıkınca bir set kaydırılır.
    İçerik assets/js/data.js'ten gelir.
+
+   Portfolyo görünümü: ortadaki karta (ya da ızgaradaki karta) tıklayınca
+   sayfa değişmeden kategori görünümü açılır; adres index.html?k=slug olur,
+   tarayıcının geri tuşu, "Geri" ve Esc kapatır (aşağıda "Portfolyo" bölümü).
    ========================================================= */
 (() => {
   const $ = (s, c = document) => c.querySelector(s);
@@ -48,11 +52,11 @@
     : `<div class="ph mono tone-${(i % 4) + 1}"><span>${pad(i + 1)}<span class="ph__name">${esc(c.name)}</span></span></div>`;
 
   track.innerHTML = CATS.map((c, i) =>
-    `<a class="reel__item${shapeCls[c.shape] || ""}" href="kategori.html?k=${encodeURIComponent(c.slug)}" draggable="false">${media(c, i)}</a>`
+    `<a class="reel__item${shapeCls[c.shape] || ""}" href="index.html?k=${encodeURIComponent(c.slug)}" draggable="false">${media(c, i)}</a>`
   ).join("");
   list.innerHTML = CATS.map((c) => `<li><button type="button">${esc(c.name)}</button></li>`).join("");
   gridv.innerHTML = CATS.map((c, i) => `
-    <a class="gcard" href="kategori.html?k=${encodeURIComponent(c.slug)}" style="--i:${i}" data-cursor="Aç">
+    <a class="gcard" href="index.html?k=${encodeURIComponent(c.slug)}" style="--i:${i}" data-k="${i}" data-cursor="Aç">
       <div class="gcard__media">${media(c, i)}</div>
       <div class="gcard__row"><span>${esc(c.name)}</span><span class="mono muted">${pad(i + 1)}</span></div>
       <div class="gcard__sub">${esc(c.sub)}</div>
@@ -192,6 +196,7 @@
     if (pos !== drawn) { render(); drawn = pos; }
     const g = Math.round(pos);
     if (g !== lastG) { lastG = g; setActive(g); }
+    if (pf !== null) gTick(); // portfolyonun görsel sütunu da aynı döngüde akar
     requestAnimationFrame(tick);
   };
 
@@ -206,7 +211,8 @@
     if (d > N / 2) d -= N;
     target = Math.round(target) + d;
   };
-  const busy = () => !ready || view === "g" || body.classList.contains("menu-open");
+  // portfolyo açıkken (pf) seçici tekerlek/ok/sürüklemeye tepki vermez
+  const busy = () => !ready || view === "g" || body.classList.contains("menu-open") || pf !== null;
 
   addEventListener("wheel", (e) => {
     if (busy()) return;
@@ -253,7 +259,7 @@
     if (it && !busy()) target = items.indexOf(it);
   });
 
-  // kart tıklaması: sürüklendiyse yok say; ortadaki değilse önce ortala; ortadakiyse kategoriye git
+  // kart tıklaması: sürüklendiyse yok say; ortadaki değilse önce ortala; ortadakiyse portfolyoyu aç
   track.addEventListener("click", (e) => {
     const it = e.target.closest(".reel__item");
     if (!it) return;
@@ -263,7 +269,23 @@
       e.preventDefault();
       e.stopPropagation();
       if (!busy() && !dragged) target = j;
+      return;
     }
+    // Ctrl/Cmd/Shift ile tıklama: bağlantı (index.html?k=…) yeni sekmede açılsın
+    if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+    // main.js'in belge düzeyindeki perde geçişine ulaşmasın
+    e.preventDefault();
+    e.stopPropagation();
+    openPf(mod(j, N));
+  });
+
+  // ızgara kartı: sayfaya gitmek yerine portfolyoyu aç
+  gridv.addEventListener("click", (e) => {
+    const card = e.target.closest(".gcard");
+    if (!card || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (ready && pf === null) openPf(Number(card.dataset.k));
   });
 
   // soldaki liste: tıklanan kategoriye git; zaten seçiliyse aç
@@ -286,8 +308,9 @@
 
   addEventListener("resize", () => {
     measure();
-    if (!body.classList.contains("is-intro")) selectorFrame();
+    if (!body.classList.contains("is-intro")) (pf !== null ? pfFrame() : selectorFrame());
     render();
+    if (pf !== null) gMeasure(false);
   });
 
   /* ---------- Görünüm değiştirme ---------- */
@@ -399,7 +422,315 @@
     await done;
   };
 
+  /* =========================================================
+     Portfolyo görünümü
+     Obys'in proje görünümünün yapısı ve hareketi, kendi kodumuzla:
+     1) seçici çekilir (liste satırları yukarı maskelenir, kartlar söner),
+        M yarıları ortada kapanır, üstte ince çizgi soldan sağa dolar
+     2) yazı logo sol üste küçülür, bilgiler satır satır açılır,
+        görseller sağdan sırayla gelir
+     Geri, Esc ya da tarayıcının geri tuşu tersini oynatır; seçici aynı
+     kartta ve aynı görünümde (Dikey / Yatay / Izgara) kalır.
+     ========================================================= */
+  const stage = $(".stage");
+  const pfEl = $(".pf");
+  const pfTitle = $(".pf__title");
+  const gallery = $(".pf__gallery");
+  const gTrack = $(".pf__track");
+  const bar = $(".pf-bar");
+  const pfF = Object.fromEntries($$("[data-pf]").map((el) => [el.dataset.pf, el]));
+  const baseTitle = document.title;
+  const slugIndex = (s) => (s ? CATS.findIndex((c) => c.slug === s) : -1);
+
+  let pf = null;          // açık kategorinin sırası (kapalıyken null)
+  let pfBusy = false;     // açılış / kapanış hareketi sürüyor
+  let pfPushed = false;   // arkada ana sayfa kaydı var mı (Geri → history.back)
+  let pfWantClose = false;
+
+  // bir değişikliği geçişsiz uygula: html.pf-snap iki kare boyunca tüm geçişleri kapatır
+  const instantly = (fn) => {
+    const root = document.documentElement;
+    root.classList.add("pf-snap");
+    fn();
+    void body.offsetWidth;
+    requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove("pf-snap")));
+  };
+
+  // kapanmış M: iki yarı bitişik, ekranın ortasında ~9vw
+  const pfFrame = () => setFrame(clamp(innerWidth * 0.09, 72, 150), 0);
+
+  /* ---------- Görseller: her çalışmanın kapağı (varsa) + ekran görüntüleri ---------- */
+  const ratioOf = (r) => {
+    const [a, b] = String(r || "16x9").split("x").map(Number);
+    return a && b ? [a, b] : [16, 9];
+  };
+  const pfShots = (c) => (c.works || []).flatMap((w, wi) =>
+    [...(w.cover ? [{ src: w.cover, ratio: "16x9", caption: "" }] : []), ...(w.shots || [])]
+      .map((s) => ({ ...s, w, wi })));
+
+  const buildGallery = (c) => {
+    gTrack.innerHTML = pfShots(c).map((s, i) => {
+      const [a, b] = ratioOf(s.ratio);
+      const wide = a / b > 1.2; // yatay / geniş kareler 50vw, dikey olanlar 42.5vw
+      const href = `proje.html?k=${encodeURIComponent(c.slug)}&p=${encodeURIComponent(s.w.slug)}`;
+      const media = s.src
+        ? `<img src="${esc(s.src)}" alt="${esc(s.caption || s.w.title)}" loading="lazy" draggable="false">`
+        : `<div class="ph mono tone-${(i % 4) + 1}"><span>Çalışma ${pad(s.wi + 1)} — ${a}:${b}</span></div>`;
+      return `<a class="pf__item${wide ? " is-wide" : ""}" href="${href}" data-cursor="Aç" draggable="false"><div class="pf__media" style="aspect-ratio:${a} / ${b}">${media}</div></a>`;
+    }).join("");
+  };
+
+  /* ---------- Sonsuz sütun ----------
+     Her öğenin set içindeki yeri (o) sabit; ekrandaki yeri
+     y = mod(o - kaydırma + pay, setBoyu) - pay. Böylece son görselden sonra
+     yine ilki gelir. Set ekranı dolduramayacak kadar kısaysa kopyalanır. */
+  let gItems = [], gS = 0, gPad = 0, gVh = 0, gCur = 0, gTarget = 0, gDrawn = null, gDrag = null;
+  const gPlace = () => {
+    if (!gS) return;
+    // tam piksele yuvarla: yarım pikselde iki karenin arasında ince çizgi görünür
+    const c = Math.round(gCur);
+    gItems.forEach((it) => {
+      it.y = mod(it.o - c + gPad, gS) - gPad;
+      it.el.style.transform = `translate3d(0, ${it.y}px, 0)`;
+    });
+  };
+  const gMeasure = (reset = true) => {
+    const frac = gS ? gCur / gS : 0;
+    $$(".is-clone", gTrack).forEach((n) => n.remove());
+    const base = [...gTrack.children];
+    gVh = gallery.clientHeight || innerHeight;
+    let off = 0, maxH = 0;
+    // yükseklik oran + genişlikten gelir; tam piksele sabitlenir ki kareler arasında boşluk kalmasın
+    base.forEach((el) => (el.firstElementChild.style.height = ""));
+    const hs = base.map((el) => Math.round(el.getBoundingClientRect().height));
+    gItems = base.map((el, j) => {
+      const h = hs[j];
+      el.firstElementChild.style.height = `${h}px`;
+      const it = { el, o: off, h };
+      off += h; maxH = Math.max(maxH, h);
+      return it;
+    });
+    gS = 0;
+    if (!off) return;
+    let copies = 1;
+    while (off * copies < gVh + maxH * 2) copies++;
+    for (let n = 1; n < copies; n++) base.forEach((el, j) => {
+      const cl = el.cloneNode(true);
+      cl.classList.add("is-clone");
+      cl.setAttribute("aria-hidden", "true");
+      cl.tabIndex = -1;
+      gTrack.append(cl);
+      gItems.push({ el: cl, o: gItems[j].o + n * off, h: gItems[j].h });
+    });
+    gS = off * copies;
+    gPad = maxH;
+    // ilk açılışta ilk görsel dikeyde ortada (üstünde döngüden son görsel görünür)
+    gCur = gTarget = reset ? gItems[0].h / 2 - gVh / 2 : frac * gS;
+    gDrawn = null;
+    gPlace();
+  };
+  const gTick = () => {
+    gCur += (gTarget - gCur) * (reduced ? 1 : 0.1);
+    if (Math.abs(gTarget - gCur) < 0.05) gCur = gTarget;
+    // sayılar büyüyüp durmasın: birkaç tur ötedeyse ikisini birlikte geri al
+    if (gS && Math.abs(gCur) > gS * 4) {
+      const s = Math.trunc(gCur / gS) * gS;
+      gCur -= s; gTarget -= s;
+      if (gDrag) gDrag.t -= s;
+    }
+    if (gCur !== gDrawn) { gPlace(); gDrawn = gCur; }
+  };
+
+  /* ---------- Aç / kapat ---------- */
+  const openPf = async (k, { push = true, instant = false } = {}) => {
+    const c = CATS[k];
+    if (!c || pf !== null || pfBusy) return;
+    pf = k; pfBusy = true; pfWantClose = false;
+    pfPushed = !instant; // doğrudan ?k= ile gelindiyse arkada ana sayfa kaydı yok
+    const url = `${location.pathname}?k=${encodeURIComponent(c.slug)}`;
+    if (push) history.pushState({ pf: c.slug }, "", url);
+    else history.replaceState({ pf: c.slug }, "", url);
+
+    // seçici bu kartta dursun: kapanınca aynı kart ortada olur
+    if (mod(Math.round(pos), N) !== k) pos = target = N + k;
+    else pos = target = Math.round(pos);
+    drawn = null;
+
+    pfF.name.textContent = c.name;
+    pfF.sub.textContent = c.sub || "";
+    pfF.services.textContent = (c.services || []).join(", ");
+    pfF.link.href = `kategori.html?k=${encodeURIComponent(c.slug)}`;
+    gallery.setAttribute("aria-label", `${c.name} — çalışma görselleri`);
+    buildGallery(c);
+    document.title = `${c.name} — Mes Dijital`;
+
+    const leave = () => {
+      pfEl.hidden = false;
+      stage.inert = true;               // gizlenen seçici klavye ve ekran okuyucudan da çıkar
+      body.classList.add("pf-out");
+      frame.classList.add("is-pf");
+      pfFrame();
+      gMeasure(true);
+    };
+
+    if (instant || reduced) {
+      instantly(() => { leave(); body.classList.add("pf-on"); });
+      pfTitle.focus({ preventScroll: true });
+    } else {
+      leave();
+      bar.classList.remove("is-run", "is-done");
+      void bar.offsetWidth;
+      bar.classList.add("is-run");       // üst çizgi dolar
+      await wait(600);
+      bar.classList.add("is-done");
+      // ekrandaki görseller yukarıdan aşağı sırayla gelsin, sütun hafifçe yukarı otursun
+      gItems
+        .map((it) => ({ it, y: mod(it.o - gTarget + gPad, gS) - gPad }))
+        .filter((x) => x.y < gVh && x.y + x.it.h > 0)
+        .sort((a, b) => a.y - b.y)
+        .forEach((x, n) => x.it.el.style.setProperty("--k", n));
+      gCur = gTarget - 90;
+      body.classList.add("pf-on");
+      pfTitle.focus({ preventScroll: true });
+      await wait(450);
+      bar.classList.remove("is-run", "is-done");
+      await wait(650);
+    }
+    pfBusy = false;
+    if (pfWantClose) closePf();
+  };
+
+  const closePf = async () => {
+    if (pf === null) return;
+    if (pfBusy) { pfWantClose = true; return; }
+    pfBusy = true;
+    const k = pf;
+    const back = () => {
+      body.classList.remove("pf-out");
+      stage.inert = false;
+      // karışımı renk geçişi kapalıyken kaldır: yoksa çerçeve bir an beyaz görünür
+      frame.style.transition = "opacity .5s, transform 1.1s var(--ease-io)";
+      frame.classList.remove("is-pf");
+      void frame.offsetWidth;
+      requestAnimationFrame(() => requestAnimationFrame(() => { frame.style.transition = ""; }));
+      selectorFrame();
+    };
+    if (reduced) {
+      instantly(() => { body.classList.remove("pf-on"); back(); });
+    } else {
+      body.classList.remove("pf-on");   // bilgiler kapanır, görseller sağa çekilir, logo büyür
+      await wait(450);
+      back();                           // liste, kartlar ve açık çerçeve geri gelir
+      await wait(900);
+    }
+    document.title = baseTitle;
+    pfEl.hidden = true;
+    gTrack.innerHTML = "";
+    gItems = []; gS = 0;
+    pf = null; pfBusy = false; pfPushed = false;
+    if (view === "g") {
+      const card = $(`.gcard[data-k="${k}"]`, gridv);
+      card && card.focus({ preventScroll: true });
+    } else {
+      reel.focus({ preventScroll: true });
+    }
+  };
+
+  // Geri / Esc / logo: bizim eklediğimiz kayıt varsa tarayıcı geçmişinde geri git
+  // (popstate kapatır), yoksa adresi temizleyip doğrudan kapat
+  const requestClose = () => {
+    if (pf === null) return;
+    if (pfPushed && history.state && history.state.pf) history.back();
+    else { history.replaceState(null, "", location.pathname); closePf(); }
+  };
+
+  addEventListener("popstate", () => {
+    const k = slugIndex(new URLSearchParams(location.search).get("k"));
+    if (k >= 0 && pf === null) openPf(k, { push: false });
+    else if (k < 0 && pf !== null) closePf();
+  });
+
+  /* ---------- Portfolyoda etkileşim ---------- */
+  pfEl.addEventListener("click", (e) => {
+    if (!e.target.closest(".pf__back") || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    e.stopPropagation(); // main.js perde geçişi yapmasın
+    requestClose();
+  });
+  // üst banttaki ana sayfa bağlantıları (logo, "Kategoriler") görünümü kapatır
+  $(".top").addEventListener("click", (e) => {
+    const a = e.target.closest('a[href="index.html"]');
+    if (!a || pf === null || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    e.stopPropagation();
+    requestClose();
+  });
+
+  // tekerlek sayfanın her yerinde sütunu kaydırır
+  addEventListener("wheel", (e) => {
+    if (pf === null || body.classList.contains("menu-open")) return;
+    e.preventDefault();
+    let d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    if (e.deltaMode === 1) d *= 16;
+    else if (e.deltaMode === 2) d *= gVh;
+    gTarget += d;
+  }, { passive: false });
+
+  // sürükleme (fare ve dokunma)
+  gallery.addEventListener("pointerdown", (e) => {
+    if (pf === null || e.button !== 0) return;
+    gDrag = { y: e.clientY, t: gTarget, moved: 0, last: e.clientY, lastT: performance.now(), v: 0, id: e.pointerId };
+  });
+  gallery.addEventListener("pointermove", (e) => {
+    if (!gDrag) return;
+    const d = e.clientY - gDrag.y;
+    gDrag.moved = Math.max(gDrag.moved, Math.abs(d));
+    // yakalama yalnızca gerçek sürüklemede: basılır basılmaz yakalanırsa bağlantı tıklanmaz
+    if (gDrag.moved > 6 && !gallery.hasPointerCapture(gDrag.id)) {
+      gallery.setPointerCapture(gDrag.id);
+      gallery.classList.add("is-drag");
+    }
+    const now = performance.now();
+    gDrag.v = (e.clientY - gDrag.last) / Math.max(1, now - gDrag.lastT);
+    gDrag.last = e.clientY; gDrag.lastT = now;
+    gTarget = gDrag.t - d;
+  });
+  const gEnd = () => {
+    if (!gDrag) return;
+    if (performance.now() - gDrag.lastT < 80) gTarget -= gDrag.v * 220; // hafif savrulma
+    gallery.classList.remove("is-drag");
+    const d = gDrag;
+    setTimeout(() => { if (gDrag === d) gDrag = null; }, 0);
+  };
+  gallery.addEventListener("pointerup", gEnd);
+  gallery.addEventListener("pointercancel", gEnd);
+  gallery.addEventListener("pointerleave", () => { if (gDrag && !gallery.hasPointerCapture(gDrag.id)) gEnd(); });
+  // sürükleme sonrası gelen tıklama çalışmayı açmasın
+  gallery.addEventListener("click", (e) => {
+    if (gDrag && gDrag.moved > 6) { e.preventDefault(); e.stopPropagation(); }
+  }, true);
+
+  // Tab ile gelinen görsel ekranda değilse sütunu ona kaydır
+  gallery.addEventListener("focusin", (e) => {
+    const it = gItems.find((x) => x.el === e.target.closest(".pf__item"));
+    if (!it || !gS) return;
+    const y = mod(it.o - gTarget + gPad, gS) - gPad;
+    if (y < 0 || y + it.h > gVh) gTarget += y - Math.max(0, (gVh - it.h) / 2);
+  });
+
+  // oklar ve Esc (yakalama aşamasında: menü açıkken Esc'yi main.js'e bırak)
+  addEventListener("keydown", (e) => {
+    if (pf === null || body.classList.contains("menu-open")) return;
+    if (e.key === "Escape") { e.preventDefault(); requestClose(); return; }
+    const step = { ArrowDown: 140, ArrowUp: -140, PageDown: gVh * 0.85, PageUp: -gVh * 0.85 }[e.key];
+    if (step) { e.preventDefault(); gTarget += step; }
+  }, true);
+
   /* ---------- Başlat ---------- */
+  // index.html?k=slug: açılış animasyonu atlanır, görünüm geçişsiz açılır
+  const deepK = slugIndex(new URLSearchParams(location.search).get("k"));
+  if (deepK >= 0) { pos = target = N + deepK; store.set("md-loaded", "1"); }
+
   if (flash) buildFlash();
   triple(track, base);
   items = [...track.children];
@@ -410,9 +741,10 @@
   render();
   requestAnimationFrame(tick);
 
-  if (!intro || reduced || (!force && store.get("md-loaded"))) {
+  if (!intro || reduced || deepK >= 0 || (!force && store.get("md-loaded"))) {
     intro && intro.remove();
     toSelector(true);
+    if (deepK >= 0) openPf(deepK, { push: false, instant: true });
   } else {
     runIntro();
   }

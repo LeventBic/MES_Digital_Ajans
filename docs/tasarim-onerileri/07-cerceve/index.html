@@ -32,13 +32,13 @@
     "areaServed": "TR"
   }
   </script>
-  <script src="assets/js/theme.js?v=13"></script>
+  <script src="assets/js/theme.js?v=14"></script>
   <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap&subset=latin-ext" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=13">
-  <link rel="stylesheet" href="assets/css/home.css?v=13">
+  <link rel="stylesheet" href="assets/css/style.css?v=14">
+  <link rel="stylesheet" href="assets/css/home.css?v=14">
 </head>
 <body class="home is-intro">
   <a class="skip" href="ajans.html">Ajans sayfasına geç</a>
@@ -99,6 +99,26 @@
     <span class="foot foot--r muted">© <span data-year>2026</span> Mes Dijital</span>
   </main>
 
+  <!-- Portfolyo görünümü: ortadaki karta tıklayınca yerinde açılır (index.html?k=slug).
+       Sol: kategori bilgisi, orta: kapanmış M, sağ: sonsuz döngülü görsel sütunu.
+       İçerik assets/js/data.js'ten home.js ile doldurulur. -->
+  <section class="pf" aria-labelledby="pf-title" hidden>
+    <div class="pf__info">
+      <h1 class="pf__title" id="pf-title" tabindex="-1"><span class="pf__ln"><span style="--i:0" data-pf="name">[ Kategori ]</span></span></h1>
+      <div class="pf__meta">
+        <p class="pf__ln"><span style="--i:1" data-pf="sub">[ Alt başlık ]</span></p>
+        <p class="pf__ln"><span style="--i:2" data-pf="services">[ Hizmetler ]</span></p>
+        <p class="pf__ln pf__more"><span style="--i:3"><a class="pf__link" data-pf="link" href="kategori.html">Tüm çalışmalar ↗</a></span></p>
+      </div>
+    </div>
+    <div class="pf__gallery" role="group" aria-label="Çalışma görselleri">
+      <div class="pf__track"></div>
+    </div>
+    <p class="pf__ln pf__foot"><span style="--i:4"><a class="pf__back" href="index.html">Geri</a></span></p>
+  </section>
+  <!-- portfolyo açılırken üstte soldan sağa dolan ince çizgi -->
+  <div class="pf-bar" aria-hidden="true"></div>
+
   <!-- Açılış: siyah zemin, sayaç, M'nin arasında değişen kareler -->
   <div class="intro" aria-hidden="true">
     <div class="intro__flash"></div>
@@ -111,8 +131,8 @@
     <svg class="frame__half r" viewBox="50 0 50 100" preserveAspectRatio="none"><polygon pathLength="1" points="92,86 92,14 76,14 53,50 53,74 76,40 76,86"/></svg>
   </div>
 
-  <script src="assets/js/data.js?v=13"></script>
-  <script src="assets/js/main.js?v=13"></script>
-  <script src="assets/js/home.js?v=13"></script>
+  <script src="assets/js/data.js?v=14"></script>
+  <script src="assets/js/main.js?v=14"></script>
+  <script src="assets/js/home.js?v=14"></script>
 </body>
 </html>
