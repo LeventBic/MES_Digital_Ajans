@@ -5,15 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mes Dijital — Dijital & Influencer Ajansı</title>
   <meta name="description" content="Mes Dijital, Uşak merkezli dijital pazarlama ve influencer ajansı.">
-  <script src="assets/js/theme.js?v=12"></script>
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0b0b0b" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mes Dijital">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:title" content="Mes Dijital — Dijital & Influencer Ajansı">
+  <meta property="og:description" content="Mes Dijital, Uşak merkezli dijital pazarlama ve influencer ajansı.">
+  <meta name="twitter:card" content="summary">
+  <!-- Google'da yerel işletme bilgisi (adres, telefon) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Mes Dijital",
+    "description": "Uşak merkezli dijital pazarlama ve influencer ajansı.",
+    "url": "https://mesdijital.com.tr/",
+    "email": "iletisim@mesdijital.com.tr",
+    "telephone": "+905394974327",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Cumhuriyet Mah., Namık Kemal Cad. No: 9C",
+      "addressLocality": "Uşak",
+      "addressCountry": "TR"
+    },
+    "areaServed": "TR"
+  }
+  </script>
+  <script src="assets/js/theme.js?v=13"></script>
   <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap&subset=latin-ext" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=12">
-  <link rel="stylesheet" href="assets/css/home.css?v=12">
+  <link rel="stylesheet" href="assets/css/style.css?v=13">
+  <link rel="stylesheet" href="assets/css/home.css?v=13">
 </head>
 <body class="home is-intro">
+  <a class="skip" href="ajans.html">Ajans sayfasına geç</a>
 
   <div class="curtain" aria-hidden="true"></div>
   <div class="cursor" aria-hidden="true"><span class="cursor__label">Aç</span></div>
@@ -24,7 +52,6 @@
     <nav class="top__nav" aria-label="Ana menü">
       <a href="index.html" aria-current="page">Kategoriler</a>, <a href="ajans.html">Ajans</a>
     </nav>
-    <span class="top__clock mono">Uşak <span data-clock>--:--:--</span></span>
     <span class="top__end">
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="Gece ve gündüz modu arasında geç"><span class="theme-toggle__dot" aria-hidden="true"></span><span data-theme-label>Gece</span></button>
       <a class="top__contact" href="ajans.html#iletisim">İletişim</a>
@@ -36,10 +63,12 @@
     <a href="ajans.html">Ajans</a>
     <a href="ajans.html#hizmetler">Hizmetler</a>
     <a href="ajans.html#iletisim">İletişim</a>
+    <a href="https://wa.me/905394974327" target="_blank" rel="noopener">WhatsApp</a>
     <button class="theme-toggle mono" type="button" data-theme-toggle><span class="theme-toggle__dot" aria-hidden="true"></span><span data-theme-label>Gece</span></button>
   </nav>
 
   <main class="stage" aria-label="Kategoriler">
+    <h1 class="sr-only">Mes Dijital — Uşak merkezli dijital pazarlama ve influencer ajansı</h1>
     <!-- Kategori sütunu ve soldaki liste assets/js/data.js'ten üretilir -->
     <div class="reel" tabindex="0" aria-roledescription="kaydırılabilir kategori listesi">
       <div class="reel__track"></div>
@@ -58,7 +87,7 @@
     <!-- Sağ üst: kısa tanıtım -->
     <div class="about">
       <p>[ Ajansı anlatan iki üç cümlelik kısa tanıtım metni buraya gelecek. ]</p>
-      <p>İletişim:<br><a href="mailto:iletisim@mesdijital.com.tr">iletisim@mesdijital.com.tr</a></p>
+      <p>İletişim:<br><a href="mailto:iletisim@mesdijital.com.tr">iletisim@mesdijital.com.tr</a><br><a href="https://wa.me/905394974327" target="_blank" rel="noopener">WhatsApp ↗</a></p>
     </div>
 
     <!-- Izgara görünümü -->
@@ -82,8 +111,8 @@
     <svg class="frame__half r" viewBox="50 0 50 100" preserveAspectRatio="none"><polygon pathLength="1" points="92,86 92,14 76,14 53,50 53,74 76,40 76,86"/></svg>
   </div>
 
-  <script src="assets/js/data.js?v=12"></script>
-  <script src="assets/js/main.js?v=12"></script>
-  <script src="assets/js/home.js?v=12"></script>
+  <script src="assets/js/data.js?v=13"></script>
+  <script src="assets/js/main.js?v=13"></script>
+  <script src="assets/js/home.js?v=13"></script>
 </body>
 </html>

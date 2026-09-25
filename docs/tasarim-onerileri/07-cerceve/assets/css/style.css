@@ -9,7 +9,8 @@
   --paper-2: #e7e4dd;
   --muted: #7a776f;
   --line: rgba(11, 11, 11, .14);
-  --red: #e51b26;
+  --red: #e51b26;          /* marka kırmızısı: dolgu, logo, süs */
+  --red-text: #c4141d;     /* kırmızı metin: açık zeminde WCAG AA (5.4:1) */
   --bg-home: #ffffff;
   --soft: #c4c1ba;
   --hatch: rgba(11, 11, 11, .05);
@@ -36,6 +37,7 @@ html[data-theme="dark"] {
   --paper-2: #1b1b1b;
   --muted: #8f8b84;
   --line: rgba(237, 234, 228, .14);
+  --red-text: #ff4a52;     /* koyu zeminde #e51b26 4.1:1'de kalıyor */
   --bg-home: #0b0b0b;
   --soft: #4a4844;
   --hatch: rgba(255, 255, 255, .05);
@@ -59,7 +61,7 @@ html.theme-anim, html.theme-anim body, html.theme-anim .footer, html.theme-anim 
   transition: transform .6s var(--ease-io);
 }
 html[data-theme="dark"] .theme-toggle__dot { transform: rotate(180deg); }
-.theme-toggle:hover { color: var(--red); }
+.theme-toggle:hover { color: var(--red-text); }
 
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -83,6 +85,20 @@ a { color: inherit; text-decoration: none; }
 img, video { display: block; max-width: 100%; }
 button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
 ::selection { background: var(--red); color: #fff; }
+
+/* yalnızca ekran okuyucu için */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+/* "içeriğe geç" bağlantısı: Tab ile odaklanınca görünür */
+.skip {
+  position: fixed; left: var(--gutter); top: 12px; z-index: 200;
+  padding: 10px 14px; background: var(--ink); color: var(--paper);
+  font-size: 14px; font-weight: 500;
+  transform: translateY(-160%); transition: transform .3s var(--ease-out);
+}
+.skip:focus { transform: none; }
 
 .mono {
   font-family: var(--f-mono);
@@ -110,7 +126,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
    → sayaç 100 olunca M aralanır → siyah perde M ile birlikte ortadan ikiye yarılır */
 .loader {
   position: fixed; inset: 0; z-index: 100;
-  color: var(--paper);
+  color: #f3f1ec; /* siyah perde üstünde: gece modunda da açık kalmalı */
   display: grid; place-items: center;
   pointer-events: all;
 }
@@ -142,7 +158,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 .loader__count {
   position: absolute; right: var(--gutter); top: 50%; transform: translateY(-50%);
-  font-variant-numeric: tabular-nums; color: var(--paper);
+  font-variant-numeric: tabular-nums; color: #f3f1ec;
   transition: opacity .5s;
 }
 
@@ -329,16 +345,16 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 @keyframes marquee { to { transform: translateX(-50%); } }
 
 /* ---------- Footer ---------- */
-.footer { background: var(--footer-bg); color: var(--footer-ink); margin-top: clamp(80px, 14vw, 200px); padding-top: clamp(64px, 10vw, 140px); overflow: hidden; }
+.footer { --red-text: #ff4a52; background: var(--footer-bg); color: var(--footer-ink); margin-top: clamp(80px, 14vw, 200px); padding-top: clamp(64px, 10vw, 140px); overflow: hidden; }
 .footer .muted { color: var(--footer-muted); }
 .cta { display: block; padding-bottom: clamp(48px, 8vw, 120px); }
 .cta .display { display: inline-flex; align-items: baseline; gap: .12em; }
 .cta .arrow { display: inline-block; font-size: .6em; transition: transform .8s var(--ease-out); }
 .cta:hover .arrow { transform: translate(.12em, -.12em) rotate(-45deg); }
-.cta:hover .display { color: var(--red); transition: color .5s; }
+.cta:hover .display { color: var(--red-text); transition: color .5s; }
 .footer__cols { row-gap: 32px; padding-block: 32px; border-top: 1px solid var(--footer-line); }
 .footer__cols > div { grid-column: span 3; display: flex; flex-direction: column; gap: 6px; }
-.footer__cols a:hover { color: var(--red); }
+.footer__cols a:hover { color: var(--red-text); }
 .footer__bottom { display: flex; justify-content: space-between; gap: 16px; padding-block: 20px; }
 .footer__word { font-size: 27vw; font-weight: 600; letter-spacing: -.08em; line-height: .72; margin: 0 0 -.02em -.04em; white-space: nowrap; color: var(--footer-word); user-select: none; }
 
@@ -352,7 +368,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .case-info { padding-block: 24px; border-top: 1px solid var(--line); row-gap: 24px; }
 .case-info > div { grid-column: span 3; display: flex; flex-direction: column; gap: 6px; }
 .case-info .live { display: inline-flex; gap: 6px; align-items: center; }
-.case-info .live:hover { color: var(--red); }
+.case-info .live:hover { color: var(--red-text); }
 
 .case-media-full { margin-top: 8px; }
 .case-block { padding-top: clamp(64px, 10vw, 160px); row-gap: var(--gutter); }
@@ -370,7 +386,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 .next { display: block; margin-top: clamp(80px, 14vw, 200px); border-top: 1px solid var(--line); padding-block: 24px clamp(40px, 6vw, 80px); }
 .next .h1 { transition: color .5s; }
-.next:hover .h1 { color: var(--red); }
+.next:hover .h1 { color: var(--red-text); }
 .next__row { display: flex; justify-content: space-between; margin-bottom: 24px; }
 
 /* ---------- Özel imleç ---------- */
@@ -449,7 +465,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .work__n { grid-column: 1 / 4; }
 .work__title { grid-column: 4 / 10; transition: color .5s; }
 .work__meta { grid-column: 10 / 13; text-align: right; }
-.work__link:hover .work__title { color: var(--red); }
+.work__link:hover .work__title { color: var(--red-text); }
 .work__media { align-items: end; }
 .work__main { grid-column: 1 / 9; }
 .work__side { grid-column: 9 / 13; }
@@ -487,6 +503,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 
 .strip { margin-top: clamp(64px, 10vw, 140px); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; cursor: grab; }
 .strip::-webkit-scrollbar { display: none; }
+.strip.is-drag { cursor: grabbing; user-select: none; }
 .strip__track { display: flex; align-items: flex-end; gap: var(--gutter); padding-inline: var(--gutter); width: max-content; }
 .strip__item { margin: 0; flex: none; }
 .strip__item.r-4x5 { width: clamp(220px, 22vw, 340px); aspect-ratio: auto; }
@@ -503,7 +520,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .fact { grid-column: span 3; }
 .fact h2 { margin: 0 0 18px; font-weight: 400; }
 .fact ul { list-style: none; margin: 0; padding: 0; font-size: clamp(17px, 1.4vw, 21px); font-weight: 500; letter-spacing: -.02em; line-height: 1.35; }
-.fact a:hover { color: var(--red); }
+.fact a:hover { color: var(--red-text); }
 .fact .dated li { display: flex; justify-content: space-between; gap: 12px; }
 
 .team { row-gap: 40px; padding-top: clamp(32px, 5vw, 64px); }

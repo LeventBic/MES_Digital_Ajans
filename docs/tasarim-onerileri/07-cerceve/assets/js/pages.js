@@ -13,8 +13,9 @@
   const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const q = new URLSearchParams(location.search);
   const CATS = DATA.categories;
-  const ci = Math.max(0, CATS.findIndex((c) => c.slug === q.get("k")));
+  const ci = CATS.findIndex((c) => c.slug === q.get("k"));
   const cat = CATS[ci];
+  const setDesc = (t) => { const m = document.querySelector('meta[name="description"]'); if (m && t) m.content = t; };
   const catUrl = (c) => `kategori.html?k=${encodeURIComponent(c.slug)}`;
   const workUrl = (c, w) => `proje.html?k=${encodeURIComponent(c.slug)}&p=${encodeURIComponent(w.slug)}`;
   const ratioCls = { "16x9": "r-16x9", "21x9": "r-21x9", "4x5": "r-4x5", "3x4": "r-3x4", "1x1": "r-1x1" };
@@ -46,9 +47,13 @@
     return;
   }
 
+  // bilinmeyen ya da eksik kategori adresi: sessizce ilk kategoriyi göstermek yerine ana sayfaya dön
+  if (!cat) { location.replace("index.html"); return; }
+
   /* ---------- Kategori sayfası ---------- */
   if (page === "kategori") {
     document.title = `${cat.name} — ${DATA.agency.name}`;
+    setDesc(`${DATA.agency.name} ${cat.name} hizmetleri: ${(cat.services || []).join(", ")}. ${DATA.agency.city} merkezli dijital ajans.`);
     const next = CATS[(ci + 1) % CATS.length];
     const works = cat.works || [];
 
@@ -123,10 +128,11 @@
   /* ---------- Proje sayfası ---------- */
   if (page === "proje") {
     const works = cat.works || [];
-    const wi = Math.max(0, works.findIndex((w) => w.slug === q.get("p")));
+    const wi = works.findIndex((w) => w.slug === q.get("p"));
     const w = works[wi];
     if (!w) { location.replace(catUrl(cat)); return; }
     document.title = `${w.title} — ${DATA.agency.name}`;
+    setDesc(`${w.title} — ${w.client}, ${cat.name}. ${DATA.agency.name} çalışması.`);
 
     // sonraki çalışma: aynı kategoride, bitince sonraki kategorinin ilki
     let nc = cat, nw = works[wi + 1];
@@ -137,27 +143,32 @@
       }
     }
 
-    // ekran görüntülerini orana göre grupla: yatay tam genişlik, 4:5 ikili, 3:4 üçlü
+    // kapak: ayrı bir kapak görseli varsa o, yoksa ilk yatay ekran görüntüsü.
+    // Kapak olarak kullanılan görüntü aşağıda tekrar edilmez, geri kalan hiçbiri de düşmez.
     const shots = w.shots || [];
+    const hi = w.cover ? -1 : Math.max(0, shots.findIndex((s) => s.ratio === "16x9" || s.ratio === "21x9"));
+    const hero = w.cover ? { src: w.cover, ratio: "16x9", caption: w.title } : shots[hi];
+    const rest = shots.filter((_, i) => i !== hi);
+
+    // kalanları orana göre grupla: yatay tam genişlik, 4:5 ve 1:1 ikili, 3:4 üçlü
     const rows = [];
-    for (let i = 0; i < shots.length; ) {
-      const r = shots[i].ratio;
+    for (let i = 0; i < rest.length; ) {
+      const r = rest[i].ratio;
       if (r === "4x5" || r === "3x4" || r === "1x1") {
         const per = r === "3x4" ? 3 : 2;
         const group = [];
-        while (i < shots.length && shots[i].ratio === r && group.length < per) group.push(shots[i++]);
+        while (i < rest.length && rest[i].ratio === r && group.length < per) group.push(rest[i++]);
         rows.push(group);
-      } else rows.push([shots[i++]]);
+      } else rows.push([rest[i++]]);
     }
-    let n = 0;
-    const rowHtml = rows.slice(1).map((g) => {
+    let n = hero ? 1 : 0;
+    const rowHtml = rows.map((g) => {
       const span = g.length === 1 ? "span-12" : g.length === 2 ? "span-6" : "span-4";
       return `<section class="wrap grid case-block">${g.map((s) => {
         n++;
-        return `<figure class="${span} shot">${shot(s, "Ekran görüntüsü")}<figcaption class="caption mono muted"><span>${esc(s.caption)}</span><span>${pad(n + 1)}</span></figcaption></figure>`;
+        return `<figure class="${span} shot">${shot(s, "Ekran görüntüsü")}<figcaption class="caption mono muted"><span>${esc(s.caption)}</span><span>${pad(n)}</span></figcaption></figure>`;
       }).join("")}</section>`;
     }).join("");
-    const first = rows[0] || [];
 
     root.innerHTML = `
     <section class="case-hero wrap">
@@ -176,7 +187,7 @@
     </section>
 
     <section class="wrap case-media-full">
-      ${first.length ? `<figure class="shot">${shot(w.cover ? { src: w.cover, ratio: "16x9" } : first[0], "Kapak")}<figcaption class="caption mono muted"><span>${esc(first[0]?.caption)}</span><span>01</span></figcaption></figure>` : ""}
+      ${hero ? `<figure class="shot">${shot(hero, "Kapak")}<figcaption class="caption mono muted"><span>${esc(hero.caption)}</span><span>01</span></figcaption></figure>` : ""}
     </section>
 
     <section class="wrap grid case-block case-text">

@@ -52,12 +52,24 @@
   });
 
   /* ---------- Görünür olunca aç ---------- */
+  // .media başta clip-path ile tamamen kırpılı; Chrome kırpılı öğeyi hiç "görünür" saymaz.
+  // Bu yüzden görseller kendileri yerine kapsayıcıları üzerinden izlenir.
+  const revealOf = new Map();
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
-      if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); }
+      if (!e.isIntersecting) return;
+      (revealOf.get(e.target) || [e.target]).forEach((el) => el.classList.add("is-in"));
+      io.unobserve(e.target);
     });
   }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
-  const armReveals = () => $$("[data-split], [data-reveal], .media").forEach((el) => io.observe(el));
+  const armReveals = () => {
+    $$("[data-split], [data-reveal]").forEach((el) => io.observe(el));
+    $$(".media").forEach((m) => {
+      const box = m.parentElement;
+      if (!revealOf.has(box)) { revealOf.set(box, []); io.observe(box); }
+      revealOf.get(box).push(m);
+    });
+  };
 
   /* ---------- Parallax ---------- */
   const parallax = $$("[data-parallax]");
@@ -173,7 +185,9 @@
 
   /* ---------- Çapa linkleri Lenis ile ---------- */
   $$('a[href^="#"]').forEach((a) => a.addEventListener("click", (e) => {
-    const target = $(a.getAttribute("href"));
+    const href = a.getAttribute("href");
+    if (href.length < 2) { e.preventDefault(); return; } // boş "#": geçersiz seçici, sayfa başa zıplamasın
+    const target = document.getElementById(decodeURIComponent(href.slice(1)));
     if (!target) return;
     e.preventDefault();
     lenis ? lenis.scrollTo(target, { offset: 0 }) : target.scrollIntoView({ behavior: "smooth" });
@@ -198,6 +212,58 @@
     menuBtn.textContent = "Kapat";
     menuBtn.setAttribute("aria-expanded", "true");
     lenis && lenis.stop();
+    const first = $("a, button", menu);
+    first && first.focus({ preventScroll: true });
+  });
+  addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || !menu || !menu.classList.contains("is-open")) return;
+    closeMenu();
+    menuBtn && menuBtn.focus();
+  });
+
+  /* ---------- Sosyal medya bağlantıları (data.js → agency.social) ---------- */
+  // adres boşsa bağlantı yerine soluk metin: tıklanıp hiçbir yere gitmeyen "#" kalmasın
+  const social = (window.MD_DATA && window.MD_DATA.agency && window.MD_DATA.agency.social) || {};
+  $$("[data-social]").forEach((box) => {
+    const asList = box.tagName === "UL";
+    Object.entries(social).forEach(([name, url]) => {
+      const el = document.createElement(url ? "a" : "span");
+      el.textContent = asList && url ? `${name} ↗` : name;
+      if (url) {
+        el.href = url; el.target = "_blank"; el.rel = "noopener";
+        el.dataset.magnet = "";
+      } else {
+        el.className = "muted";
+        el.title = "Hesap henüz eklenmedi";
+      }
+      if (asList) { const li = document.createElement("li"); li.append(el); box.append(li); }
+      else box.append(el);
+    });
+  });
+
+  /* ---------- Yatay görsel şeridi: fareyle sürükleyerek kaydır ---------- */
+  $$(".strip").forEach((strip) => {
+    let d = null, suppress = false;
+    strip.addEventListener("click", (e) => { if (suppress) { e.preventDefault(); e.stopPropagation(); } }, true);
+    strip.addEventListener("pointerdown", (e) => {
+      if (e.pointerType !== "mouse" || e.button !== 0) return;
+      e.preventDefault(); // metin seçimi / görsel sürükleme başlamasın
+      d = { x: e.clientX, left: strip.scrollLeft, moved: 0 };
+      strip.classList.add("is-drag");
+    });
+    addEventListener("pointermove", (e) => {
+      if (!d) return;
+      d.moved = Math.max(d.moved, Math.abs(e.clientX - d.x));
+      strip.scrollLeft = d.left - (e.clientX - d.x);
+    });
+    addEventListener("pointerup", () => {
+      if (!d) return;
+      // sürükleme sonrası gelen tıklama bağlantı açmasın
+      suppress = d.moved > 6;
+      d = null;
+      strip.classList.remove("is-drag");
+      setTimeout(() => { suppress = false; }, 0);
+    });
   });
 
   /* ---------- Hizmet akordeonu ---------- */

@@ -5,14 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kategori — Mes Dijital</title>
   <meta name="description" content="Mes Dijital hizmet kategorisi ve çalışmaları.">
-  <script src="assets/js/theme.js?v=12"></script>
+  <meta name="theme-color" content="#f3f1ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mes Dijital">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:title" content="Kategori — Mes Dijital">
+  <meta property="og:description" content="Mes Dijital hizmet kategorisi ve çalışmaları.">
+  <meta name="twitter:card" content="summary">
+  <script src="assets/js/theme.js?v=13"></script>
   <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap&subset=latin-ext" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=12">
+  <link rel="stylesheet" href="assets/css/style.css?v=13">
 </head>
 <body id="top">
+  <a class="skip" href="#icerik">İçeriğe geç</a>
 
   <div class="loader" aria-hidden="true">
     <span class="loader__panel l"></span><span class="loader__panel r"></span>
@@ -43,7 +52,7 @@
   </nav>
 
   <!-- İçerik assets/js/pages.js tarafından data.js'ten çizilir -->
-  <main data-page="kategori"></main>
+  <main id="icerik" tabindex="-1" data-page="kategori"></main>
 
   <footer class="footer" id="iletisim">
     <div class="wrap">
@@ -52,9 +61,9 @@
         <span class="display" data-split>Birlikte çalışalım <span class="arrow">→</span></span>
       </a>
       <div class="grid footer__cols">
-        <div><span class="mono muted">Adres</span><span>Cumhuriyet Mah., Namık Kemal Cad. No: 9C, Uşak</span></div>
-        <div><span class="mono muted">İletişim</span><a href="tel:+905394974327">+90 539 497 43 27</a><a href="mailto:iletisim@mesdijital.com.tr">iletisim@mesdijital.com.tr</a></div>
-        <div><span class="mono muted">Sosyal</span><a href="#" data-magnet>Instagram</a><a href="#" data-magnet>LinkedIn</a><a href="#" data-magnet>TikTok</a></div>
+        <div><span class="mono muted">Adres</span><span>Cumhuriyet Mah., Namık Kemal Cad. No: 9C, Uşak</span><a href="https://www.google.com/maps/search/?api=1&query=Cumhuriyet+Mah.+Nam%C4%B1k+Kemal+Cad.+No%3A+9C+U%C5%9Fak" target="_blank" rel="noopener">Haritada aç ↗</a></div>
+        <div><span class="mono muted">İletişim</span><a href="tel:+905394974327">+90 539 497 43 27</a><a href="mailto:iletisim@mesdijital.com.tr">iletisim@mesdijital.com.tr</a><a href="https://wa.me/905394974327" target="_blank" rel="noopener">WhatsApp ↗</a></div>
+        <div data-social><span class="mono muted">Sosyal</span></div>
         <div><span class="mono muted">Yerel saat</span><span data-clock>--:--:--</span></div>
       </div>
       <div class="footer__bottom mono muted"><span>© <span data-year>2026</span> Mes Dijital</span><a href="#top" class="js-top">Başa dön ↑</a></div>
@@ -63,8 +72,8 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="assets/js/data.js?v=12"></script>
-  <script src="assets/js/pages.js?v=12"></script>
-  <script src="assets/js/main.js?v=12"></script>
+  <script src="assets/js/data.js?v=13"></script>
+  <script src="assets/js/pages.js?v=13"></script>
+  <script src="assets/js/main.js?v=13"></script>
 </body>
 </html>

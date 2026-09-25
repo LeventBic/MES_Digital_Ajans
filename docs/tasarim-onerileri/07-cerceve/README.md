@@ -17,6 +17,8 @@ açmak yeterli (yerelde: `py -m http.server 5173 --directory mes-dijital`).
 Bütün kategoriler ve çalışmalar **`assets/js/data.js`** dosyasından gelir.
 Ana sayfa, kategori sayfaları ve proje sayfaları bu dosyadan otomatik çizilir.
 
+- Sosyal medya hesaplarını `agency.social` altına yaz (ör. `Instagram: "https://instagram.com/..."`).
+  Adresi boş kalan hesap sitede tıklanamaz soluk metin olarak görünür; boş `#` bağlantı üretilmez.
 - Kategori eklemek, silmek ya da sıralamak için `categories` dizisini düzenle.
 - Görsel eklemek için görseli `assets/img/` altına koy ve yolunu yaz:
   - ana sayfa kartı: kategoride `cover: "assets/img/web/kapak.jpg"`

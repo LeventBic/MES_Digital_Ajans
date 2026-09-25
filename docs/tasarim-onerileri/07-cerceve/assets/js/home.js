@@ -181,14 +181,15 @@
     swap(fields.idx, pad(k + 1));
   };
 
-  let lastG = null;
+  let lastG = null, drawn = null;
   const tick = () => {
     pos += (target - pos) * 0.11;
     if (Math.abs(target - pos) < 0.0005) pos = target;
     // ortadaki kopyanın dışına çıkınca bir set geri/ileri kaydır (görünmez)
     if (pos > 2 * N - 0.5 && target > 2 * N - 0.5) { pos -= N; target -= N; if (drag) drag.t -= N; }
     if (pos < N - 0.5 && target < N - 0.5) { pos += N; target += N; if (drag) drag.t += N; }
-    render();
+    // sütun durunca her karede stil yazmayı bırak (boşta CPU/pil harcamasın)
+    if (pos !== drawn) { render(); drawn = pos; }
     const g = Math.round(pos);
     if (g !== lastG) { lastG = g; setActive(g); }
     requestAnimationFrame(tick);
@@ -220,14 +221,16 @@
   const ptr = (e) => (isH() ? e.clientX : e.clientY);
   reel.addEventListener("pointerdown", (e) => {
     if (busy() || e.button !== 0) return;
-    drag = { p: ptr(e), t: target, moved: 0, last: ptr(e), lastT: performance.now(), v: 0 };
-    reel.setPointerCapture(e.pointerId);
+    drag = { p: ptr(e), t: target, moved: 0, last: ptr(e), lastT: performance.now(), v: 0, id: e.pointerId };
     reel.classList.add("is-drag");
   });
   reel.addEventListener("pointermove", (e) => {
     if (!drag) return;
     const d = ptr(e) - drag.p;
     drag.moved = Math.max(drag.moved, Math.abs(d));
+    // yakalama yalnızca gerçek sürüklemede: basılır basılmaz yakalanırsa tıklama
+    // karta değil .reel'e düşer ve ortadaki kart hiç açılmaz
+    if (drag.moved > 6 && !reel.hasPointerCapture(drag.id)) reel.setPointerCapture(drag.id);
     const now = performance.now();
     drag.v = (ptr(e) - drag.last) / Math.max(1, now - drag.lastT);
     drag.last = ptr(e); drag.lastT = now;
@@ -242,6 +245,13 @@
   };
   reel.addEventListener("pointerup", endDrag);
   reel.addEventListener("pointercancel", endDrag);
+  reel.addEventListener("pointerleave", () => { if (drag && !reel.hasPointerCapture(drag.id)) endDrag(); });
+
+  // klavyeyle (Tab) bir karta gelince kartı ortala
+  track.addEventListener("focusin", (e) => {
+    const it = e.target.closest(".reel__item");
+    if (it && !busy()) target = items.indexOf(it);
+  });
 
   // kart tıklaması: sürüklendiyse yok say; ortadaki değilse önce ortala; ortadakiyse kategoriye git
   track.addEventListener("click", (e) => {

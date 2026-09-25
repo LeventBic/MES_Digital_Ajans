@@ -5,14 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ajans — Mes Dijital</title>
   <meta name="description" content="Mes Dijital, Uşak merkezli dijital pazarlama ve influencer ajansı.">
-  <script src="assets/js/theme.js?v=12"></script>
+  <meta name="theme-color" content="#f3f1ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0e0e0e" media="(prefers-color-scheme: dark)">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mes Dijital">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:title" content="Ajans — Mes Dijital">
+  <meta property="og:description" content="Mes Dijital, Uşak merkezli dijital pazarlama ve influencer ajansı.">
+  <meta name="twitter:card" content="summary">
+  <script src="assets/js/theme.js?v=13"></script>
   <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap&subset=latin-ext" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css?v=12">
+  <link rel="stylesheet" href="assets/css/style.css?v=13">
 </head>
 <body id="top">
+  <a class="skip" href="#icerik">İçeriğe geç</a>
 
   <!-- Açılış -->
   <div class="loader" aria-hidden="true">
@@ -44,7 +53,7 @@
     <button class="theme-toggle mono" type="button" data-theme-toggle><span class="theme-toggle__dot" aria-hidden="true"></span><span data-theme-label>Gece</span></button>
   </nav>
 
-  <main data-page="ajans">
+  <main id="icerik" tabindex="-1" data-page="ajans">
     <!-- Tanıtım -->
     <section class="hero wrap about-hero">
       <div class="grid hero__meta">
@@ -52,7 +61,7 @@
         <p class="mono" data-reveal>Dijital &amp; Influencer Ajansı</p>
         <p class="mono" data-reveal>Uşak, TR — <span data-clock>--:--:--</span></p>
       </div>
-      <p class="statement" data-split>[ Mes Dijital'i anlatan güçlü bir tanıtım cümlesi buraya gelecek. Ne yaptığımızı, kimlerle çalıştığımızı ve neden farklı olduğumuzu iki üç cümlede söyleyen bir metin. ]</p>
+      <h1 class="statement" data-split>[ Mes Dijital'i anlatan güçlü bir tanıtım cümlesi buraya gelecek. Ne yaptığımızı, kimlerle çalıştığımızı ve neden farklı olduğumuzu iki üç cümlede söyleyen bir metin. ]</h1>
     </section>
 
     <!-- Görsel şeridi: ekip, ofis, çekim arkası -->
@@ -90,12 +99,7 @@
         </div>
         <div class="fact">
           <h2 class="mono">(05) Sosyal</h2>
-          <ul>
-            <li><a href="#" data-magnet>Instagram ↗</a></li>
-            <li><a href="#" data-magnet>LinkedIn ↗</a></li>
-            <li><a href="#" data-magnet>TikTok ↗</a></li>
-            <li><a href="#" data-magnet>YouTube ↗</a></li>
-          </ul>
+          <ul data-social></ul>
         </div>
       </div>
     </section>
@@ -103,7 +107,7 @@
     <!-- Ekip -->
     <section class="section wrap" id="ekip">
       <div class="grid section__head">
-        <p class="mono">(—) Ekip</p>
+        <p class="mono">(06) Ekip</p>
         <h2 class="h1" data-split>[ Ekip başlığı ]</h2>
       </div>
       <div class="grid team">
@@ -116,7 +120,7 @@
 
     <section class="section wrap" id="katalog">
       <div class="grid section__head">
-        <p class="mono">(06) Katalog</p>
+        <p class="mono">(07) Katalog</p>
         <h2 class="h1" data-split>[ Katalog başlığı ]</h2>
       </div>
       <div class="grid cards">
@@ -153,8 +157,6 @@
       </div>
     </section>
 
-    <!-- Hizmetler -->
-
     <!-- Marka şeridi -->
     <section class="section">
       <div class="marquee" aria-label="Çalıştığımız markalar">
@@ -169,14 +171,14 @@
   <!-- Footer -->
   <footer class="footer" id="iletisim">
     <div class="wrap">
-      <p class="mono muted">(04) İletişim</p>
+      <p class="mono muted">(08) İletişim</p>
       <a class="cta" href="mailto:iletisim@mesdijital.com.tr">
         <span class="display" data-split>Birlikte çalışalım <span class="arrow">→</span></span>
       </a>
       <div class="grid footer__cols">
-        <div><span class="mono muted">Adres</span><span>Cumhuriyet Mah., Namık Kemal Cad. No: 9C, Uşak</span></div>
-        <div><span class="mono muted">İletişim</span><a href="tel:+905394974327">+90 539 497 43 27</a><a href="mailto:iletisim@mesdijital.com.tr">iletisim@mesdijital.com.tr</a></div>
-        <div><span class="mono muted">Sosyal</span><a href="#" data-magnet>Instagram</a><a href="#" data-magnet>LinkedIn</a><a href="#" data-magnet>TikTok</a></div>
+        <div><span class="mono muted">Adres</span><span>Cumhuriyet Mah., Namık Kemal Cad. No: 9C, Uşak</span><a href="https://www.google.com/maps/search/?api=1&query=Cumhuriyet+Mah.+Nam%C4%B1k+Kemal+Cad.+No%3A+9C+U%C5%9Fak" target="_blank" rel="noopener">Haritada aç ↗</a></div>
+        <div><span class="mono muted">İletişim</span><a href="tel:+905394974327">+90 539 497 43 27</a><a href="mailto:iletisim@mesdijital.com.tr">iletisim@mesdijital.com.tr</a><a href="https://wa.me/905394974327" target="_blank" rel="noopener">WhatsApp ↗</a></div>
+        <div data-social><span class="mono muted">Sosyal</span></div>
         <div><span class="mono muted">Yerel saat</span><span data-clock>--:--:--</span></div>
       </div>
       <div class="footer__bottom mono muted"><span>© <span data-year>2026</span> Mes Dijital</span><a href="#top" class="js-top">Başa dön ↑</a></div>
@@ -185,8 +187,8 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script src="assets/js/data.js?v=12"></script>
-  <script src="assets/js/pages.js?v=12"></script>
-  <script src="assets/js/main.js?v=12"></script>
+  <script src="assets/js/data.js?v=13"></script>
+  <script src="assets/js/pages.js?v=13"></script>
+  <script src="assets/js/main.js?v=13"></script>
 </body>
 </html>

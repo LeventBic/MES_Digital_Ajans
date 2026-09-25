@@ -3,6 +3,9 @@
    Sitedeki bütün kategoriler ve çalışmalar buradan gelir.
    İçerik doldurmak için yalnızca bu dosyayı düzenlemek yeterli.
 
+   Ajans alanları (agency)
+     iletişim bilgileri, whatsapp bağlantısı ve social (sosyal medya adresleri)
+
    Kategori alanları
      slug      adres için kısa ad (kategori.html?k=slug)
      name      kategori adı
@@ -59,7 +62,16 @@
       about: "[ Ajansı anlatan iki üç cümlelik kısa tanıtım metni buraya gelecek. ]",
       email: "iletisim@mesdijital.com.tr",
       phone: "+90 539 497 43 27",
+      whatsapp: "https://wa.me/905394974327",
       address: "Cumhuriyet Mah., Namık Kemal Cad. No: 9C, Uşak",
+      // sosyal medya hesapları: adres yazılınca sitede bağlantıya dönüşür,
+      // boş kalanlar soluk metin olarak görünür (tıklanıp hiçbir yere gitmeyen link olmaz)
+      social: {
+        Instagram: "",
+        LinkedIn: "",
+        TikTok: "",
+        YouTube: "",
+      },
     },
     categories: [
       cat("web-tasarim", "Web Tasarım", "Kurumsal site, landing", ["Arayüz Tasarımı", "Geliştirme", "Bakım"], "port"),
