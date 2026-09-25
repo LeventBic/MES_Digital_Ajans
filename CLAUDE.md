@@ -3,8 +3,12 @@
 Astro (statik), cPanel/LiteSpeed, FTP deploy. `README.md` insan için giriş
 noktasıdır (kurulum, dizin yapısı, yayın, bakım modu); bu dosya depodan
 okunamayan kuralları ve tuzakları taşır. **devarp-web'in CLAUDE.md'si bu
-projeye uygulanmaz**: dal disiplini, Cloudflare Pages, `npm run ci`, Sanity
+projeye uygulanmaz**: onun dal disiplini, Cloudflare Pages, `npm run ci`, Sanity
 burada yok.
+
+Dallar: iş `develop`'a commit'lenir; `main` kullanıcı isteyince `develop`'tan
+ileri sarılır (fast-forward). CI yok; push canlıyı değiştirmez, canlıya yalnızca
+`npm run deploy` çıkar.
 
 ## Model'e göre çalışma modu
 
@@ -56,6 +60,16 @@ Bakım sayfasıyla tutarlılık: Eina 04, marka kırmızısı `#e51b26` (dolgu/l
 metin kırmızısı `#c4141d` (açık zeminde WCAG için), zemin `#fcfbfb`, kart
 `#ffffff`. Logo `public/assets/img/mes-logo.png` (şeffaf), favicon seti
 kırmızı "M". Ana sayfa tasarımı henüz yapılmadı; `src/pages/index.astro`
-yer tutucudur ve canlıda bakım modu açık. Altı statik tasarım önerisi
-`docs/tasarim-onerileri/` altında (24 Eylül 2026); seçilen öneri Astro'ya
-taşınacak, içlerindeki vaka ve rakamlar yer tutucudur.
+yer tutucudur ve canlıda bakım modu açık. Yedi statik tasarım önerisi
+`docs/tasarim-onerileri/` altında (01–06: 24 Eylül, 07 Çerçeve: 25–26 Eylül
+2026); seçilen öneri Astro'ya taşınacak, içlerindeki vaka ve rakamlar yer
+tutucudur. 07'yi taşırken `07-cerceve/README.md` "Astro'ya taşırken dikkat"
+bölümündeki tarayıcı tuzaklarını (clip-path + IntersectionObserver, pointer
+capture) oku.
+
+## SEO
+
+`public/robots.txt` elle, sitemap `@astrojs/sitemap` ile her build'de üretilir
+(`site` değeri `astro.config.mjs`'te). Sitemap dosyalarını `public/`'e koyma,
+bakım bloğuna robots/sitemap istisnası ekleme: bakımda 503 dönmeleri doğru.
+Sıradaki işler ve gerekçeleri: `docs/arastirma/04-obys-seo-ve-gorunurluk.md`.

@@ -1,14 +1,22 @@
-# Ana sayfa tasarım önerileri — 24 Eylül 2026
+# Ana sayfa tasarım önerileri — 24–26 Eylül 2026
 
 `docs/arastirma/03-global-ajans-siteleri.md` içindeki 27 global siteden yalnızca
 sıradışı olanlar incelendi ve her biri farklı bir ajans grubundan ilham alan
-altı site hazırlandı. Önerilerin renkleri, tipografisi, sayfa yapısı ve
-etkileşimleri birbirinden farklı.
+altı site hazırlandı (01–06, 24 Eylül). 07 Çerçeve, Obys'in açılış ve seçim
+akışından ilham alan çok sayfalı yedinci öneri (25–26 Eylül). Önerilerin
+renkleri, tipografisi, sayfa yapısı ve etkileşimleri birbirinden farklı.
 
-Her öneri tek dosyalık, bağımsız bir HTML sayfası. CSS ve JS dosyanın içinde,
+01–06 tek dosyalık, bağımsız birer HTML sayfası. CSS ve JS dosyanın içinde,
 dış kaynak olarak yalnızca Google Fonts var (03'te ayrıca Matter.js, cdnjs'ten).
-Astro build'ine girmez. Dosyayı tarayıcıda doğrudan açmak yeterli.
-`index.html` hepsinin özetini ve ilham alınan ajans listesini gösterir.
+Dosyayı tarayıcıda doğrudan açmak yeterli. 07 ise ayrı CSS/JS dosyalarından ve
+dört sayfadan oluşur; bir statik sunucuyla açılır (aşağıda). Hiçbiri Astro
+build'ine girmez. `index.html` hepsinin özetini ve ilham alınan ajans listesini gösterir.
+
+```bash
+# depo kökünden, 07 için
+python -m http.server 5173 --directory docs/tasarim-onerileri/07-cerceve
+# → http://localhost:5173
+```
 
 | # | Klasör | Fikir | Fontlar | İlham |
 |---|---|---|---|---|
@@ -23,7 +31,7 @@ Astro build'ine girmez. Dosyayı tarayıcıda doğrudan açmak yeterli.
 ## Notlar
 
 - Vakalar ve rakamlar **yer tutucu** ("Örnek" diye işaretli), gerçek vakalarla
-  değiştirilecek. Adres, telefon ve e-posta gerçek.
+  değiştirilecek. Adres, telefon, e-posta ve WhatsApp (`wa.me/905394974327`) gerçek.
 - Fontların hepsi ücretsiz Google Fonts ailesi ve Türkçe karakterleri destekliyor. Seçilen
   öneri Astro'ya taşınırken marka fontu Eina 04 ile yeniden değerlendirilmeli.
 - Hepsi mobil öncelikli (375 px'te yatay kaydırma yok) ve `prefers-reduced-motion`
@@ -40,3 +48,15 @@ sektörler, ödüller, ekip ve katalog bölümlerinden oluşur. Gece/gündüz an
 var. Yumuşak kaydırma için Lenis jsDelivr'den yüklenir. İçerik yer tutucudur.
 Obys'in açılış ve seçim akışından ilham alındı; kod, logo, metin ve görseller
 sıfırdan yazıldı. Yapım: Claude (Opus 5.5).
+
+**26 Eylül 2026 düzeltmeleri** (`fdf47c1`), gerçek Chrome'da 11 otomatik testle doğrulandı:
+
+- Ana sayfada karta tıklamak kategoriyi açmıyordu → düzeldi.
+- Kategori, proje ve ajans sayfalarındaki görsellerin hiçbiri açılmıyordu → düzeldi.
+- Gece modunda açılıştaki M ve sayaç görünmüyordu; mobilde ana sayfa menüsü
+  kapatılamıyordu; boş `#` sosyal linkler JS hatası veriyordu → düzeldi.
+- Eklenenler: WhatsApp ve harita linkleri, `data.js`'ten sosyal medya, paylaşım
+  önizlemesi (Open Graph), LocalBusiness JSON-LD, `h1` ve "içeriğe geç" linki,
+  klavye odağı, WCAG uyumlu kırmızı metin (`#c4141d`), kırmızı favicon.
+- Ana sayfa üst bandındaki Uşak saati kaldırıldı (ajans sayfası ve alt bilgideki
+  "Yerel saat" duruyor).

@@ -140,8 +140,13 @@ Kaynaklar: [izmirinfluencer.com](https://www.izmirinfluencer.com/), [appaajans.c
 
 ## Yöntem notu
 
-Rakip sitelerin ana sayfa HTML'i ve harici CSS dosyaları `curl` ile doğrudan çekildi; `font-family` bildirimleri, `fonts.googleapis.com` bağlantıları, `@font-face` blokları, hex renk kodları ve Elementor global renk değişkenleri sayılarak okundu. Başlık hiyerarşisi ve bölüm kimlikleri aynı kaynaklardan çıkarıldı. Ham dosyalar şurada:
+Rakip sitelerin ana sayfa HTML'i ve harici CSS dosyaları `curl` ile doğrudan çekildi; `font-family` bildirimleri, `fonts.googleapis.com` bağlantıları, `@font-face` blokları, hex renk kodları ve Elementor global renk değişkenleri sayılarak okundu. Başlık hiyerarşisi ve bölüm kimlikleri aynı kaynaklardan çıkarıldı.
 
-`/private/tmp/claude-501/-/0749372d-28d5-45e1-9a63-6692e038205d/scratchpad/sites/`
+Ham dosyalar (on rakibin ana sayfa HTML'i, dört harici CSS dosyası ve Mes Dijital bakım sayfası) araştırma sırasında geçici bir klasörde tutuldu ve depoya alınmadı. Gerekirse aynı `curl` çekimiyle yeniden üretilebilir.
 
-İçerik: on rakibin ana sayfa HTML'i, dört harici CSS dosyası (`astro.css`, `anil.css`, `izmirinf.css`, `marifad.css`) ve Mes Dijital bakım sayfası (`mes.html`).
+## Güncelleme — 26 Eylül 2026
+
+- **Telefon tutarsızlığı hâlâ açık:** sitede +90 539 497 43 27, Yandex Haritalar kaydında +90 541 186 64 37. Google İşletme Profili açılırken ikisi tek numarada birleştirilmeli.
+- **Sosyal medya hesabı hâlâ yok.** 07 Çerçeve önerisi hesapları `assets/js/data.js` → `agency.social` alanından okuyor; adres girilene kadar sitede tıklanamaz soluk metin olarak görünüyorlar.
+- **WhatsApp** (`wa.me/905394974327`) yedi tasarım önerisinin hepsinde iletişim kanalı olarak var.
+- Site dışı görünürlük için yapılacaklar (Google İşletme Profili, dizinler, ödül başvuruları): `04-obys-seo-ve-gorunurluk.md`.
