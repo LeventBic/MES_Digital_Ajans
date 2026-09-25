@@ -1,0 +1,11 @@
+# Mes Dijital — mesdijital.com.tr
+# Tüm arama motorlarına açık. Site haritası her build'de @astrojs/sitemap ile
+# yeniden üretilir (astro.config.mjs). Bakım modu açıkken bu dosya da 503
+# döner; arama motorları bunu "geçici kapalı" sayar ve sonra tekrar dener.
+
+User-agent: *
+Allow: /
+Disallow: /maintenance.html
+Disallow: /maintenance.php
+
+Sitemap: https://mesdijital.com.tr/sitemap-index.xml
